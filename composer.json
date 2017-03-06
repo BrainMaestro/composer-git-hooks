@@ -1,14 +1,24 @@
 {
-    "name": "brainmaestro/collie",
-    "description": "Easily manage git hooks",
+    "name": "brainmaestro/composer-git-hooks",
+    "description": "Easily manage git hooks in your composer config",
     "type": "library",
     "minimum-stability": "stable",
     "license": "MIT",
+    "keywords": [
+        "git",
+        "hook",
+        "composer"
+    ],
     "authors": [
         {
             "name": "Ezinwa Okpoechi",
             "email": "brainmaestro@outlook.com"
         }
     ],
-    "require": {}
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "BrainMaestro\\GitHooks\\": "src/"
+        }
+    }
 }
