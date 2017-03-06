@@ -1,0 +1,14 @@
+{
+    "name": "brainmaestro/collie",
+    "description": "Easily manage git hooks",
+    "type": "library",
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ezinwa Okpoechi",
+            "email": "brainmaestro@outlook.com"
+        }
+    ],
+    "require": {}
+}
