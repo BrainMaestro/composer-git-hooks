@@ -12,13 +12,13 @@ if (is_file(__DIR__ . '/../vendor/autoload.php')) {
 }
 
 if (isset($argv[1])) {
-    $force = isset($argv[2]) && ($argv[2] == '--force' || $argv[2] == '-f');
-
     if ($argv[1] == 'install') {
+        $force = isset($argv[2]) && ($argv[2] == '--force' || $argv[2] == '-f');
         BrainMaestro\GitHooks\HookManager::install($force);
         exit(0);
     } else if ($argv[1] == 'uninstall') {
-        BrainMaestro\GitHooks\HookManager::uninstall();
+        $hooks = array_slice($argv, 2);
+        BrainMaestro\GitHooks\HookManager::uninstall($hooks);
         exit(0);
     }
 }

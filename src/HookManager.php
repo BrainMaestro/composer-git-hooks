@@ -20,11 +20,13 @@ class HookManager
     /**
      * Uninstall all valid git hooks.
      */
-    public static function uninstall()
+    public static function uninstall($hooks)
     {
-        $scripts = self::getComposerScripts();
+        if (! $hooks) {
+            $hooks = array_keys(self::getComposerScripts());
+        }
 
-        foreach (array_keys($scripts) as $hook) {
+        foreach ($hooks as $hook) {
             Hook::remove($hook);
         }
     }

@@ -14,7 +14,7 @@ class Hook
     {
         $filename = ".git/hooks/{$hook}";
 
-        if (array_key_exists($hook, self::getHooks())) {
+        if (self::isValidHook($hook)) {
             if (is_file($filename) && ! $force) {
                 echo "'{$hook}' already exists" . PHP_EOL;
                 return;
@@ -33,10 +33,18 @@ class Hook
     {
         $filename = ".git/hooks/{$hook}";
 
-        if (array_key_exists($hook, self::getHooks()) && is_file($filename)) {
+        if (self::isValidHook($hook) && is_file($filename)) {
             unlink(".git/hooks/{$hook}");
             echo "Removed '{$hook}' hook" . PHP_EOL;
         }
+    }
+
+    /**
+     * Check if a hook is valid
+     */
+    private static function isValidHook($hook)
+    {
+        return array_key_exists($hook, self::getHooks());
     }
 
     /**
