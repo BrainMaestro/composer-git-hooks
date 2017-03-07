@@ -1,5 +1,5 @@
 # composer-git-hooks
-> Manage git hooks easily in your composer configuration.
+> Manage git hooks easily in your composer configuration. This package makes it easy to implement a consistent project-wide usage of git hooks. 
 
 ## Install
 

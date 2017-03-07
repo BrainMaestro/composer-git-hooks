@@ -10,6 +10,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class AddCommand extends Command
 {
+    private $hooks;
+
+    public function __construct($hooks)
+    {
+        $this->hooks = $hooks;
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this
@@ -22,7 +30,7 @@ class AddCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        foreach (Hook::getValidHooks() as $hook => $script) {
+        foreach ($this->hooks as $hook => $script) {
             $filename = ".git/hooks/{$hook}";
 
             if (is_file($filename) && ! $input->getOption('force')) {

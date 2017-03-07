@@ -10,6 +10,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RemoveCommand extends Command
 {
+    private $hooks;
+
+    public function __construct($hooks)
+    {
+        $this->hooks = $hooks;
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this
@@ -20,7 +28,7 @@ class RemoveCommand extends Command
                 'hooks',
                 InputArgument::IS_ARRAY,
                 'Hooks to be removed',
-                array_keys(Hook::getValidHooks())
+                array_keys($this->hooks)
             )
         ;
     }
@@ -30,9 +38,11 @@ class RemoveCommand extends Command
         foreach ($input->getArgument('hooks') as $hook) {
             $filename = ".git/hooks/{$hook}";
 
-            if (Hook::isValidHook($hook) && is_file($filename)) {
+            if (array_key_exists($hook, $this->hooks) && is_file($filename)) {
                 unlink(".git/hooks/{$hook}");
                 $output->writeln("Removed '{$hook}' hook");
+            } else {
+                $output->writeln("'{$hook}' hook does not exist");
             }
         }
     }

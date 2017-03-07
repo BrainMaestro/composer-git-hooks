@@ -10,6 +10,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ListCommand extends Command
 {
+    private $hooks;
+
+    public function __construct($hooks)
+    {
+        $this->hooks = $hooks;
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this
@@ -20,8 +28,8 @@ class ListCommand extends Command
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
-    {    
-        foreach (array_keys(Hook::getValidHooks()) as $hook) {
+    {
+        foreach (array_keys($this->hooks) as $hook) {
             $filename = ".git/hooks/{$hook}";
 
             if (is_file($filename)) {

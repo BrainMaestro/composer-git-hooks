@@ -23,5 +23,13 @@
             "BrainMaestro\\GitHooks\\": "src/"
         }
     },
-    "bin": ["cghooks"]
+    "autoload-dev": {
+        "classmap": [
+            "tests/"
+        ]
+    },
+    "bin": ["cghooks"],
+    "require-dev": {
+        "phpunit/phpunit": "^5.7"
+    }
 }
