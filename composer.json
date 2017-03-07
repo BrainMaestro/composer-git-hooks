@@ -15,11 +15,13 @@
             "email": "brainmaestro@outlook.com"
         }
     ],
-    "require": {},
+    "require": {
+        "symfony/console": "^3.2"
+    },
     "autoload": {
         "psr-4": {
             "BrainMaestro\\GitHooks\\": "src/"
         }
     },
-    "bin": ["bin/cghooks"]
+    "bin": ["cghooks"]
 }

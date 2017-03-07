@@ -7,42 +7,29 @@ class Hook
     private static $hooks;
 
     /**
-     * Add valid git hooks.
-     * @param $force bool
+     * Get scripts section of the composer config file.
+     *
+     * @return array
      */
-    public static function add($hook, $script, $force)
+    public static function getValidHooks()
     {
-        $filename = ".git/hooks/{$hook}";
+        $contents = file_get_contents('composer.json');
+        $json = json_decode($contents, true);
 
-        if (self::isValidHook($hook)) {
-            if (is_file($filename) && ! $force) {
-                echo "'{$hook}' already exists" . PHP_EOL;
-                return;
+        $hooks = [];
+        foreach ($json['scripts'] as $hook => $script) {
+            if (array_key_exists($hook, self::getHooks())) {
+                $hooks[$hook] = $script;
             }
-
-            file_put_contents($filename, $script);
-            chmod($filename, 0755);
-            echo "Added '{$hook}' hook" . PHP_EOL;
         }
-    }
 
-    /**
-     * Remove valid git hooks.
-     */
-    public static function remove($hook)
-    {
-        $filename = ".git/hooks/{$hook}";
-
-        if (self::isValidHook($hook) && is_file($filename)) {
-            unlink(".git/hooks/{$hook}");
-            echo "Removed '{$hook}' hook" . PHP_EOL;
-        }
+        return $hooks;
     }
 
     /**
      * Check if a hook is valid
      */
-    private static function isValidHook($hook)
+    public static function isValidHook($hook)
     {
         return array_key_exists($hook, self::getHooks());
     }
