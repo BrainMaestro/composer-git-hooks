@@ -14,7 +14,11 @@ if (is_file(__DIR__ . '/../vendor/autoload.php')) {
 if (isset($argv[1])) {
     if ($argv[1] == 'install') {
         BrainMaestro\GitHooks\HookManager::install();
+        exit(0);
     } else if ($argv[1] == 'uninstall') {
         BrainMaestro\GitHooks\HookManager::uninstall();
+        exit(0);
     }
 }
+
+echo "The command requires either 'install' or 'uninstall' as arguments" . PHP_EOL;

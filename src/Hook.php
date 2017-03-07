@@ -12,8 +12,13 @@ class Hook
     public static function add($hook, $script)
     {
         $filename = ".git/hooks/{$hook}";
-        
+
         if (array_key_exists($hook, self::getHooks())) {
+            if (is_file($filename)) {
+                echo "'{$hook}' already exists" . PHP_EOL;
+                return;
+            }
+
             file_put_contents($filename, $script);
             chmod($filename, 0755);
             echo "Added '{$hook}' hook" . PHP_EOL;
