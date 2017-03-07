@@ -8,13 +8,14 @@ class Hook
 
     /**
      * Add valid git hooks.
+     * @param $force bool
      */
-    public static function add($hook, $script)
+    public static function add($hook, $script, $force)
     {
         $filename = ".git/hooks/{$hook}";
 
         if (array_key_exists($hook, self::getHooks())) {
-            if (is_file($filename)) {
+            if (is_file($filename) && ! $force) {
                 echo "'{$hook}' already exists" . PHP_EOL;
                 return;
             }

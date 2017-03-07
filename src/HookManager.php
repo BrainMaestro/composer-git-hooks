@@ -5,19 +5,20 @@ namespace BrainMaestro\GitHooks;
 class HookManager
 {
     /**
-     *  Install all valid git hooks.
+     * Install all valid git hooks.
+     * @param $force bool
      */
-    public static function install()
+    public static function install($force)
     {
         $scripts = self::getComposerScripts();
 
         foreach ($scripts as $hook => $script) {
-            Hook::add($hook, $script);
+            Hook::add($hook, $script, $force);
         }
     }
 
     /**
-     *  Uninstall all valid git hooks.
+     * Uninstall all valid git hooks.
      */
     public static function uninstall()
     {
