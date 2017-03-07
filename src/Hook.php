@@ -12,8 +12,10 @@ class Hook
     public static function add($hook, $script)
     {
         if (array_key_exists($hook, self::getHooks())) {
-            file_put_contents(".git/hooks/{$hook}", $script);
-            echo "Added {$hook}";
+            $filename = ".git/hooks/{$hook}";
+            file_put_contents($filename, $script);
+            chmod($filename, 0755);
+            echo "Added '{$hook}' hook" . PHP_EOL;
         }
     }
 
@@ -24,7 +26,7 @@ class Hook
     {
         if (array_key_exists($hook, self::getHooks())) {
             unlink(".git/hooks/{$hook}");
-            echo "Removed {$hook}";
+            echo "Removed '{$hook}' hook" . PHP_EOL;
         }
     }
 

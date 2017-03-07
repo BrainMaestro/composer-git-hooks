@@ -20,5 +20,6 @@
         "psr-4": {
             "BrainMaestro\\GitHooks\\": "src/"
         }
-    }
+    },
+    "bin": ["bin/cghooks"]
 }
