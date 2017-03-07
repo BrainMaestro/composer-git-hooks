@@ -15,8 +15,9 @@ class Hook
     {
         $contents = file_get_contents('composer.json');
         $json = json_decode($contents, true);
-
+        $json['scripts'] = isset($json['scripts']) ? $json['scripts'] : [];
         $hooks = [];
+
         foreach ($json['scripts'] as $hook => $script) {
             if (array_key_exists($hook, self::getHooks())) {
                 $hooks[$hook] = $script;

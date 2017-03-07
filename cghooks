@@ -4,11 +4,13 @@ require __DIR__ . '/../../autoload.php';
 
 use BrainMaestro\GitHooks\Commands\AddCommand;
 use BrainMaestro\GitHooks\Commands\RemoveCommand;
+use BrainMaestro\GitHooks\Commands\ListCommand;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
 
 $application->add(new AddCommand);
 $application->add(new RemoveCommand);
+$application->add(new ListCommand);
 
 $application->run();
