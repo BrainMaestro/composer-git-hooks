@@ -4,6 +4,11 @@ use BrainMaestro\GitHooks\Hook;
 
 trait PrepareHookTest
 {
+    private static $hooks = [
+        'test-pre-commit' => 'echo before-commit',
+        'test-post-commit' => 'echo after-commit',
+    ];
+
     public function setUp()
     {
         self::prepare();

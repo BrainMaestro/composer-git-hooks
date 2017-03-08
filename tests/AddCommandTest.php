@@ -9,11 +9,6 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
 {
     use PrepareHookTest;
 
-    private static $hooks = [
-        'test-pre-commit' => 'echo before-commit',
-        'test-post-commit' => 'echo after-commit',
-    ];
-
     private $commandTester;
 
     public function setUp()
