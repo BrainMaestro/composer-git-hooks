@@ -1,5 +1,7 @@
 <?php
 
+namespace BrainMaestro\GitHooks\Tests;
+
 use BrainMaestro\GitHooks\Hook;
 
 trait PrepareHookTest

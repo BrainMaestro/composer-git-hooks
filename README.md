@@ -1,4 +1,6 @@
 # composer-git-hooks
+[![Travis](https://img.shields.io/travis/BrainMaestro/composer-git-hooks.svg?style=flat-square)](https://travis-ci.org/BrainMaestro/composer-git-hooks)
+[![Packagist](https://img.shields.io/packagist/v/brainmaestro/composer-git-hooks.svg?style=flat-square)](https://packagist.org/packages/brainmaestro/composer-git-hooks)
 > Manage git hooks easily in your composer configuration. This package makes it easy to implement a consistent project-wide usage of git hooks.
 
 ## Install
@@ -8,9 +10,9 @@ Add hooks to the `scripts` section of your `composer.json`.
 ```json
 {
   "scripts": {
-    "pre-commit": "phpunit test",
+    "pre-commit": "phpunit",
     "post-commit": "echo committed",
-    "pre-push": "phpunit test && echo pushing!",
+    "pre-push": "phpunit && echo pushing!",
     "...": "..."
   }
 }
@@ -52,7 +54,7 @@ Option | Description | Command
 
 ### Listing hooks
 
-Hooks can be listed with the `vendor/bin/cghooks list-hooks` command. This basically checks composer config and list the hooks that actually have files.
+Hooks can be listed with the `cghooks list-hooks` command. This basically checks composer config and list the hooks that actually have files.
 
 ## Related
 - [husky](https://github.com/typicode/husky)

@@ -1,5 +1,7 @@
 <?php
 
+namespace BrainMaestro\GitHooks\Tests;
+
 use BrainMaestro\GitHooks\Commands\AddCommand;
 use BrainMaestro\GitHooks\Hook;
 use Symfony\Component\Console\Application;
