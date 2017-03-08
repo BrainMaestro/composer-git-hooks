@@ -4,6 +4,7 @@ namespace BrainMaestro\GitHooks;
 
 class Hook
 {
+    const LOCK_FILE = 'composer-git-hooks.lock';
     private static $hooks;
 
     /**
