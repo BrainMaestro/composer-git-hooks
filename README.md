@@ -25,18 +25,30 @@ composer require --dev brainmaestro/composer-git-hooks
 
 ### Adding Hooks
 
-After installation is complete, run `vendor/bin/cghooks add`
+After installation is complete, run `cghooks add`
 to add all the valid git hooks that have been specified in the composer config.
 
-If a hook that was specified in the scripts already exists, it will not be overridden. To override it, pass the `--force` or `-f` flag. So the command will be `vendor/bin/cghooks add --force`
+Option | Description | Command
+------ | ----------- | -------
+`force` | Override any existing git hooks | `cghooks add --force`
+`no-lock` | Do not create a lock file | `cghooks add --no-lock`
+`ignore-lock` | Add the lock file to .gitignore | `cghooks add --ignore-lock`
+
+The `lock` file contains a list of all added hooks.
 
 ### Removing Hooks
 
-Hooks can be easily removed with `vendor/bin/cghooks remove`. This will remove all the hooks that were specified in the composer config.
+Hooks can be easily removed with `cghooks remove`. This will remove all the hooks that were specified in the composer config.
 
-**CAREFUL**: Hooks that already existed before using this package, but were specified in the composer scripts config will be removed as well. That is, if you had a previous `pre-commit` hook, but your current composer config also has a `pre-commit` hook, this command will remove your initial hook.
+Hooks can also be removed by passing them as arguments. The command `cghooks remove pre-commit post-commit` which will remove the `pre-commit` and `post-commit` hooks.
 
-Hooks can also be removed by passing them as arguments. The command `vendor/bin/cghooks remove pre-commit post-commit` which will remove the `pre-commit` and `post-commit` hooks.
+Option | Description | Command
+------ | ----------- | -------
+`force` | Delete hooks without checking the lock file | `cghooks remove --force`
+
+
+**CAREFUL**: If the lock file was tampered with or the force option is used, hooks that already existed before using this package, but were specified in the composer scripts config will be removed as well. That is, if you had a previous `pre-commit` hook, but your current composer config also has a `pre-commit` hook, these options will caused the command to remove your initial hook.
+
 
 ### Listing hooks
 
