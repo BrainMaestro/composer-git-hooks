@@ -35,7 +35,7 @@ class RemoveCommand extends Command
                 'force',
                 'f',
                 InputOption::VALUE_NONE,
-                'Delete hooks without using a ' . Hook::LOCK_FILE . ' file'
+                'Delete hooks without checking the lock file'
             )
         ;
     }
