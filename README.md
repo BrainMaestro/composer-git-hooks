@@ -23,6 +23,8 @@ Then install the library with
 composer require --dev brainmaestro/composer-git-hooks
 ```
 
+This installs the `cghooks` binary to your `vendor/bin` folder. If this folder is not in your path, you would need to preface every command with `vendor/bin/`.
+
 ## Usage
 
 ### Adding Hooks
@@ -55,6 +57,12 @@ Option | Description | Command
 ### Listing hooks
 
 Hooks can be listed with the `cghooks list-hooks` command. This basically checks composer config and list the hooks that actually have files.
+
+
+## Reason
+
+Specifying hooks in the composer file makes them available for every member of the project team. Provides a consistent environment for everyone.
+Hooks can be tested with `composer ${hook}`. Example `composer pre-commit` runs the `pre-commit` hook.
 
 ## Related
 - [husky](https://github.com/typicode/husky)

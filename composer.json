@@ -24,9 +24,9 @@
         }
     },
     "autoload-dev": {
-        "classmap": [
-            "tests/"
-        ]
+        "psr-4": {
+            "BrainMaestro\\GitHooks\\Tests\\": "tests/"
+        }
     },
     "bin": ["cghooks"],
     "require-dev": {

@@ -25,7 +25,7 @@ class AddCommand extends Command
             ->setDescription('Adds git hooks from the composer config')
             ->setHelp('This command allows you to add git hooks')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Override existing git hooks')
-            ->addOption('no-lock', 'n', InputOption::VALUE_NONE, 'Do not create a lock file')
+            ->addOption('no-lock', 'l', InputOption::VALUE_NONE, 'Do not create a lock file')
             ->addOption('ignore-lock', 'i', InputOption::VALUE_NONE, 'Add the lock file to .gitignore')
         ;
     }
