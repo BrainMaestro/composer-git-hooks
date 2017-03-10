@@ -37,6 +37,7 @@ class RemoveCommand extends Command
                 InputOption::VALUE_NONE,
                 'Delete hooks without checking the lock file'
             )
+            ->addOption('git-dir', 'g', InputOption::VALUE_REQUIRED, 'Path to git directory', '.git')
         ;
     }
 
@@ -45,9 +46,10 @@ class RemoveCommand extends Command
         $lockFileHooks = file_exists(Hook::LOCK_FILE)
                          ? array_flip(json_decode(file_get_contents(Hook::LOCK_FILE)))
                          : [];
+        $gitDir = $input->getOption('git-dir');
 
         foreach ($input->getArgument('hooks') as $hook) {
-            $filename = ".git/hooks/{$hook}";
+            $filename = "{$gitDir}/hooks/{$hook}";
 
             if (! array_key_exists($hook, $lockFileHooks) && ! $input->getOption('force')) {
                 $output->writeln("Skipped '{$hook}' hook - not present in lock file");
@@ -55,7 +57,7 @@ class RemoveCommand extends Command
             }
 
             if (array_key_exists($hook, $this->hooks) && is_file($filename)) {
-                unlink(".git/hooks/{$hook}");
+                unlink($filename);
                 $output->writeln("Removed '{$hook}' hook");
             } else {
                 $output->writeln("'{$hook}' hook does not exist");

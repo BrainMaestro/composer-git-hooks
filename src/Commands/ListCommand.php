@@ -24,13 +24,16 @@ class ListCommand extends Command
             ->setName('list-hooks')
             ->setDescription('List added hooks')
             ->setHelp('This command allows you to list your git hooks')
+            ->addOption('git-dir', 'g', InputOption::VALUE_REQUIRED, 'Path to git directory', '.git')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $gitDir = $input->getOption('git-dir');
+
         foreach (array_keys($this->hooks) as $hook) {
-            $filename = ".git/hooks/{$hook}";
+            $filename = "{$gitDir}/hooks/{$hook}";
 
             if (is_file($filename)) {
                 $output->writeln($hook);

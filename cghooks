@@ -8,7 +8,7 @@ use BrainMaestro\GitHooks\Commands\RemoveCommand;
 use BrainMaestro\GitHooks\Commands\ListCommand;
 use Symfony\Component\Console\Application;
 
-$application = new Application();
+$application = new Application('Composer Git Hooks', '0.3.0');
 
 $application->add(new AddCommand(Hook::getValidHooks()));
 $application->add(new RemoveCommand(Hook::getValidHooks()));
