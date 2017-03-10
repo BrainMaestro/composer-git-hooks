@@ -8,16 +8,15 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class ListCommandTester extends \PHPUnit_Framework_TestCase
 {
-    private static $hooks = [
-        'test-pre-commit',
-        'test-post-commit',
-    ];
+    use PrepareHookTest;
+
+    private $commandTester;
 
     public function setUp()
     {
-        foreach (self::$hooks as $hook) {
-            file_put_contents(".git/hooks/{$hook}", 'get schwifty');
-        }
+        self::createHooks();
+        $command = new ListCommand(self::$hooks);
+        $this->commandTester = new CommandTester($command);
     }
 
     /**
@@ -25,19 +24,28 @@ class ListCommandTester extends \PHPUnit_Framework_TestCase
      */
     public function it_lists_hooks_that_exist()
     {
-        $command = new ListCommand(array_flip(self::$hooks));
-        $commandTester = new CommandTester($command);
-        $commandTester->execute([]);
+        $this->commandTester->execute([]);
 
-        foreach (self::$hooks as $hook) {
-            $this->assertContains($hook, $commandTester->getDisplay());
+        foreach (array_keys(self::$hooks) as $hook) {
+            $this->assertContains($hook, $this->commandTester->getDisplay());
         }
     }
 
-    public function tearDown()
+    /**
+     * @test
+     */
+    public function it_uses_a_different_git_path_if_specified()
     {
-        foreach (self::$hooks as $hook) {
-            unlink(".git/hooks/{$hook}");
+        $gitDir = 'test-git-dir';
+        passthru("mkdir -p {$gitDir}/hooks");
+        self::createHooks($gitDir);
+
+        $this->commandTester->execute(['--git-dir' => $gitDir]);
+
+        foreach (array_keys(self::$hooks) as $hook) {
+            $this->assertContains($hook, $this->commandTester->getDisplay());
         }
+
+        passthru("rm -rf {$gitDir}");
     }
 }

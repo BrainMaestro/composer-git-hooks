@@ -37,10 +37,7 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
      */
     public function it_does_not_add_hooks_that_already_exist()
     {
-        foreach (self::$hooks as $hook => $script) {
-            file_put_contents(".git/hooks/{$hook}", $script);
-        }
-
+        self::createHooks();
         $this->commandTester->execute([]);
 
         foreach (array_keys(self::$hooks) as $hook) {
@@ -109,5 +106,21 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
         $this->assertContains('Added ' . Hook::LOCK_FILE . ' to .gitignore', $this->commandTester->getDisplay());
         passthru('grep -q ' . Hook::LOCK_FILE . ' .gitignore', $return);
         $this->assertEquals(0, $return);
+    }
+
+    /**
+     * @test
+     */
+    public function it_uses_a_different_git_path_if_specified()
+    {
+        $gitDir = 'test-git-dir';
+        passthru("mkdir -p {$gitDir}/hooks");
+        $this->commandTester->execute(['--git-dir' => $gitDir]);
+
+        foreach (array_keys(self::$hooks) as $hook) {
+            $this->assertTrue(file_exists("{$gitDir}/hooks/{$hook}"));
+        }
+
+        passthru("rm -rf {$gitDir}");
     }
 }

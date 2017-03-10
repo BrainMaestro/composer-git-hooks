@@ -27,15 +27,17 @@ class AddCommand extends Command
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Override existing git hooks')
             ->addOption('no-lock', 'l', InputOption::VALUE_NONE, 'Do not create a lock file')
             ->addOption('ignore-lock', 'i', InputOption::VALUE_NONE, 'Add the lock file to .gitignore')
+            ->addOption('git-dir', 'g', InputOption::VALUE_REQUIRED, 'Path to git directory', '.git')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $addedHooks = [];
+        $gitDir = $input->getOption('git-dir');
 
         foreach ($this->hooks as $hook => $script) {
-            $filename = ".git/hooks/{$hook}";
+            $filename = "{$gitDir}/hooks/{$hook}";
 
             if (is_file($filename) && ! $input->getOption('force')) {
                 $output->writeln("'{$hook}' already exists");

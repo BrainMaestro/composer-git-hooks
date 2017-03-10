@@ -15,9 +15,7 @@ class RemoveCommandTester extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        foreach (self::$hooks as $hook => $script) {
-            file_put_contents(".git/hooks/{$hook}", $script);
-        }
+        self::createHooks();
         file_put_contents(Hook::LOCK_FILE, json_encode(array_keys(self::$hooks)));
 
         $command = new RemoveCommand(self::$hooks);
@@ -71,8 +69,33 @@ class RemoveCommandTester extends \PHPUnit_Framework_TestCase
         $this->assertContains("Removed '{$hook}' hook", $this->commandTester->getDisplay());
     }
 
+    /**
+     * @test
+     */
+    public function it_uses_a_different_git_path_if_specified()
+    {
+        $gitDir = 'test-git-dir';
+        passthru("mkdir -p {$gitDir}/hooks");
+        self::createHooks($gitDir);
+        $this->assertFalse(self::isDirEmpty("{$gitDir}/hooks"));
+
+        $this->commandTester->execute(['--git-dir' => $gitDir]);
+
+        foreach (array_keys(self::$hooks) as $hook) {
+            $this->assertContains("Removed '{$hook}' hook", $this->commandTester->getDisplay());
+        }
+
+        $this->assertTrue(self::isDirEmpty("{$gitDir}/hooks"));
+        passthru("rm -rf {$gitDir}");
+    }
+
     public function tearDown()
     {
         self::prepare();
+    }
+
+    private static function isDirEmpty($dir)
+    {
+        return count(scandir($dir)) == 2;
     }
 }
