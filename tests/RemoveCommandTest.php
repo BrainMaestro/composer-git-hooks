@@ -34,6 +34,20 @@ class RemoveCommandTester extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function it_removes_removed_hooks_from_the_lock_file()
+    {
+        foreach (array_keys(self::$hooks) as $hook) {
+            passthru("grep -q {$hook} " . Hook::LOCK_FILE, $return);
+            $this->assertEquals(0, $return);
+
+            $this->commandTester->execute(['hooks' => [$hook]]);
+            $this->assertContains("Removed '{$hook}' hook", $this->commandTester->getDisplay());
+
+            passthru("grep -q {$hook} " . Hook::LOCK_FILE, $return);
+            $this->assertEquals(1, $return);
+        }
+    }
+
     /**
      * @test
      */

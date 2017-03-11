@@ -59,9 +59,12 @@ class RemoveCommand extends Command
             if (array_key_exists($hook, $this->hooks) && is_file($filename)) {
                 unlink($filename);
                 $output->writeln("Removed '{$hook}' hook");
+                unset($lockFileHooks[$hook]);
             } else {
                 $output->writeln("'{$hook}' hook does not exist");
             }
         }
+
+        file_put_contents(Hook::LOCK_FILE, json_encode(array_keys($lockFileHooks)));
     }
 }
