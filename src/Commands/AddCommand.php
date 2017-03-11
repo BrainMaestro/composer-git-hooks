@@ -49,6 +49,11 @@ class AddCommand extends Command
             }
         }
 
+        if (! count($addedHooks)) {
+            $output->writeln('No hooks were added');
+            return;
+        }
+
         if ($input->getOption('no-lock')) {
             $output->writeln('Skipped creating a '. Hook::LOCK_FILE . ' file');
             return;

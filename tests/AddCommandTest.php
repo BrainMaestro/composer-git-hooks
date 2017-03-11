@@ -123,4 +123,18 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
 
         passthru("rm -rf {$gitDir}");
     }
+
+    /**
+     * @test
+     */
+    public function it_does_not_create_a_lock_file_when_no_hooks_were_added()
+    {
+        $commandTester = new CommandTester(new AddCommand([]));
+        $commandTester->execute([]);
+
+        $this->assertContains('No hooks were added', $commandTester->getDisplay());
+        foreach (array_keys(self::$hooks) as $hook) {
+            $this->assertFalse(file_exists(".git/hooks/{$hook}"));
+        }
+    }
 }
