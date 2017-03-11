@@ -15,16 +15,19 @@ class Hook
     {
         $contents = file_get_contents('composer.json');
         $json = json_decode($contents, true);
-        $json['scripts'] = isset($json['scripts']) ? $json['scripts'] : [];
-        $hooks = [];
+        $hooks = array_merge(
+            isset($json['scripts']) ? $json['scripts'] : [],
+            isset($json['hooks']) ? $json['hooks'] : []
+        );
+        $validHooks = [];
 
-        foreach ($json['scripts'] as $hook => $script) {
+        foreach ($hooks as $hook => $script) {
             if (array_key_exists($hook, self::getHooks())) {
-                $hooks[$hook] = $script;
+                $validHooks[$hook] = $script;
             }
         }
 
-        return $hooks;
+        return $validHooks;
     }
 
     /**
