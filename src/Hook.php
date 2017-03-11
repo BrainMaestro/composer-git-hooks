@@ -4,8 +4,7 @@ namespace BrainMaestro\GitHooks;
 
 class Hook
 {
-    const LOCK_FILE = 'composer-git-hooks.lock';
-    private static $hooks;
+    const LOCK_FILE = 'cghooks.lock';
 
     /**
      * Get scripts section of the composer config file.
@@ -41,29 +40,25 @@ class Hook
      */
     private static function getHooks()
     {
-        if (! isset(self::$hooks)) {
-            self::$hooks = array_flip([
-               'applypatch-msg',
-               'commit-msg',
-               'post-applypatch',
-               'post-checkout',
-               'post-commit',
-               'post-merge',
-               'post-receive',
-               'post-rewrite',
-               'post-update',
-               'pre-applypatch',
-               'pre-auto-gc',
-               'pre-commit',
-               'pre-push',
-               'pre-rebase',
-               'pre-receive',
-               'prepare-commit-msg',
-               'push-to-checkout',
-               'update',
-           ]);
-        }
-
-        return self::$hooks;
+        return array_flip([
+           'applypatch-msg',
+           'commit-msg',
+           'post-applypatch',
+           'post-checkout',
+           'post-commit',
+           'post-merge',
+           'post-receive',
+           'post-rewrite',
+           'post-update',
+           'pre-applypatch',
+           'pre-auto-gc',
+           'pre-commit',
+           'pre-push',
+           'pre-rebase',
+           'pre-receive',
+           'prepare-commit-msg',
+           'push-to-checkout',
+           'update',
+       ]);
     }
 }

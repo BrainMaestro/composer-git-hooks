@@ -31,5 +31,9 @@
     "bin": ["cghooks"],
     "require-dev": {
         "phpunit/phpunit": "^5.7"
+    },
+    "scripts": {
+        "pre-commit": "echo about to commit",
+        "post-commit": "echo just committed"
     }
 }
