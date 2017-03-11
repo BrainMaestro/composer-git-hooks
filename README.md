@@ -5,11 +5,11 @@
 
 ## Install
 
-Add hooks to the `scripts` section of your `composer.json`.
+Add a `hooks` section to your `composer.json` and add the hooks there. The previous way of adding hooks to the `scripts` section of your `composer.json` is still supported, but this way is cleaner if you have many scripts.
 
 ```json
 {
-  "scripts": {
+  "hooks": {
     "pre-commit": "phpunit",
     "post-commit": "echo committed",
     "pre-push": "phpunit && echo pushing!",
@@ -25,6 +25,18 @@ composer require --dev brainmaestro/composer-git-hooks
 
 This installs the `cghooks` binary to your `vendor/bin` folder. If this folder is not in your path, you will need to preface every command with `vendor/bin/`.
 
+### Optional Configuration
+Add a `cghooks` script to the `scripts` section of your `composer.json`. That way, commands can be run with `composer cghooks ${command}`. This is ideal if you would rather not edit your system path.
+
+```json
+{
+  "scripts": {
+    "cghooks": "vendor/bin/cghooks",
+    "...": "..."
+  }
+}
+```
+
 ## Usage
 
 All the following commands have to be run in the same folder as your `composer.json` file.
@@ -39,7 +51,6 @@ Option | Description | Command
 `force` | Override any existing git hooks | `cghooks add --force`
 `no-lock` | Do not create a lock file | `cghooks add --no-lock`
 `ignore-lock` | Add the lock file to .gitignore | `cghooks add --ignore-lock`
-`git-dir` | Path to git directory | `cghooks add --git-dir='/path/to/.git'`
 
 The `lock` file contains a list of all added hooks.
 
@@ -52,7 +63,6 @@ Hooks can also be removed by passing them as arguments. The command `cghooks rem
 Option | Description | Command
 ------ | ----------- | -------
 `force` | Delete hooks without checking the lock file | `cghooks remove --force`
-`git-dir` | Path to git directory | `cghooks remove --git-dir='/path/to/.git'`
 
 **CAREFUL**: If the lock file was tampered with or the force option was used, hooks that already existed before using this package, but were specified in the composer scripts config will be removed as well. That is, if you had a previous `pre-commit` hook, but your current composer config also has a `pre-commit` hook, this option will cause the command to remove your initial hook.
 
@@ -61,15 +71,17 @@ Option | Description | Command
 
 Hooks can be listed with the `cghooks list-hooks` command. This basically checks composer config and list the hooks that actually have files.
 
+#### Common Options
+The following options are common to all commands.
+
 Option | Description | Command
 ------ | ----------- | -------
-`git-dir` | Path to git directory | `cghooks list-hooks --git-dir='/path/to/.git'`
-
+`git-dir` | Path to git directory | `cghooks ${command} --git-dir='/path/to/.git'`
 
 ## Reason
 
 Specifying hooks in the composer file makes them available for every member of the project team. Provides a consistent environment and behavior for everyone which is great.
-Hooks can be tested with `composer ${hook}`. Example `composer pre-commit` runs the `pre-commit` hook.
+Hooks can be tested with `cghooks ${hook}`. Example `cghooks pre-commit` runs the `pre-commit` hook.
 
 ## Related
 - [husky](https://github.com/typicode/husky)
