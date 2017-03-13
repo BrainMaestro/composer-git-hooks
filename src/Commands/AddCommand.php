@@ -39,7 +39,7 @@ class AddCommand extends Command
         foreach ($this->hooks as $hook => $script) {
             $filename = "{$gitDir}/hooks/{$hook}";
 
-            if (is_file($filename) && ! $input->getOption('force')) {
+            if (file_exists($filename)) {
                 $output->writeln("'{$hook}' already exists");
             } else {
                 file_put_contents($filename, $script);
@@ -50,7 +50,7 @@ class AddCommand extends Command
         }
 
         if (! count($addedHooks)) {
-            $output->writeln('No hooks were added');
+            $output->writeln('No hooks were added. Try updating');
             return;
         }
 
