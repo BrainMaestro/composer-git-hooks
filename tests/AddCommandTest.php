@@ -48,22 +48,6 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_adds_hooks_that_already_exist_if_forced_to()
-    {
-        $hook = array_rand(self::$hooks);
-        $script = self::$hooks[$hook];
-        file_put_contents(".git/hooks/{$hook}", $script);
-
-        $this->commandTester->execute(['--force' => true]);
-
-        foreach (array_keys(self::$hooks) as $hook) {
-            $this->assertContains("Added '{$hook}' hook", $this->commandTester->getDisplay());
-        }
-    }
-
-    /**
-     * @test
-     */
     public function it_correctly_creates_the_hook_lock_file()
     {
         $this->commandTester->execute([]);
@@ -132,7 +116,7 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
         $commandTester = new CommandTester(new AddCommand([]));
         $commandTester->execute([]);
 
-        $this->assertContains('No hooks were added', $commandTester->getDisplay());
+        $this->assertContains('No hooks were added. Try updating', $commandTester->getDisplay());
         foreach (array_keys(self::$hooks) as $hook) {
             $this->assertFalse(file_exists(".git/hooks/{$hook}"));
         }

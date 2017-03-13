@@ -4,15 +4,17 @@ require __DIR__ . '/../../autoload.php';
 
 use BrainMaestro\GitHooks\Hook;
 use BrainMaestro\GitHooks\Commands\AddCommand;
+use BrainMaestro\GitHooks\Commands\UpdateCommand;
 use BrainMaestro\GitHooks\Commands\RemoveCommand;
 use BrainMaestro\GitHooks\Commands\ListCommand;
 use BrainMaestro\GitHooks\Commands\HookCommand;
 use Symfony\Component\Console\Application;
 
-$application = new Application('Composer Git Hooks', 'v1.0.0');
+$application = new Application('Composer Git Hooks', 'v1.1.0');
 
 $hooks = Hook::getValidHooks();
 $application->add(new AddCommand($hooks));
+$application->add(new UpdateCommand($hooks));
 $application->add(new RemoveCommand($hooks));
 $application->add(new ListCommand($hooks));
 

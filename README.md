@@ -1,7 +1,7 @@
 # composer-git-hooks
 [![Travis](https://img.shields.io/travis/BrainMaestro/composer-git-hooks.svg?style=flat-square)](https://travis-ci.org/BrainMaestro/composer-git-hooks)
 [![Packagist](https://img.shields.io/packagist/v/brainmaestro/composer-git-hooks.svg?style=flat-square)](https://packagist.org/packages/brainmaestro/composer-git-hooks)
-> Manage git hooks easily in your composer configuration. This package makes it easy to implement a consistent project-wide usage of git hooks.
+> Manage git hooks easily in your composer configuration. This package makes it easy to implement a consistent project-wide usage of git hooks. Specifying hooks in the composer file makes them available for every member of the project team. This provides a consistent environment and behavior for everyone which is great.
 
 ## Install
 
@@ -26,12 +26,29 @@ composer require --dev brainmaestro/composer-git-hooks
 This installs the `cghooks` binary to your `vendor/bin` folder. If this folder is not in your path, you will need to preface every command with `vendor/bin/`.
 
 ### Optional Configuration
-Add a `cghooks` script to the `scripts` section of your `composer.json`. That way, commands can be run with `composer cghooks ${command}`. This is ideal if you would rather not edit your system path.
+
+#### Shortcut
+
+Add a `cghooks` script to the `scripts` section of your `composer.json` file. That way, commands can be run with `composer cghooks ${command}`. This is ideal if you would rather not edit your system path.
 
 ```json
 {
   "scripts": {
     "cghooks": "vendor/bin/cghooks",
+    "...": "..."
+  }
+}
+```
+
+#### Composer Events
+
+Add the following events to your `composer.json` file. The `cghooks` commands will be run every time the events occur. Go to [Composer Command Events](https://getcomposer.org/doc/articles/scripts.md#command-events) for more details about composer's event system.
+
+```json
+{
+  "scripts": {
+    "post-install-cmd": "vendor/bin/cghooks install",
+    "post-update-cmd": "vendor/bin/cghooks update",
     "...": "..."
   }
 }
@@ -48,11 +65,14 @@ to add all the valid git hooks that have been specified in the composer config.
 
 Option | Description | Command
 ------ | ----------- | -------
-`force` | Override any existing git hooks | `cghooks add --force`
 `no-lock` | Do not create a lock file | `cghooks add --no-lock`
 `ignore-lock` | Add the lock file to .gitignore | `cghooks add --ignore-lock`
 
 The `lock` file contains a list of all added hooks.
+
+### Updating Hooks
+
+The update command which is run with `cghooks update` basically ignores the lock file and tries to add hooks from the composer lock. This is similar to what the `--force` option for the `add` command did. This command is useful if the hooks in the `composer.json` file have changed since the first time the hooks were added.
 
 ### Removing Hooks
 
@@ -72,16 +92,16 @@ Option | Description | Command
 Hooks can be listed with the `cghooks list-hooks` command. This basically checks composer config and list the hooks that actually have files.
 
 #### Common Options
+
 The following options are common to all commands.
 
 Option | Description | Command
 ------ | ----------- | -------
 `git-dir` | Path to git directory | `cghooks ${command} --git-dir='/path/to/.git'`
 
-## Reason
+### Testing Hooks
 
-Specifying hooks in the composer file makes them available for every member of the project team. Provides a consistent environment and behavior for everyone which is great.
-Hooks can be tested with `cghooks ${hook}`. Example `cghooks pre-commit` runs the `pre-commit` hook.
+Hooks can be tested with `cghooks ${hook}` before adding them. Example `cghooks pre-commit` runs the `pre-commit` hook.
 
 ## Related
 - [husky](https://github.com/typicode/husky)
