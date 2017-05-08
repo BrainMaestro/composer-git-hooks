@@ -9,11 +9,13 @@ Add a `hooks` section to your `composer.json` and add the hooks there. The previ
 
 ```json
 {
-  "hooks": {
-    "pre-commit": "phpunit",
-    "post-commit": "echo committed",
-    "pre-push": "phpunit && echo pushing!",
-    "...": "..."
+  "extra": {
+    "hooks": {
+      "pre-commit": "phpunit",
+      "post-commit": "echo committed",
+      "pre-push": "phpunit && echo pushing!",
+      "...": "..."
+    }
   }
 }
 ```
