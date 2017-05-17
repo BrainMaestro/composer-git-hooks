@@ -17,7 +17,8 @@ class Hook
         $json = json_decode($contents, true);
         $hooks = array_merge(
             isset($json['scripts']) ? $json['scripts'] : [],
-            isset($json['hooks']) ? $json['hooks'] : []
+            isset($json['hooks']) ? $json['hooks'] : [],
+            isset($json['extra']['hooks']) ? $json['extra']['hooks'] : []
         );
         $validHooks = [];
 
@@ -62,6 +63,6 @@ class Hook
            'prepare-commit-msg',
            'push-to-checkout',
            'update',
-       ]);
+        ]);
     }
 }

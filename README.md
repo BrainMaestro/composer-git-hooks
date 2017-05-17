@@ -5,15 +5,17 @@
 
 ## Install
 
-Add a `hooks` section to your `composer.json` and add the hooks there. The previous way of adding hooks to the `scripts` section of your `composer.json` is still supported, but this way is cleaner if you have many scripts.
+Add a `hooks` section to the `extra` section of your `composer.json` and add the hooks there. The previous way of adding hooks to the `scripts` section of your `composer.json` is still supported, but this way is cleaner if you have many scripts.
 
 ```json
 {
-  "hooks": {
-    "pre-commit": "phpunit",
-    "post-commit": "echo committed",
-    "pre-push": "phpunit && echo pushing!",
-    "...": "..."
+  "extra": {
+    "hooks": {
+      "pre-commit": "phpunit",
+      "post-commit": "echo committed",
+      "pre-push": "phpunit && echo pushing!",
+      "...": "..."
+    }
   }
 }
 ```
