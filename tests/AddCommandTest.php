@@ -76,8 +76,7 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
         $this->commandTester->execute([]);
 
         $this->assertContains('Skipped adding '. Hook::LOCK_FILE . ' to .gitignore', $this->commandTester->getDisplay());
-        passthru('grep -q ' . Hook::LOCK_FILE . ' .gitignore', $return);
-        $this->assertEquals(1, $return);
+        $this->assertFalse(strpos(file_get_contents('.gitignore'), Hook::LOCK_FILE));
     }
 
     /**
@@ -88,8 +87,7 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
         $this->commandTester->execute(['--ignore-lock' => true]);
 
         $this->assertContains('Added ' . Hook::LOCK_FILE . ' to .gitignore', $this->commandTester->getDisplay());
-        passthru('grep -q ' . Hook::LOCK_FILE . ' .gitignore', $return);
-        $this->assertEquals(0, $return);
+        $this->assertTrue(strpos(file_get_contents('.gitignore'), Hook::LOCK_FILE) !== false);
     }
 
     /**
@@ -98,14 +96,15 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
     public function it_uses_a_different_git_path_if_specified()
     {
         $gitDir = 'test-git-dir';
-        passthru("mkdir -p {$gitDir}/hooks");
+        mkdir("{$gitDir}/hooks", 0700, true);
         $this->commandTester->execute(['--git-dir' => $gitDir]);
 
         foreach (array_keys(self::$hooks) as $hook) {
             $this->assertTrue(file_exists("{$gitDir}/hooks/{$hook}"));
+            unlink("{$gitDir}/hooks/{$hook}");
         }
 
-        passthru("rm -rf {$gitDir}");
+        rmdir("{$gitDir}/hooks");
     }
 
     /**

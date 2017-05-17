@@ -27,7 +27,7 @@ trait PrepareHookTest
             file_put_contents("{$gitDir}/hooks/{$hook}", $script);
         }
     }
-    
+
     private static function prepare()
     {
         foreach (array_keys(self::$hooks) as $hook) {
@@ -40,6 +40,7 @@ trait PrepareHookTest
             unlink(Hook::LOCK_FILE);
         }
 
-        passthru('sed -i /' . Hook::LOCK_FILE . '/d .gitignore');
+        $ignoreContents = file_get_contents('.gitignore');
+        file_put_contents('.gitignore', str_replace(Hook::LOCK_FILE . PHP_EOL, '', $ignoreContents));
     }
 }
