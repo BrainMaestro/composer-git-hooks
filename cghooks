@@ -15,7 +15,7 @@ use BrainMaestro\GitHooks\Commands\ListCommand;
 use BrainMaestro\GitHooks\Commands\HookCommand;
 use Symfony\Component\Console\Application;
 
-$application = new Application('Composer Git Hooks', 'v1.1.0');
+$application = new Application('Composer Git Hooks', 'v2.0.1');
 
 $hooks = Hook::getValidHooks();
 $application->add(new AddCommand($hooks));
