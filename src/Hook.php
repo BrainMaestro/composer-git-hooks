@@ -22,8 +22,17 @@ class Hook
         );
         $validHooks = [];
 
+        //add customize hooks
+        $customizeHooks = isset($json['extra']['customize_hooks']) ?
+            $json['extra']['customize_hooks'] : [];
+        $customizeHooks = array_flip($customizeHooks);
+
         foreach ($hooks as $hook => $script) {
             if (array_key_exists($hook, self::getHooks())) {
+                $validHooks[$hook] = $script;
+            }
+
+            if (array_key_exists($hook, $customizeHooks)) {
                 $validHooks[$hook] = $script;
             }
         }
