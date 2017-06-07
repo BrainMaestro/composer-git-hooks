@@ -35,6 +35,11 @@ class AddCommand extends Command
     {
         $addedHooks = [];
         $gitDir = $input->getOption('git-dir');
+        $hookDir = "{$gitDir}/hooks";
+
+        if (! is_dir($hookDir)) {
+            mkdir($hookDir, 0700, true);
+        }
 
         foreach ($this->hooks as $hook => $script) {
             $filename = "{$gitDir}/hooks/{$hook}";

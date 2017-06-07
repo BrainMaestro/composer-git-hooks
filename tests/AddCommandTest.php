@@ -120,4 +120,25 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
             $this->assertFalse(file_exists(".git/hooks/{$hook}"));
         }
     }
+
+    /**
+     * @test
+     */
+    public function it_create_git_hooks_path_when_hooks_dir_not_exists()
+    {
+        $gitDirs = ['test-git-dir', '.git'];
+
+        foreach ($gitDirs as $gitDir) {
+            if (file_exists($hookDir = "{$gitDir}/hooks")) {
+                rmdir($hookDir);
+            }
+
+            $this->commandTester->execute(['--git-dir' => $gitDir]);
+
+            foreach (array_keys(self::$hooks) as $hook) {
+                $this->assertTrue(file_exists("{$gitDir}/hooks/{$hook}"));
+                unlink("{$gitDir}/hooks/{$hook}");
+            }
+        }
+    }
 }

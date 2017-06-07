@@ -31,6 +31,11 @@ class UpdateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $gitDir = $input->getOption('git-dir');
+        $hookDir = "{$gitDir}/hooks";
+
+        if (! is_dir($hookDir)) {
+            mkdir($hookDir, 0700, true);
+        }
 
         foreach ($this->hooks as $hook => $script) {
             $filename = "{$gitDir}/hooks/{$hook}";
