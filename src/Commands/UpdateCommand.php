@@ -34,7 +34,7 @@ class UpdateCommand extends Command
         $hookDir = "{$gitDir}/hooks";
 
         if (! is_dir($hookDir)) {
-            mkdir($hookDir);
+            mkdir($hookDir, 0700, true);
         }
 
         foreach ($this->hooks as $hook => $script) {
