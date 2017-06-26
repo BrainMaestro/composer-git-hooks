@@ -43,7 +43,7 @@ class UpdateCommand extends Command
             $operation = file_exists($filename) ? 'Updated' : 'Added';
             file_put_contents($filename, $script);
             chmod($filename, 0755);
-            $output->writeln("{$operation} '{$hook}' hook");
+            $output->writeln("{$operation} <info>{$hook}</info> hook");
         }
     }
 }

@@ -28,7 +28,7 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
         $this->commandTester->execute([]);
 
         foreach (array_keys(self::$hooks) as $hook) {
-            $this->assertContains("Added '{$hook}' hook", $this->commandTester->getDisplay());
+            $this->assertContains("Added {$hook} hook", $this->commandTester->getDisplay());
         }
     }
 
@@ -41,7 +41,7 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
         $this->commandTester->execute([]);
 
         foreach (array_keys(self::$hooks) as $hook) {
-            $this->assertContains("'{$hook}' already exists", $this->commandTester->getDisplay());
+            $this->assertContains("{$hook} already exists", $this->commandTester->getDisplay());
         }
     }
 

@@ -30,7 +30,7 @@ class RemoveCommandTester extends \PHPUnit_Framework_TestCase
         $this->commandTester->execute([]);
 
         foreach (array_keys(self::$hooks) as $hook) {
-            $this->assertContains("Removed '{$hook}' hook", $this->commandTester->getDisplay());
+            $this->assertContains("Removed {$hook} hook", $this->commandTester->getDisplay());
         }
     }
 
@@ -41,7 +41,7 @@ class RemoveCommandTester extends \PHPUnit_Framework_TestCase
             $this->assertEquals(0, $return);
 
             $this->commandTester->execute(['hooks' => [$hook]]);
-            $this->assertContains("Removed '{$hook}' hook", $this->commandTester->getDisplay());
+            $this->assertContains("Removed {$hook} hook", $this->commandTester->getDisplay());
 
             passthru("grep -q {$hook} " . Hook::LOCK_FILE, $return);
             $this->assertEquals(1, $return);
@@ -55,7 +55,7 @@ class RemoveCommandTester extends \PHPUnit_Framework_TestCase
     {
         foreach (array_keys(self::$hooks) as $hook) {
             $this->commandTester->execute(['hooks' => [$hook]]);
-            $this->assertContains("Removed '{$hook}' hook", $this->commandTester->getDisplay());
+            $this->assertContains("Removed {$hook} hook", $this->commandTester->getDisplay());
         }
     }
 
@@ -66,7 +66,7 @@ class RemoveCommandTester extends \PHPUnit_Framework_TestCase
     {
         $hook = 'test-hook';
         $this->commandTester->execute(['hooks' => [$hook]]);
-        $this->assertContains("Skipped '{$hook}' hook - not present in lock file", $this->commandTester->getDisplay());
+        $this->assertContains("Skipped {$hook} hook - not present in lock file", $this->commandTester->getDisplay());
     }
 
     /**
@@ -80,7 +80,7 @@ class RemoveCommandTester extends \PHPUnit_Framework_TestCase
         $this->commandTester = new CommandTester($command);
 
         $this->commandTester->execute(['hooks' => [$hook], '--force' => true]);
-        $this->assertContains("Removed '{$hook}' hook", $this->commandTester->getDisplay());
+        $this->assertContains("Removed {$hook} hook", $this->commandTester->getDisplay());
     }
 
     /**
@@ -96,7 +96,7 @@ class RemoveCommandTester extends \PHPUnit_Framework_TestCase
         $this->commandTester->execute(['--git-dir' => $gitDir]);
 
         foreach (array_keys(self::$hooks) as $hook) {
-            $this->assertContains("Removed '{$hook}' hook", $this->commandTester->getDisplay());
+            $this->assertContains("Removed {$hook} hook", $this->commandTester->getDisplay());
         }
 
         $this->assertTrue(self::isDirEmpty("{$gitDir}/hooks"));

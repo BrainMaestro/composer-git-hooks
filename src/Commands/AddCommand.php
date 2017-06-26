@@ -45,29 +45,29 @@ class AddCommand extends Command
             $filename = "{$gitDir}/hooks/{$hook}";
 
             if (file_exists($filename)) {
-                $output->writeln("'{$hook}' already exists");
+                $output->writeln("<comment>{$hook} already exists</comment>");
             } else {
                 file_put_contents($filename, $script);
                 chmod($filename, 0755);
-                $output->writeln("Added '{$hook}' hook");
+                $output->writeln("Added <info>{$hook}</info> hook");
                 $addedHooks[] = $hook;
             }
         }
 
         if (! count($addedHooks)) {
-            $output->writeln('No hooks were added. Try updating');
+            $output->writeln('<error>No hooks were added. Try updating</error>');
             return;
         }
 
         if ($input->getOption('no-lock')) {
-            $output->writeln('Skipped creating a '. Hook::LOCK_FILE . ' file');
+            $output->writeln('<comment>Skipped creating a '. Hook::LOCK_FILE . ' file</comment?');
             return;
         }
 
         $this->addLockFile($addedHooks, $output);
 
         if (! $input->getOption('ignore-lock')) {
-            $output->writeln('Skipped adding '. Hook::LOCK_FILE . ' to .gitignore');
+            $output->writeln('<comment>Skipped adding '. Hook::LOCK_FILE . ' to .gitignore</comment>');
             return;
         }
 
@@ -77,7 +77,7 @@ class AddCommand extends Command
     private function addLockFile($hooks, $output)
     {
         file_put_contents(Hook::LOCK_FILE, json_encode($hooks));
-        $output->writeln('Created ' . Hook::LOCK_FILE . ' file');
+        $output->writeln('<comment>Created ' . Hook::LOCK_FILE . ' file</comment>');
     }
 
     private function ignoreLockFile($output)
@@ -85,7 +85,7 @@ class AddCommand extends Command
         passthru('grep -q ' . Hook::LOCK_FILE . ' .gitignore', $return);
         if ($return !== 0) {
             passthru('echo ' . Hook::LOCK_FILE . ' >> .gitignore');
-            $output->writeln('Added ' . Hook::LOCK_FILE . ' to .gitignore');
+            $output->writeln('<comment>Added ' . Hook::LOCK_FILE . ' to .gitignore</comment>');
         }
     }
 }

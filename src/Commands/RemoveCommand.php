@@ -52,16 +52,16 @@ class RemoveCommand extends Command
             $filename = "{$gitDir}/hooks/{$hook}";
 
             if (! array_key_exists($hook, $lockFileHooks) && ! $input->getOption('force')) {
-                $output->writeln("Skipped '{$hook}' hook - not present in lock file");
+                $output->writeln("<comment>Skipped {$hook} hook - not present in lock file</comment>");
                 continue;
             }
 
             if (array_key_exists($hook, $this->hooks) && is_file($filename)) {
                 unlink($filename);
-                $output->writeln("Removed '{$hook}' hook");
+                $output->writeln("Removed <info>{$hook}</info> hook");
                 unset($lockFileHooks[$hook]);
             } else {
-                $output->writeln("'{$hook}' hook does not exist");
+                $output->writeln("<error>{$hook} hook does not exist</error>");
             }
         }
 

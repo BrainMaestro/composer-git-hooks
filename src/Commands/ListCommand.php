@@ -36,7 +36,7 @@ class ListCommand extends Command
             $filename = "{$gitDir}/hooks/{$hook}";
 
             if (is_file($filename)) {
-                $output->writeln($hook);
+                $output->writeln("<info>{$hook}</info>");
             }
         }
     }
