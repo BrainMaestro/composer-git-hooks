@@ -35,6 +35,25 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_adds_shebang_to_hooks_on_windows()
+    {
+        if(strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN')
+            $this->markTestSkipped('This test is only relevant on windows. You\'re running Linux.');
+
+        $this->commandTester->execute([]);
+
+        foreach (array_keys(self::$hooks) as $hook) {
+            $this->assertContains("Added {$hook} hook", $this->commandTester->getDisplay());
+
+            $content = file_get_contents(".git/hooks/" . $hook);
+            $this->assertNotFalse(strpos($content, "#!/bin/bash"));
+            $this->assertEquals(strpos($content, "#!/bin/bash"), 0);
+        }
+    }
+
+    /**
+     * @test
+     */
     public function it_does_not_add_hooks_that_already_exist()
     {
         self::createHooks();

@@ -37,14 +37,17 @@ class RemoveCommandTester extends \PHPUnit_Framework_TestCase
     public function it_removes_removed_hooks_from_the_lock_file()
     {
         foreach (array_keys(self::$hooks) as $hook) {
-            passthru("grep -q {$hook} " . Hook::LOCK_FILE, $return);
+            $contents = file_get_contents('.gitignore');
+            $return = strpos($contents, Hook::LOCK_FILE);
+
             $this->assertEquals(0, $return);
 
             $this->commandTester->execute(['hooks' => [$hook]]);
             $this->assertContains("Removed {$hook} hook", $this->commandTester->getDisplay());
 
-            passthru("grep -q {$hook} " . Hook::LOCK_FILE, $return);
-            $this->assertEquals(1, $return);
+            $contents = file_get_contents('.gitignore');
+            $return = strpos($contents, Hook::LOCK_FILE);
+            $this->assertFalse($return);
         }
     }
 
@@ -66,7 +69,9 @@ class RemoveCommandTester extends \PHPUnit_Framework_TestCase
     {
         $hook = 'test-hook';
         $this->commandTester->execute(['hooks' => [$hook]]);
-        $this->assertContains("Skipped {$hook} hook - not present in lock file", $this->commandTester->getDisplay());
+        $this->assertContains(
+            "Skipped {$hook} hook - not present in lock file", $this->commandTester->getDisplay()
+        );
     }
 
     /**
@@ -89,7 +94,9 @@ class RemoveCommandTester extends \PHPUnit_Framework_TestCase
     public function it_uses_a_different_git_path_if_specified()
     {
         $gitDir = 'test-git-dir';
-        passthru("mkdir -p {$gitDir}/hooks");
+
+        mkdir("{$gitDir}/hooks", 0777, true);
+
         self::createHooks($gitDir);
         $this->assertFalse(self::isDirEmpty("{$gitDir}/hooks"));
 
@@ -100,7 +107,8 @@ class RemoveCommandTester extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertTrue(self::isDirEmpty("{$gitDir}/hooks"));
-        passthru("rm -rf {$gitDir}");
+
+        $this->recursive_rmdir($gitDir);
     }
 
     public function tearDown()

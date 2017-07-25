@@ -47,6 +47,12 @@ class AddCommand extends Command
             if (file_exists($filename)) {
                 $output->writeln("<comment>{$hook} already exists</comment>");
             } else {
+                if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                    // On windows we need to add a SHEBANG
+                    // See: https://github.com/BrainMaestro/composer-git-hooks/issues/7
+                    $script = '#!/bin/bash' . PHP_EOL . $script;
+                }
+
                 file_put_contents($filename, $script);
                 chmod($filename, 0755);
                 $output->writeln("Added <info>{$hook}</info> hook");
@@ -82,9 +88,11 @@ class AddCommand extends Command
 
     private function ignoreLockFile($output)
     {
-        passthru('grep -q ' . Hook::LOCK_FILE . ' .gitignore', $return);
-        if ($return !== 0) {
-            passthru('echo ' . Hook::LOCK_FILE . ' >> .gitignore');
+        $contents = file_get_contents('.gitignore');
+        $return = strpos($contents, Hook::LOCK_FILE);
+
+        if ($return === false) {
+            file_put_contents('.gitignore', Hook::LOCK_FILE . PHP_EOL, FILE_APPEND);
             $output->writeln('<comment>Added ' . Hook::LOCK_FILE . ' to .gitignore</comment>');
         }
     }

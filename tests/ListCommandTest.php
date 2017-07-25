@@ -37,7 +37,9 @@ class ListCommandTester extends \PHPUnit_Framework_TestCase
     public function it_uses_a_different_git_path_if_specified()
     {
         $gitDir = 'test-git-dir';
-        passthru("mkdir -p {$gitDir}/hooks");
+
+        mkdir("{$gitDir}/hooks", 0777, true);
+
         self::createHooks($gitDir);
 
         $this->commandTester->execute(['--git-dir' => $gitDir]);
@@ -46,6 +48,6 @@ class ListCommandTester extends \PHPUnit_Framework_TestCase
             $this->assertContains($hook, $this->commandTester->getDisplay());
         }
 
-        passthru("rm -rf {$gitDir}");
+        $this->recursive_rmdir($gitDir);
     }
 }
