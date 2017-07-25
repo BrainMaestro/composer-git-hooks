@@ -47,6 +47,12 @@ class AddCommand extends Command
             if (file_exists($filename)) {
                 $output->writeln("<comment>{$hook} already exists</comment>");
             } else {
+                if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                    // On windows we need to add a SHEBANG
+                    // See: https://github.com/BrainMaestro/composer-git-hooks/issues/7
+                    $script = '#!/bin/bash' . PHP_EOL . $script;
+                }
+
                 file_put_contents($filename, $script);
                 chmod($filename, 0755);
                 $output->writeln("Added <info>{$hook}</info> hook");
