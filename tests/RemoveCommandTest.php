@@ -37,19 +37,17 @@ class RemoveCommandTester extends \PHPUnit_Framework_TestCase
     public function it_removes_removed_hooks_from_the_lock_file()
     {
         foreach (array_keys(self::$hooks) as $hook) {
-            $command = "grep -q {$hook} " . Hook::LOCK_FILE;
-            if (self::$isWin) {
-                $command = "findstr \"{$hook}\" \"" . Hook::LOCK_FILE . "\"";
-            }
-            passthru($command, $return);
+            $contents = file_get_contents('.gitignore');
+            $return = strpos($contents, Hook::LOCK_FILE);
 
             $this->assertEquals(0, $return);
 
             $this->commandTester->execute(['hooks' => [$hook]]);
             $this->assertContains("Removed {$hook} hook", $this->commandTester->getDisplay());
 
-            passthru($command, $return);
-            $this->assertEquals(1, $return);
+            $contents = file_get_contents('.gitignore');
+            $return = strpos($contents, Hook::LOCK_FILE);
+            $this->assertFalse($return);
         }
     }
 
@@ -71,7 +69,9 @@ class RemoveCommandTester extends \PHPUnit_Framework_TestCase
     {
         $hook = 'test-hook';
         $this->commandTester->execute(['hooks' => [$hook]]);
-        $this->assertContains("Skipped {$hook} hook - not present in lock file", $this->commandTester->getDisplay());
+        $this->assertContains(
+            "Skipped {$hook} hook - not present in lock file", $this->commandTester->getDisplay()
+        );
     }
 
     /**
@@ -95,11 +95,7 @@ class RemoveCommandTester extends \PHPUnit_Framework_TestCase
     {
         $gitDir = 'test-git-dir';
 
-        $command = "mkdir -p {$gitDir}/hooks";
-        if (self::$isWin) {
-            $command = "mkdir {$gitDir}\hooks";
-        }
-        passthru($command);
+        mkdir("{$gitDir}/hooks", 0777, true);
 
         self::createHooks($gitDir);
         $this->assertFalse(self::isDirEmpty("{$gitDir}/hooks"));
@@ -112,11 +108,7 @@ class RemoveCommandTester extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue(self::isDirEmpty("{$gitDir}/hooks"));
 
-        $command = "rm -rf {$gitDir}";
-        if (self::$isWin) {
-            $command = "rd /s /q \"{$gitDir}\"";
-        }
-        passthru($command);
+        $this->recursive_rmdir($gitDir);
     }
 
     public function tearDown()

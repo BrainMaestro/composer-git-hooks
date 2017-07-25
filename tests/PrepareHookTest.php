@@ -11,8 +11,6 @@ trait PrepareHookTest
         'test-post-commit' => 'echo after-commit',
     ];
 
-    protected static $isWin = false;
-
     public function setUp()
     {
         self::prepare();
@@ -25,14 +23,8 @@ trait PrepareHookTest
 
     public static function createHooks($gitDir = '.git')
     {
-        self::$isWin = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
-
         if (!is_dir("{$gitDir}/hooks")) {
-            $command = "mkdir -p {$gitDir}/hooks";
-            if (self::$isWin) {
-                $command = "mkdir {$gitDir}\hooks";
-            }
-            passthru($command);
+            mkdir("{$gitDir}/hooks", 0777, true);
         }
 
         foreach (self::$hooks as $hook => $script) {
@@ -42,8 +34,6 @@ trait PrepareHookTest
 
     private static function prepare()
     {
-        self::$isWin = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
-
         foreach (array_keys(self::$hooks) as $hook) {
             if (file_exists(".git/hooks/{$hook}")) {
                 unlink(".git/hooks/{$hook}");
@@ -55,6 +45,32 @@ trait PrepareHookTest
         }
 
         $ignoreContents = file_get_contents('.gitignore');
-        file_put_contents('.gitignore', str_replace(Hook::LOCK_FILE . ' '. PHP_EOL, '', $ignoreContents));
+        file_put_contents('.gitignore', str_replace(Hook::LOCK_FILE . PHP_EOL, '', $ignoreContents));
+    }
+
+    /**
+     * Since PHP does not support the recursive deletion of
+     * a directory and its entire contents we need a helper here.
+     *
+     * @see https://stackoverflow.com/a/3338133
+     *
+     * @param $dir string
+     */
+    protected function recursive_rmdir($dir)
+    {
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (is_dir($dir."/".$object))
+                        $this->recursive_rmdir($dir."/".$object);
+                    else
+                        unlink($dir."/".$object);
+                }
+            }
+
+            rmdir($dir);
+        }
     }
 }

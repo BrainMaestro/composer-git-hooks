@@ -37,7 +37,7 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
      */
     public function it_adds_shebang_to_hooks_on_windows()
     {
-        if(!self::$isWin)
+        if(strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN')
             $this->markTestSkipped('This test is only relevant on windows. You\'re running Linux.');
 
         $this->commandTester->execute([]);

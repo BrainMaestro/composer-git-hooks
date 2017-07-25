@@ -52,11 +52,7 @@ class UpdateCommandTester extends \PHPUnit_Framework_TestCase
     {
         $gitDir = 'test-git-dir';
 
-        $command = "mkdir -p {$gitDir}/hooks";
-        if (self::$isWin) {
-            $command = "mkdir {$gitDir}\hooks";
-        }
-        passthru($command);
+        mkdir("{$gitDir}/hooks", 0777, true);
 
         $this->commandTester->execute(['--git-dir' => $gitDir]);
 
@@ -64,11 +60,7 @@ class UpdateCommandTester extends \PHPUnit_Framework_TestCase
             $this->assertTrue(file_exists("{$gitDir}/hooks/{$hook}"));
         }
 
-        $command = "rm -rf {$gitDir}";
-        if (self::$isWin) {
-            $command = "rd /s /q \"{$gitDir}\"";
-        }
-        passthru($command);
+        $this->recursive_rmdir($gitDir);
     }
 
     /**

@@ -38,11 +38,7 @@ class ListCommandTester extends \PHPUnit_Framework_TestCase
     {
         $gitDir = 'test-git-dir';
 
-        $command = "mkdir -p {$gitDir}/hooks";
-        if (self::$isWin) {
-            $command = "mkdir {$gitDir}\hooks";
-        }
-        passthru($command);
+        mkdir("{$gitDir}/hooks", 0777, true);
 
         self::createHooks($gitDir);
 
@@ -52,10 +48,6 @@ class ListCommandTester extends \PHPUnit_Framework_TestCase
             $this->assertContains($hook, $this->commandTester->getDisplay());
         }
 
-        $command = "rm -rf {$gitDir}";
-        if (self::$isWin) {
-            $command = "rd /s /q \"{$gitDir}\"";
-        }
-        passthru($command);
+        $this->recursive_rmdir($gitDir);
     }
 }
