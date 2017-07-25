@@ -51,14 +51,24 @@ class UpdateCommandTester extends \PHPUnit_Framework_TestCase
     public function it_uses_a_different_git_path_if_specified()
     {
         $gitDir = 'test-git-dir';
-        passthru("mkdir -p {$gitDir}/hooks");
+
+        $command = "mkdir -p {$gitDir}/hooks";
+        if (self::$isWin) {
+            $command = "mkdir {$gitDir}\hooks";
+        }
+        passthru($command);
+
         $this->commandTester->execute(['--git-dir' => $gitDir]);
 
         foreach (array_keys(self::$hooks) as $hook) {
             $this->assertTrue(file_exists("{$gitDir}/hooks/{$hook}"));
         }
 
-        passthru("rm -rf {$gitDir}");
+        $command = "rm -rf {$gitDir}";
+        if (self::$isWin) {
+            $command = "rd /s /q \"{$gitDir}\"";
+        }
+        passthru($command);
     }
 
     /**

@@ -11,6 +11,8 @@ trait PrepareHookTest
         'test-post-commit' => 'echo after-commit',
     ];
 
+    protected static $isWin = false;
+
     public function setUp()
     {
         self::prepare();
@@ -23,6 +25,16 @@ trait PrepareHookTest
 
     public static function createHooks($gitDir = '.git')
     {
+        self::$isWin = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+
+        if (!is_dir("{$gitDir}/hooks")) {
+            $command = "mkdir -p {$gitDir}/hooks";
+            if (self::$isWin) {
+                $command = "mkdir {$gitDir}\hooks";
+            }
+            passthru($command);
+        }
+
         foreach (self::$hooks as $hook => $script) {
             file_put_contents("{$gitDir}/hooks/{$hook}", $script);
         }
@@ -30,6 +42,8 @@ trait PrepareHookTest
 
     private static function prepare()
     {
+        self::$isWin = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+
         foreach (array_keys(self::$hooks) as $hook) {
             if (file_exists(".git/hooks/{$hook}")) {
                 unlink(".git/hooks/{$hook}");
@@ -41,6 +55,6 @@ trait PrepareHookTest
         }
 
         $ignoreContents = file_get_contents('.gitignore');
-        file_put_contents('.gitignore', str_replace(Hook::LOCK_FILE . PHP_EOL, '', $ignoreContents));
+        file_put_contents('.gitignore', str_replace(Hook::LOCK_FILE . ' '. PHP_EOL, '', $ignoreContents));
     }
 }
