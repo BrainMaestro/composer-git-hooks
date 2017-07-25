@@ -82,7 +82,12 @@ class AddCommand extends Command
 
     private function ignoreLockFile($output)
     {
-        passthru('grep -q ' . Hook::LOCK_FILE . ' .gitignore', $return);
+        $command = 'grep -q ' . Hook::LOCK_FILE . ' .gitignore';
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $command = 'findstr "' . Hook::LOCK_FILE . '" .gitignore';
+        }
+        passthru($command, $return);
+
         if ($return !== 0) {
             passthru('echo ' . Hook::LOCK_FILE . ' >> .gitignore');
             $output->writeln('<comment>Added ' . Hook::LOCK_FILE . ' to .gitignore</comment>');
