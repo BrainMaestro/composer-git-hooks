@@ -45,6 +45,23 @@ class UpdateCommandTester extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function it_adds_shebang_to_hooks_on_windows()
+    {
+        if(strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN')
+            $this->markTestSkipped('This test is only relevant on windows. You\'re running Linux.');
+
+        self::createHooks();
+        $this->commandTester->execute([]);
+
+        foreach (array_keys(self::$hooks) as $hook) {
+            $this->assertContains("Updated {$hook} hook", $this->commandTester->getDisplay());
+
+            $content = file_get_contents(".git/hooks/" . $hook);
+            $this->assertNotFalse(strpos($content, "#!/bin/bash"));
+            $this->assertEquals(strpos($content, "#!/bin/bash"), 0);
+        }
+    }
+
     /**
      * @test
      */
