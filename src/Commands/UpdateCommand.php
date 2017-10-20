@@ -25,12 +25,14 @@ class UpdateCommand extends Command
             ->setDescription('Update git hooks specified in the composer config')
             ->setHelp('This command allows you to update git hooks')
             ->addOption('git-dir', 'g', InputOption::VALUE_REQUIRED, 'Path to git directory', '.git')
+            ->addOption('force-win', null, InputOption::VALUE_NONE, 'Force windows bash compatibility')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $gitDir = $input->getOption('git-dir');
+        $forceWindows = $input->getOption('force-win');
         $hookDir = "{$gitDir}/hooks";
 
         if (! is_dir($hookDir)) {
@@ -42,7 +44,7 @@ class UpdateCommand extends Command
 
             $operation = file_exists($filename) ? 'Updated' : 'Added';
 
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            if ($forceWindows || strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
                 // On windows we need to add a SHEBANG
                 // See: https://github.com/BrainMaestro/composer-git-hooks/issues/7
                 $script = '#!/bin/bash' . PHP_EOL . $script;
