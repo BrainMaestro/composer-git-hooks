@@ -4,4 +4,4 @@ COPY . /app
 
 RUN composer install
 
-CMD ["/bin/sh", "./docker.sh"]
+RUN ./vendor/bin/phpunit
