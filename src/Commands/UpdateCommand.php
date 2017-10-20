@@ -32,7 +32,7 @@ class UpdateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $gitDir = $input->getOption('git-dir');
-        $forceWindows = $input->getOption('force-win') === true;
+        $forceWindows = $input->getOption('force-win');
         $hookDir = "{$gitDir}/hooks";
 
         if (! is_dir($hookDir)) {
