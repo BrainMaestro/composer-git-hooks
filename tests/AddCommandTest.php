@@ -161,4 +161,20 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
 
         rmdir($hookDir);
     }
+
+    /**
+     * @test
+     */
+    public function it_adds_win_bash_compat_if_the_force_windows_option_is_passed()
+    {
+        $this->commandTester->execute(['--force-win' => true]);
+
+        foreach (array_keys(self::$hooks) as $hook) {
+            $this->assertContains("Added {$hook} hook", $this->commandTester->getDisplay());
+
+            $content = file_get_contents(".git/hooks/" . $hook);
+            $this->assertNotFalse(strpos($content, "#!/bin/bash"));
+            $this->assertEquals(strpos($content, "#!/bin/bash"), 0);
+        }
+    }
 }

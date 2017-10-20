@@ -69,6 +69,7 @@ Option | Description | Command
 ------ | ----------- | -------
 `no-lock` | Do not create a lock file | `cghooks add --no-lock`
 `ignore-lock` | Add the lock file to .gitignore | `cghooks add --ignore-lock`
+`force-win` | Force windows bash compatibility | `cghooks add --force-win`
 
 The `lock` file contains a list of all added hooks.
 

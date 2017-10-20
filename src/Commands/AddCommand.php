@@ -28,6 +28,7 @@ class AddCommand extends Command
             ->addOption('no-lock', 'l', InputOption::VALUE_NONE, 'Do not create a lock file')
             ->addOption('ignore-lock', 'i', InputOption::VALUE_NONE, 'Add the lock file to .gitignore')
             ->addOption('git-dir', 'g', InputOption::VALUE_REQUIRED, 'Path to git directory', '.git')
+            ->addOption('force-win', null, InputOption::VALUE_NONE, 'Force windows bash compatibility')
         ;
     }
 
@@ -35,6 +36,7 @@ class AddCommand extends Command
     {
         $addedHooks = [];
         $gitDir = $input->getOption('git-dir');
+        $forceWindows = $input->getOption('force-win') === true;
         $hookDir = "{$gitDir}/hooks";
 
         if (! is_dir($hookDir)) {
@@ -47,7 +49,7 @@ class AddCommand extends Command
             if (file_exists($filename)) {
                 $output->writeln("<comment>{$hook} already exists</comment>");
             } else {
-                if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                if ($forceWindows || strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
                     // On windows we need to add a SHEBANG
                     // See: https://github.com/BrainMaestro/composer-git-hooks/issues/7
                     $script = '#!/bin/bash' . PHP_EOL . $script;
