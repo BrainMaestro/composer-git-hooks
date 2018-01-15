@@ -1,5 +1,18 @@
 language: php
-php:
-  - '7.0'
-  - '7.1'
-before_script: composer install
+
+matrix:
+    include:
+        - php: 5.6
+        - php: 7.0
+        - php: 7.1
+    fast_finish: true
+
+before_install:
+  - composer self-update
+
+install:
+  - composer update --no-interaction
+
+script:
+  - composer validate --strict --no-check-lock
+  - phpunit
