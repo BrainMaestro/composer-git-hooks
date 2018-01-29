@@ -9,11 +9,13 @@ class Hook
     /**
      * Get scripts section of the composer config file.
      *
+	 * @param	$dir	string	dir where to look for composer.json
+	 *
      * @return array
      */
-    public static function getValidHooks()
+    public static function getValidHooks($dir)
     {
-        $contents = file_get_contents('composer.json');
+        $contents = file_get_contents("{$dir}/composer.json");
         $json = json_decode($contents, true);
         $hooks = array_merge(
             isset($json['scripts']) ? $json['scripts'] : [],

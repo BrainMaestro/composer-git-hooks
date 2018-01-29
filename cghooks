@@ -1,10 +1,10 @@
 #!/usr/bin/env php
 <?php
-
+$dir = getcwd();
 if (is_file($autoload = __DIR__ . '/vendor/autoload.php')) {
-    require $autoload;
+    require_once $autoload;
 } elseif (is_file($autoload = __DIR__ . '/../../autoload.php')) {
-    require $autoload;
+    require_once $autoload;
 } else {
     fwrite(STDERR,
         'You must set up the project dependencies, run the following commands:' . PHP_EOL .
@@ -24,7 +24,7 @@ use Symfony\Component\Console\Application;
 
 $application = new Application('Composer Git Hooks', 'v2.2.0');
 
-$hooks = Hook::getValidHooks();
+$hooks = Hook::getValidHooks($dir);
 $application->add(new AddCommand($hooks));
 $application->add(new UpdateCommand($hooks));
 $application->add(new RemoveCommand($hooks));
