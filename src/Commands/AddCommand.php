@@ -36,6 +36,7 @@ class AddCommand extends Command
     {
         $addedHooks = [];
         $gitDir = $input->getOption('git-dir');
+        $force = $input->getOption('force');
         $forceWindows = $input->getOption('force-win');
         $hookDir = "{$gitDir}/hooks";
 
@@ -45,8 +46,9 @@ class AddCommand extends Command
 
         foreach ($this->hooks as $hook => $script) {
             $filename = "{$gitDir}/hooks/{$hook}";
+            $fileExists = file_exists($filename);
 
-            if (file_exists($filename)) {
+            if (! $force && $fileExists) {
                 $output->writeln("<comment>{$hook} already exists</comment>");
             } else {
                 if ($forceWindows || strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
@@ -57,7 +59,10 @@ class AddCommand extends Command
 
                 file_put_contents($filename, $script);
                 chmod($filename, 0755);
-                $output->writeln("Added <info>{$hook}</info> hook");
+                $output->writeln($fileExists
+                    ? "Overwrote <info>{$hook}</info> hook"
+                    : "Added <info>{$hook}</info> hook"
+                );
                 $addedHooks[] = $hook;
             }
         }

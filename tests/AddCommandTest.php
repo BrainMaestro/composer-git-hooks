@@ -67,6 +67,19 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_overrides_hooks_that_already_exist()
+    {
+        self::createHooks();
+        $this->commandTester->execute(['--force' => true]);
+
+        foreach (array_keys(self::$hooks) as $hook) {
+            $this->assertContains("Overwrote {$hook} hook", $this->commandTester->getDisplay());
+        }
+    }
+
+    /**
+     * @test
+     */
     public function it_correctly_creates_the_hook_lock_file()
     {
         $this->commandTester->execute([]);
