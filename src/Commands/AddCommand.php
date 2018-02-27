@@ -68,7 +68,7 @@ class AddCommand extends Command
         }
 
         if ($input->getOption('no-lock')) {
-            $output->writeln('<comment>Skipped creating a '. Hook::LOCK_FILE . ' file</comment?');
+            $output->writeln('<comment>Skipped creating a '. Hook::LOCK_FILE . ' file</comment>');
             return;
         }
 
