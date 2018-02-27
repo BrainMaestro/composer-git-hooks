@@ -73,7 +73,7 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
         $this->commandTester->execute(['--force' => true]);
 
         foreach (array_keys(self::$hooks) as $hook) {
-            $this->assertContains("{$hook} overridden", $this->commandTester->getDisplay());
+            $this->assertContains("Overwrote {$hook} hook", $this->commandTester->getDisplay());
         }
     }
 
