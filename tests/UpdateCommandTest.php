@@ -4,10 +4,11 @@ namespace BrainMaestro\GitHooks\Tests;
 
 use BrainMaestro\GitHooks\Commands\UpdateCommand;
 use BrainMaestro\GitHooks\Hook;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class UpdateCommandTester extends \PHPUnit_Framework_TestCase
+class UpdateCommandTester extends TestCase
 {
     use PrepareHookTest;
 
@@ -74,7 +75,7 @@ class UpdateCommandTester extends \PHPUnit_Framework_TestCase
         $this->commandTester->execute(['--git-dir' => $gitDir]);
 
         foreach (array_keys(self::$hooks) as $hook) {
-            $this->assertTrue(file_exists("{$gitDir}/hooks/{$hook}"));
+            $this->assertFileExists("{$gitDir}/hooks/{$hook}");
         }
 
         $this->recursive_rmdir($gitDir);
@@ -95,7 +96,7 @@ class UpdateCommandTester extends \PHPUnit_Framework_TestCase
         $this->commandTester->execute(['--git-dir' => $gitDir]);
 
         foreach (array_keys(self::$hooks) as $hook) {
-            $this->assertTrue(file_exists("{$gitDir}/hooks/{$hook}"));
+            $this->assertFileExists("{$gitDir}/hooks/{$hook}");
             unlink("{$gitDir}/hooks/{$hook}");
         }
 

@@ -3,10 +3,11 @@
 namespace BrainMaestro\GitHooks\Tests;
 
 use BrainMaestro\GitHooks\Commands\ListCommand;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class ListCommandTester extends \PHPUnit_Framework_TestCase
+class ListCommandTester extends TestCase
 {
     use PrepareHookTest;
 

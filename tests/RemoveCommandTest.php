@@ -4,10 +4,11 @@ namespace BrainMaestro\GitHooks\Tests;
 
 use BrainMaestro\GitHooks\Commands\RemoveCommand;
 use BrainMaestro\GitHooks\Hook;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class RemoveCommandTester extends \PHPUnit_Framework_TestCase
+class RemoveCommandTester extends TestCase
 {
     use PrepareHookTest;
 
