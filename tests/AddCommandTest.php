@@ -4,10 +4,11 @@ namespace BrainMaestro\GitHooks\Tests;
 
 use BrainMaestro\GitHooks\Commands\AddCommand;
 use BrainMaestro\GitHooks\Hook;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class AddCommandTester extends \PHPUnit_Framework_TestCase
+class AddCommandTester extends TestCase
 {
     use PrepareHookTest;
 
@@ -85,7 +86,7 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
         $this->commandTester->execute([]);
 
         $this->assertContains('Created '. Hook::LOCK_FILE . ' file', $this->commandTester->getDisplay());
-        $this->assertTrue(file_exists(Hook::LOCK_FILE));
+        $this->assertFileExists(Hook::LOCK_FILE);
         $this->assertEquals(json_encode(array_keys(self::$hooks)), file_get_contents(Hook::LOCK_FILE));
     }
 
@@ -97,7 +98,7 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
         $this->commandTester->execute(['--no-lock' => true]);
 
         $this->assertContains('Skipped creating a '. Hook::LOCK_FILE . ' file', $this->commandTester->getDisplay());
-        $this->assertFalse(file_exists(Hook::LOCK_FILE));
+        $this->assertFileNotExists(Hook::LOCK_FILE);
     }
 
     /**
@@ -132,7 +133,7 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
         $this->commandTester->execute(['--git-dir' => $gitDir]);
 
         foreach (array_keys(self::$hooks) as $hook) {
-            $this->assertTrue(file_exists("{$gitDir}/hooks/{$hook}"));
+            $this->assertFileExists("{$gitDir}/hooks/{$hook}");
             unlink("{$gitDir}/hooks/{$hook}");
         }
 
@@ -149,7 +150,7 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
 
         $this->assertContains('No hooks were added. Try updating', $commandTester->getDisplay());
         foreach (array_keys(self::$hooks) as $hook) {
-            $this->assertFalse(file_exists(".git/hooks/{$hook}"));
+            $this->assertFileNotExists(".git/hooks/{$hook}");
         }
     }
 
@@ -168,7 +169,7 @@ class AddCommandTester extends \PHPUnit_Framework_TestCase
         $this->commandTester->execute(['--git-dir' => $gitDir]);
 
         foreach (array_keys(self::$hooks) as $hook) {
-            $this->assertTrue(file_exists("{$gitDir}/hooks/{$hook}"));
+            $this->assertFileExists("{$gitDir}/hooks/{$hook}");
             unlink("{$gitDir}/hooks/{$hook}");
         }
 
