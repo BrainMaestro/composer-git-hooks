@@ -71,7 +71,8 @@ class RemoveCommandTester extends TestCase
         $hook = 'test-hook';
         $this->commandTester->execute(['hooks' => [$hook]]);
         $this->assertContains(
-            "Skipped {$hook} hook - not present in lock file", $this->commandTester->getDisplay()
+            "Skipped {$hook} hook - not present in lock file",
+            $this->commandTester->getDisplay()
         );
     }
 

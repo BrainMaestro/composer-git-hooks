@@ -63,10 +63,11 @@ trait PrepareHookTest
 
             foreach ($objects as $object) {
                 if ($object != "." && $object != "..") {
-                    if (is_dir($dir."/".$object))
+                    if (is_dir($dir."/".$object)) {
                         $this->recursive_rmdir($dir."/".$object);
-                    else
+                    } else {
                         unlink($dir."/".$object);
+                    }
                 }
             }
 

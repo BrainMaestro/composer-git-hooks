@@ -11,7 +11,9 @@ class HookCommandTester extends TestCase
 {
     use PrepareHookTest;
 
-    public function setUp() {}
+    public function setUp()
+    {
+    }
 
     /**
      * @test
@@ -27,5 +29,7 @@ class HookCommandTester extends TestCase
         }
     }
 
-    public function tearDown() {}
+    public function tearDown()
+    {
+    }
 }

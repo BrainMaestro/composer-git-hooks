@@ -9,8 +9,8 @@ class Hook
     /**
      * Get scripts section of the composer config file.
      *
-	 * @param	$dir	string	dir where to look for composer.json
-	 *
+     * @param	$dir	string	dir where to look for composer.json
+     *
      * @return array
      */
     public static function getValidHooks($dir)
