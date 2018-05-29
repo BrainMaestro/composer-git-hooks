@@ -59,7 +59,8 @@ class AddCommand extends Command
 
                 file_put_contents($filename, $script);
                 chmod($filename, 0755);
-                $output->writeln($fileExists
+                $output->writeln(
+                    $fileExists
                     ? "Overwrote <info>{$hook}</info> hook"
                     : "Added <info>{$hook}</info> hook"
                 );
