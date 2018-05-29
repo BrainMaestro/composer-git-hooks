@@ -35,6 +35,8 @@
     },
     "bin": ["cghooks"],
     "scripts": {
+        "check-style": "php-cs-fixer fix --using-cache=no --diff --dry-run .",
+        "fix-style": "php-cs-fixer fix --using-cache=no .",
         "pre-commit": "echo about to commit",
         "post-commit": "echo just committed"
     }
