@@ -1,3 +1,4 @@
 /vendor/
 /.idea/
 /test-git-dir/
+.php_cs.cache
