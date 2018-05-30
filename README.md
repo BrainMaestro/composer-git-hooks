@@ -1,7 +1,10 @@
 # composer-git-hooks
-[![Travis](https://img.shields.io/travis/BrainMaestro/composer-git-hooks.svg?style=flat-square)](https://travis-ci.org/BrainMaestro/composer-git-hooks)
-[![Packagist](https://img.shields.io/packagist/v/brainmaestro/composer-git-hooks.svg?style=flat-square)](https://packagist.org/packages/brainmaestro/composer-git-hooks)
-[![Packagist](https://img.shields.io/packagist/dt/brainmaestro/composer-git-hooks.svg?style=flat-square)](https://packagist.org/packages/brainmaestro/composer-git-hooks)
+
+[![Software License][badge-license]](LICENSE)
+[![Travis][badge-travis]][link-travis]
+[![Packagist][badge-packagist]][link-packagist]
+[![Download][badge-downloads]][link-packagist]
+
 > Manage git hooks easily in your composer configuration. This package makes it easy to implement a consistent project-wide usage of git hooks. Specifying hooks in the composer file makes them available for every member of the project team. This provides a consistent environment and behavior for everyone which is great.
 
 ## Install
@@ -45,7 +48,7 @@ Add a `cghooks` script to the `scripts` section of your `composer.json` file. Th
 
 #### Composer Events
 
-Add the following events to your `composer.json` file. The `cghooks` commands will be run every time the events occur. Go to [Composer Command Events](https://getcomposer.org/doc/articles/scripts.md#command-events) for more details about composer's event system.
+Add the following events to your `composer.json` file. The `cghooks` commands will be run every time the events occur. Go to [Composer Command Events][link-composer-events] for more details about composer's event system.
 
 ```json
 {
@@ -107,9 +110,31 @@ Option | Description | Command
 
 Hooks can be tested with `cghooks ${hook}` before adding them. Example `cghooks pre-commit` runs the `pre-commit` hook.
 
-## Related
-- [husky](https://github.com/typicode/husky)
+## Contributing
 
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+
+## Credits
+
+- [Ezinwa Okpoechi][link-author]
+- [All Contributors][link-contributors]
+
+## Related
+- [husky][link-husky]
 
 ## License
-MIT © Ezinwa Okpoechi
+
+The MIT License (MIT). Please see [License File](LICENSE) for more information.
+
+[badge-downloads]: https://img.shields.io/packagist/dt/brainmaestro/composer-git-hooks.svg?style=flat-square
+[badge-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg
+[badge-packagist]: https://img.shields.io/packagist/v/brainmaestro/composer-git-hooks.svg?style=flat-square
+[badge-stable]: https://poser.pugx.org/your-app-rocks/eloquent-uuid/v/stable
+[badge-travis]: https://img.shields.io/travis/BrainMaestro/composer-git-hooks.svg?style=flat-square
+
+[link-author]: https://github.com/BrainMaestro
+[link-composer-events]: https://getcomposer.org/doc/articles/scripts.md#command-events
+[link-contributors]: ../../contributors
+[link-husky]: https://github.com/typicode/husky
+[link-packagist]: https://packagist.org/packages/brainmaestro/composer-git-hooks
+[link-travis]: https://travis-ci.org/BrainMaestro/composer-git-hooks
