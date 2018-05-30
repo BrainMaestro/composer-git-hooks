@@ -8,12 +8,17 @@ matrix:
         - php: 7.2
     fast_finish: true
 
+cache:
+  directories:
+    - $HOME/.composer/cache
+
 before_install:
-  - composer self-update
+  - travis_retry composer self-update
 
 install:
-  - composer update --no-interaction
+  - travis_retry composer update --no-interaction
 
 script:
   - composer validate --strict --no-check-lock
+  - ./vendor/bin/php-cs-fixer fix . -v --dry-run --using-cache=no
   - ./vendor/bin/phpunit
