@@ -2,3 +2,4 @@
 /.idea/
 /test-git-dir/
 .php_cs.cache
+phpunit.xml
