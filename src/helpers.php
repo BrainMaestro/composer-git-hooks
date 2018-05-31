@@ -2,15 +2,18 @@
 
 use Symfony\Component\Process\Process;
 
-if (! function_exists('windows_os')) {
+if (! function_exists('git_version')) {
     /**
-     * Determine whether the current environment is Windows based.
+     * Get latest git tag version.
      *
-     * @return bool
+     * @return string
      */
-    function windows_os()
+    function git_version()
     {
-        return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+        $process = new Process('git describe --tags $(git rev-list --tags --max-count=1)');
+        $process->run();
+        
+        return trim($process->getOutput()) ?: 'unreleased';
     }
 }
 
@@ -32,17 +35,14 @@ if (! function_exists('mkdir_if_not_exist')) {
     }
 }
 
-if (! function_exists('git_version')) {
+if (! function_exists('windows_os')) {
     /**
-     * Get latest git tag version.
+     * Determine whether the current environment is Windows based.
      *
-     * @return string
+     * @return bool
      */
-    function git_version()
+    function windows_os()
     {
-        $process = new Process('git describe --tags $(git rev-list --tags --max-count=1)');
-        $process->run();
-        
-        return trim($process->getOutput()) ?: 'unreleased';
+        return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
     }
 }
