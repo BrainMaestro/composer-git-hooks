@@ -104,7 +104,6 @@ class UpdateCommandTester extends TestCase
         rmdir($hookDir);
     }
 
-
     /**
      * @test
      */
