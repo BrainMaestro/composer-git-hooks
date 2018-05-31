@@ -38,11 +38,8 @@ class AddCommand extends Command
         $gitDir = $input->getOption('git-dir');
         $force = $input->getOption('force');
         $forceWindows = $input->getOption('force-win');
-        $hookDir = "{$gitDir}/hooks";
 
-        if (! is_dir($hookDir)) {
-            mkdir($hookDir, 0700, true);
-        }
+        mkdir_if_not_exist("{$gitDir}/hooks");
 
         foreach ($this->hooks as $hook => $script) {
             $filename = "{$gitDir}/hooks/{$hook}";
