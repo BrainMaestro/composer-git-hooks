@@ -5,4 +5,4 @@
 .travis.yml        export-ignore
 CONTRIBUTING.md    export-ignore
 Dockerfile         export-ignore
-phpunit.xml        export-ignore
+phpunit.xml.dist   export-ignore
