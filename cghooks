@@ -22,7 +22,7 @@ use BrainMaestro\GitHooks\Commands\ListCommand;
 use BrainMaestro\GitHooks\Commands\HookCommand;
 use Symfony\Component\Console\Application;
 
-$application = new Application('Composer Git Hooks', 'v2.2.0');
+$application = new Application('Composer Git Hooks', git_version());
 
 $hooks = Hook::getValidHooks($dir);
 $application->add(new AddCommand($hooks));
