@@ -23,7 +23,7 @@ trait PrepareHookTest
 
     public static function createHooks($gitDir = '.git')
     {
-        create_hooks_dir("{$gitDir}/hooks", 0777);
+        create_hooks_dir($gitDir, 0777);
 
         foreach (self::$hooks as $hook => $script) {
             file_put_contents("{$gitDir}/hooks/{$hook}", $script);

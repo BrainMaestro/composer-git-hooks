@@ -97,7 +97,7 @@ class RemoveCommandTester extends TestCase
     {
         $gitDir = 'test-git-dir';
 
-        create_hooks_dir("{$gitDir}/hooks", 0777);
+        create_hooks_dir($gitDir, 0777);
 
         self::createHooks($gitDir);
         $this->assertFalse(self::isDirEmpty("{$gitDir}/hooks"));

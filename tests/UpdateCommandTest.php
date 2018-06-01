@@ -71,7 +71,7 @@ class UpdateCommandTester extends TestCase
     {
         $gitDir = 'test-git-dir';
 
-        create_hooks_dir("{$gitDir}/hooks", 0777);
+        create_hooks_dir($gitDir, 0777);
 
         $this->commandTester->execute(['--git-dir' => $gitDir]);
 

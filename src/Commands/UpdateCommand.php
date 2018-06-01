@@ -34,7 +34,7 @@ class UpdateCommand extends Command
         $gitDir = $input->getOption('git-dir');
         $forceWindows = $input->getOption('force-win');
         
-        create_hooks_dir("{$gitDir}/hooks");
+        create_hooks_dir($gitDir);
 
         foreach ($this->hooks as $hook => $script) {
             $filename = "{$gitDir}/hooks/{$hook}";

@@ -14,8 +14,8 @@ if (! function_exists('create_hooks_dir')) {
      */
     function create_hooks_dir($dir, $mode = 0700, $recursive = true)
     {
-        if (! is_dir($dir)) {
-            mkdir($dir, $mode, $recursive);
+        if (! is_dir("{$dir}/hooks")) {
+            mkdir("{$dir}/hooks", $mode, $recursive);
         }
     }
 }

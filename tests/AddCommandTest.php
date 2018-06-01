@@ -130,7 +130,7 @@ class AddCommandTester extends TestCase
     public function it_uses_a_different_git_path_if_specified()
     {
         $gitDir = 'test-git-dir';
-        create_hooks_dir("{$gitDir}/hooks");
+        create_hooks_dir($gitDir);
         $this->commandTester->execute(['--git-dir' => $gitDir]);
 
         foreach (array_keys(self::$hooks) as $hook) {
