@@ -25,7 +25,7 @@ class Hook
         $validHooks = [];
 
         foreach ($hooks as $hook => $script) {
-            if (array_key_exists($hook, self::getHooks())) {
+            if (self::isValidHook($hook)) {
                 $validHooks[$hook] = $script;
             }
         }

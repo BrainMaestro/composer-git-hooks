@@ -38,11 +38,8 @@ class AddCommand extends Command
         $gitDir = $input->getOption('git-dir');
         $force = $input->getOption('force');
         $forceWindows = $input->getOption('force-win');
-        $hookDir = "{$gitDir}/hooks";
 
-        if (! is_dir($hookDir)) {
-            mkdir($hookDir, 0700, true);
-        }
+        create_hooks_dir($gitDir);
 
         foreach ($this->hooks as $hook => $script) {
             $filename = "{$gitDir}/hooks/{$hook}";
@@ -51,7 +48,7 @@ class AddCommand extends Command
             if (! $force && $fileExists) {
                 $output->writeln("<comment>{$hook} already exists</comment>");
             } else {
-                if ($forceWindows || strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                if ($forceWindows || is_windows()) {
                     // On windows we need to add a SHEBANG
                     // See: https://github.com/BrainMaestro/composer-git-hooks/issues/7
                     $script = '#!/bin/bash' . PHP_EOL . $script;
