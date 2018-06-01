@@ -38,7 +38,7 @@ class AddCommandTester extends TestCase
      */
     public function it_adds_shebang_to_hooks_on_windows()
     {
-        if (! windows_os()) {
+        if (! is_windows()) {
             $this->markTestSkipped('This test is only relevant on windows. You\'re running Linux.');
         }
 
@@ -130,7 +130,7 @@ class AddCommandTester extends TestCase
     public function it_uses_a_different_git_path_if_specified()
     {
         $gitDir = 'test-git-dir';
-        mkdir("{$gitDir}/hooks", 0700, true);
+        create_hooks_dir("{$gitDir}/hooks");
         $this->commandTester->execute(['--git-dir' => $gitDir]);
 
         foreach (array_keys(self::$hooks) as $hook) {

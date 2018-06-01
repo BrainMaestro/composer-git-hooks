@@ -34,14 +34,14 @@ class UpdateCommand extends Command
         $gitDir = $input->getOption('git-dir');
         $forceWindows = $input->getOption('force-win');
         
-        mkdir_if_not_exist("{$gitDir}/hooks");
+        create_hooks_dir("{$gitDir}/hooks");
 
         foreach ($this->hooks as $hook => $script) {
             $filename = "{$gitDir}/hooks/{$hook}";
 
             $operation = file_exists($filename) ? 'Updated' : 'Added';
 
-            if ($forceWindows || windows_os()) {
+            if ($forceWindows || is_windows()) {
                 // On windows we need to add a SHEBANG
                 // See: https://github.com/BrainMaestro/composer-git-hooks/issues/7
                 $script = '#!/bin/bash' . PHP_EOL . $script;
