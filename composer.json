@@ -17,7 +17,8 @@
     ],
     "require": {
         "php": "^5.6 || >=7.0 <7.3",
-        "symfony/console": "^3.2 || ^4.0"
+        "symfony/console": "^3.2 || ^4.0",
+        "symfony/process": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7",
@@ -38,6 +39,7 @@
     },
     "bin": ["cghooks"],
     "scripts": {
+        "test": "vendor/bin/phpunit",
         "check-style": "php-cs-fixer fix --using-cache=no --diff --dry-run .",
         "fix-style": "php-cs-fixer fix --using-cache=no .",
         "pre-commit": "echo about to commit",

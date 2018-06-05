@@ -25,7 +25,7 @@ composer fix-style
 ## Running Tests
 
 ```sh
-phpunit
+composer test
 ```
 
 **Happy coding**!
