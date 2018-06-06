@@ -20,21 +20,6 @@ if (! function_exists('create_hooks_dir')) {
     }
 }
 
-if (! function_exists('git_version')) {
-    /**
-     * Get latest git tag version.
-     *
-     * @return string
-     */
-    function git_version()
-    {
-        $process = new Process('git describe --tags $(git rev-list --tags --max-count=1)');
-        $process->run();
-        
-        return trim($process->getOutput()) ?: 'unreleased';
-    }
-}
-
 if (! function_exists('is_windows')) {
     /**
      * Determine whether the current environment is Windows based.
