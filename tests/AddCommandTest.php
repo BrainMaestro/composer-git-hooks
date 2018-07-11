@@ -192,4 +192,36 @@ class AddCommandTester extends TestCase
             $this->assertEquals(strpos($content, "#!/bin/bash"), 0);
         }
     }
+
+    /**
+     * @test
+     */
+    public function it_handles_commands_defined_in_an_array()
+    {
+        $gitDir = 'test-git-dir';
+        $hookDir = "{$gitDir}/hooks";
+
+        $hooks = [
+            'test-pre-commit' => [
+                'echo pre-commit first',
+                'echo pre-commit second',
+                'echo pre-commit third',
+            ],
+        ];
+
+        $command = new AddCommand($hooks);
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute(['--git-dir' => $gitDir]);
+
+        foreach ($hooks as $hook => $scripts) {
+            $content = file_get_contents($hookDir . '/' . $hook);
+
+            // Keep the last lines of the hook file (as many lines as script command)
+            $lines = explode(PHP_EOL, $content);
+            $lines = array_slice($lines, - count($scripts));
+
+            $this->assertEquals(implode(PHP_EOL, $lines), implode(PHP_EOL, $scripts));
+        }
+    }
 }
