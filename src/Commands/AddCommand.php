@@ -45,6 +45,8 @@ class AddCommand extends Command
             $filename = "{$gitDir}/hooks/{$hook}";
             $fileExists = file_exists($filename);
 
+            $script = is_array($script) ? implode(PHP_EOL, $script) : $script;
+
             if (! $force && $fileExists) {
                 $output->writeln("<comment>{$hook} already exists</comment>");
             } else {
