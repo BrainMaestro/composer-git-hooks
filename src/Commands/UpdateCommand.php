@@ -33,13 +33,15 @@ class UpdateCommand extends Command
     {
         $gitDir = $input->getOption('git-dir');
         $forceWindows = $input->getOption('force-win');
-        
+
         create_hooks_dir($gitDir);
 
         foreach ($this->hooks as $hook => $script) {
             $filename = "{$gitDir}/hooks/{$hook}";
 
             $operation = file_exists($filename) ? 'Updated' : 'Added';
+
+            $script = is_array($script) ? implode(PHP_EOL, $script) : $script;
 
             if ($forceWindows || is_windows()) {
                 // On windows we need to add a SHEBANG
