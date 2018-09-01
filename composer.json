@@ -36,12 +36,20 @@
             "BrainMaestro\\GitHooks\\Tests\\": "tests/"
         }
     },
-    "bin": ["cghooks"],
+    "bin": [
+        "cghooks"
+    ],
     "scripts": {
         "test": "vendor/bin/phpunit",
+        "post-install-cmd": "./cghooks add --ignore-lock",
+        "post-update-cmd": "./cghooks update",
         "check-style": "php-cs-fixer fix --using-cache=no --diff --dry-run .",
-        "fix-style": "php-cs-fixer fix --using-cache=no .",
-        "pre-commit": "echo about to commit",
-        "post-commit": "echo just committed"
+        "fix-style": "php-cs-fixer fix --using-cache=no ."
+    },
+    "extra": {
+        "hooks": {
+            "pre-commit": "composer check-style",
+            "pre-push": "composer test"
+        }
     }
 }

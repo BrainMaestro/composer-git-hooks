@@ -4,8 +4,11 @@ WORKDIR /app
 
 COPY ./composer.json ./composer.lock /app/
 
+# Remove any scripts that have cghooks since it is not yet present in the container
+RUN sed -iE '/\.\/cghooks .*/d' composer.json
+
 RUN composer install
 
 COPY . /app/
 
-RUN ./vendor/bin/phpunit
+RUN composer fix-style && composer test && ./cghooks add
