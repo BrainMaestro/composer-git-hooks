@@ -31,6 +31,7 @@ class HookCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln(shell_exec($this->script));
+        $script = is_array($this->script) ? implode(PHP_EOL, $this->script) : $this->script;
+        $output->writeln(shell_exec($script));
     }
 }
