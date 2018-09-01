@@ -198,9 +198,6 @@ class AddCommandTester extends TestCase
      */
     public function it_handles_commands_defined_in_an_array()
     {
-        $gitDir = 'test-git-dir';
-        $hookDir = "{$gitDir}/hooks";
-
         $hooks = [
             'test-pre-commit' => [
                 'echo pre-commit first',
@@ -212,16 +209,13 @@ class AddCommandTester extends TestCase
         $command = new AddCommand($hooks);
         $commandTester = new CommandTester($command);
 
-        $commandTester->execute(['--git-dir' => $gitDir]);
+        $commandTester->execute([]);
 
         foreach ($hooks as $hook => $scripts) {
-            $content = file_get_contents($hookDir . '/' . $hook);
+            $this->assertContains("Added {$hook} hook", $commandTester->getDisplay());
 
-            // Keep the last lines of the hook file (as many lines as script command)
-            $lines = explode(PHP_EOL, $content);
-            $lines = array_slice($lines, - count($scripts));
-
-            $this->assertEquals(implode(PHP_EOL, $lines), implode(PHP_EOL, $scripts));
+            $content = file_get_contents(".git/hooks/" . $hook);
+            $this->assertContains(implode(PHP_EOL, $scripts), $content);
         }
     }
 }

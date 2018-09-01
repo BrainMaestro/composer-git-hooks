@@ -46,6 +46,9 @@ class UpdateCommandTester extends TestCase
         }
     }
 
+    /**
+     * @test
+     */
     public function it_adds_shebang_to_hooks_on_windows()
     {
         if (! is_windows()) {
@@ -126,9 +129,7 @@ class UpdateCommandTester extends TestCase
      */
     public function it_handles_commands_defined_in_an_array()
     {
-        $gitDir = 'test-git-dir';
-        $hookDir = "{$gitDir}/hooks";
-
+        self::createHooks();
         $hooks = [
             'test-pre-commit' => [
                 'echo pre-commit first',
@@ -140,16 +141,13 @@ class UpdateCommandTester extends TestCase
         $command = new UpdateCommand($hooks);
         $commandTester = new CommandTester($command);
 
-        $commandTester->execute(['--git-dir' => $gitDir]);
+        $commandTester->execute([]);
 
         foreach ($hooks as $hook => $scripts) {
-            $content = file_get_contents($hookDir . '/' . $hook);
+            $this->assertContains("Updated {$hook} hook", $commandTester->getDisplay());
 
-            // Keep the last lines of the hook file (as many lines as script command)
-            $lines = explode(PHP_EOL, $content);
-            $lines = array_slice($lines, - count($scripts));
-
-            $this->assertEquals(implode(PHP_EOL, $lines), implode(PHP_EOL, $scripts));
+            $content = file_get_contents(".git/hooks/" . $hook);
+            $this->assertContains(implode(PHP_EOL, $scripts), $content);
         }
     }
 }
