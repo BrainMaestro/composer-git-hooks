@@ -11,4 +11,6 @@ RUN composer install
 
 COPY . /app/
 
-RUN composer fix-style && composer test && ./cghooks add
+RUN composer check-style
+RUN composer test
+RUN ./cghooks add

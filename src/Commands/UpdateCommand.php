@@ -3,20 +3,14 @@
 namespace BrainMaestro\GitHooks\Commands;
 
 use BrainMaestro\GitHooks\Hook;
-use Symfony\Component\Console\Command\Command;
+use BrainMaestro\GitHooks\Commands\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class UpdateCommand extends Command
 {
-    private $hooks;
-
-    public function __construct($hooks)
-    {
-        $this->hooks = $hooks;
-        parent::__construct();
-    }
+    private $windows;
 
     protected function configure()
     {
@@ -29,29 +23,28 @@ class UpdateCommand extends Command
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function init($input)
     {
-        $gitDir = $input->getOption('git-dir');
-        $forceWindows = $input->getOption('force-win');
+        $this->windows = $input->getOption('force-win') || is_windows();
+    }
 
-        create_hooks_dir($gitDir);
+    protected function command()
+    {
+        create_hooks_dir($this->gitDir);
 
-        foreach ($this->hooks as $hook => $script) {
-            $filename = "{$gitDir}/hooks/{$hook}";
-
+        foreach ($this->hooks as $hook => $contents) {
+            $filename = "{$this->gitDir}/hooks/{$hook}";
             $operation = file_exists($filename) ? 'Updated' : 'Added';
 
-            $script = is_array($script) ? implode(PHP_EOL, $script) : $script;
+            // On windows, the shebang needs to point to bash
+            // See: https://github.com/BrainMaestro/composer-git-hooks/issues/7
+            $shebang = ($this->windows ? '#!/bin/bash' : '#!/bin/sh') . PHP_EOL . PHP_EOL;
+            $contents = is_array($contents) ? implode(PHP_EOL, $contents) : $contents;
 
-            if ($forceWindows || is_windows()) {
-                // On windows we need to add a SHEBANG
-                // See: https://github.com/BrainMaestro/composer-git-hooks/issues/7
-                $script = '#!/bin/bash' . PHP_EOL . $script;
-            }
-
-            file_put_contents($filename, $script);
+            file_put_contents($filename, $shebang . $contents);
             chmod($filename, 0755);
-            $output->writeln("{$operation} <info>{$hook}</info> hook");
+
+            $this->log("{$operation} <info>{$hook}</info> hook");
         }
     }
 }

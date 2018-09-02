@@ -16,7 +16,7 @@ class UpdateCommandTester extends TestCase
 
     public function setUp()
     {
-        self::prepare();
+        self::cleanup();
         $command = new UpdateCommand(self::$hooks);
         $this->commandTester = new CommandTester($command);
     }

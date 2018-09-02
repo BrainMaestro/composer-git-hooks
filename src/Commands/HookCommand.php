@@ -3,20 +3,20 @@
 namespace BrainMaestro\GitHooks\Commands;
 
 use BrainMaestro\GitHooks\Hook;
-use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class HookCommand extends Command
+class HookCommand extends SymfonyCommand
 {
     private $hook;
-    private $script;
+    private $contents;
 
-    public function __construct($hook, $script)
+    public function __construct($hook, $contents)
     {
         $this->hook = $hook;
-        $this->script = $script;
+        $this->contents = $contents;
         parent::__construct();
     }
 
@@ -31,7 +31,7 @@ class HookCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $script = is_array($this->script) ? implode(PHP_EOL, $this->script) : $this->script;
-        $output->writeln(shell_exec($script));
+        $contents = is_array($this->contents) ? implode(PHP_EOL, $this->contents) : $this->contents;
+        $output->writeln(shell_exec($contents));
     }
 }

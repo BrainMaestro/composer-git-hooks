@@ -115,7 +115,7 @@ class RemoveCommandTester extends TestCase
 
     public function tearDown()
     {
-        self::prepare();
+        self::cleanup();
     }
 
     private static function isDirEmpty($dir)

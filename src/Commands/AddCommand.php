@@ -3,20 +3,18 @@
 namespace BrainMaestro\GitHooks\Commands;
 
 use BrainMaestro\GitHooks\Hook;
-use Symfony\Component\Console\Command\Command;
+use BrainMaestro\GitHooks\Commands\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class AddCommand extends Command
 {
-    private $hooks;
-
-    public function __construct($hooks)
-    {
-        $this->hooks = $hooks;
-        parent::__construct();
-    }
+    private $force;
+    private $windows;
+    private $noLock;
+    private $ignoreLock;
+    private $addedHooks = [];
 
     protected function configure()
     {
@@ -32,75 +30,83 @@ class AddCommand extends Command
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function init($input)
     {
-        $addedHooks = [];
-        $gitDir = $input->getOption('git-dir');
-        $force = $input->getOption('force');
-        $forceWindows = $input->getOption('force-win');
-
-        create_hooks_dir($gitDir);
-
-        foreach ($this->hooks as $hook => $script) {
-            $filename = "{$gitDir}/hooks/{$hook}";
-            $fileExists = file_exists($filename);
-
-            $script = is_array($script) ? implode(PHP_EOL, $script) : $script;
-
-            if (! $force && $fileExists) {
-                $output->writeln("<comment>{$hook} already exists</comment>");
-            } else {
-                if ($forceWindows || is_windows()) {
-                    // On windows we need to add a SHEBANG
-                    // See: https://github.com/BrainMaestro/composer-git-hooks/issues/7
-                    $script = '#!/bin/bash' . PHP_EOL . $script;
-                }
-
-                file_put_contents($filename, $script);
-                chmod($filename, 0755);
-                $output->writeln(
-                    $fileExists
-                    ? "Overwrote <info>{$hook}</info> hook"
-                    : "Added <info>{$hook}</info> hook"
-                );
-                $addedHooks[] = $hook;
-            }
-        }
-
-        if (! count($addedHooks)) {
-            $output->writeln('<error>No hooks were added. Try updating</error>');
-            return;
-        }
-
-        if ($input->getOption('no-lock')) {
-            $output->writeln('<comment>Skipped creating a '. Hook::LOCK_FILE . ' file</comment>');
-            return;
-        }
-
-        $this->addLockFile($addedHooks, $output);
-
-        if (! $input->getOption('ignore-lock')) {
-            $output->writeln('<comment>Skipped adding '. Hook::LOCK_FILE . ' to .gitignore</comment>');
-            return;
-        }
-
-        $this->ignoreLockFile($output);
+        $this->force = $input->getOption('force');
+        $this->windows = $input->getOption('force-win') || is_windows();
+        $this->noLock = $input->getOption('no-lock');
+        $this->ignoreLock = $input->getOption('ignore-lock');
     }
 
-    private function addLockFile($hooks, $output)
+    protected function command()
     {
-        file_put_contents(Hook::LOCK_FILE, json_encode($hooks));
-        $output->writeln('<comment>Created ' . Hook::LOCK_FILE . ' file</comment>');
+        create_hooks_dir($this->gitDir);
+
+        foreach ($this->hooks as $hook => $contents) {
+            $this->addHook($hook, $contents);
+        }
+
+        if (! count($this->addedHooks)) {
+            $this->error('No hooks were added. Try updating');
+            return;
+        }
+
+        $this->addLockFile();
+        $this->ignoreLockFile();
     }
 
-    private function ignoreLockFile($output)
+    private function addHook($hook, $contents)
     {
+        $filename = "{$this->gitDir}/hooks/{$hook}";
+        $exists = file_exists($filename);
+
+        // On windows, the shebang needs to point to bash
+        // See: https://github.com/BrainMaestro/composer-git-hooks/issues/7
+        $shebang = ($this->windows ? '#!/bin/bash' : '#!/bin/sh') . PHP_EOL . PHP_EOL;
+        $contents = is_array($contents) ? implode(PHP_EOL, $contents) : $contents;
+
+        if (! $this->force && $exists) {
+            $this->comment("{$hook} already exists");
+            return;
+        }
+
+        file_put_contents($filename, $shebang . $contents);
+        chmod($filename, 0755);
+
+        $operation = $exists ? 'Overwrote' : 'Added';
+        $this->log("{$operation} <info>{$hook}</info> hook");
+
+        $this->addedHooks[] = $hook;
+    }
+
+    private function addLockFile()
+    {
+        if ($this->noLock) {
+            $this->comment('Skipped creating a '. Hook::LOCK_FILE . ' file');
+            return;
+        }
+
+        file_put_contents(Hook::LOCK_FILE, json_encode($this->addedHooks));
+        $this->comment('Created ' . Hook::LOCK_FILE . ' file');
+    }
+
+    private function ignoreLockFile()
+    {
+        if ($this->noLock) {
+            return;
+        }
+
+        if (! $this->ignoreLock) {
+            $this->comment('Skipped adding '. Hook::LOCK_FILE . ' to .gitignore');
+            return;
+        }
+
         $contents = file_get_contents('.gitignore');
         $return = strpos($contents, Hook::LOCK_FILE);
 
         if ($return === false) {
             file_put_contents('.gitignore', Hook::LOCK_FILE . PHP_EOL, FILE_APPEND);
-            $output->writeln('<comment>Added ' . Hook::LOCK_FILE . ' to .gitignore</comment>');
+            $this->comment('Added ' . Hook::LOCK_FILE . ' to .gitignore');
         }
     }
 }

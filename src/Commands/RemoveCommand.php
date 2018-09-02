@@ -3,7 +3,7 @@
 namespace BrainMaestro\GitHooks\Commands;
 
 use BrainMaestro\GitHooks\Hook;
-use Symfony\Component\Console\Command\Command;
+use BrainMaestro\GitHooks\Commands\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -11,13 +11,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RemoveCommand extends Command
 {
-    private $hooks;
-
-    public function __construct($hooks)
-    {
-        $this->hooks = $hooks;
-        parent::__construct();
-    }
+    private $force;
+    private $lockFileHooks;
+    private $hooksToRemove;
 
     protected function configure()
     {
@@ -41,31 +37,35 @@ class RemoveCommand extends Command
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function init($input)
     {
-        $lockFileHooks = file_exists(Hook::LOCK_FILE)
-                         ? array_flip(json_decode(file_get_contents(Hook::LOCK_FILE)))
-                         : [];
-        $gitDir = $input->getOption('git-dir');
+        $this->force = $input->getOption('force');
+        $this->lockFileHooks = file_exists(Hook::LOCK_FILE)
+            ? array_flip(json_decode(file_get_contents(Hook::LOCK_FILE)))
+            : [];
+        $this->hooksToRemove = $input->getArgument('hooks');
+    }
 
-        foreach ($input->getArgument('hooks') as $hook) {
-            $filename = "{$gitDir}/hooks/{$hook}";
+    protected function command()
+    {
+        foreach ($this->hooksToRemove as $hook) {
+            $filename = "{$this->gitDir}/hooks/{$hook}";
 
-            if (! array_key_exists($hook, $lockFileHooks) && ! $input->getOption('force')) {
-                $output->writeln("<comment>Skipped {$hook} hook - not present in lock file</comment>");
+            if (! array_key_exists($hook, $this->lockFileHooks) && ! $this->force) {
+                $this->comment("Skipped {$hook} hook - not present in lock file");
                 continue;
             }
 
             if (array_key_exists($hook, $this->hooks) && is_file($filename)) {
                 unlink($filename);
-                $output->writeln("Removed <info>{$hook}</info> hook");
-                unset($lockFileHooks[$hook]);
+                $this->log("Removed <info>{$hook}</info> hook");
+                unset($this->lockFileHooks[$hook]);
                 continue;
             }
-            
-            $output->writeln("<error>{$hook} hook does not exist</error>");
+
+            $this->error("{$hook} hook does not exist");
         }
 
-        file_put_contents(Hook::LOCK_FILE, json_encode(array_keys($lockFileHooks)));
+        file_put_contents(Hook::LOCK_FILE, json_encode(array_keys($this->lockFileHooks)));
     }
 }
