@@ -13,12 +13,12 @@ trait PrepareHookTest
 
     public function setUp()
     {
-        self::prepare();
+        self::cleanup();
     }
 
     public static function tearDownAfterClass()
     {
-        self::prepare();
+        self::cleanup();
     }
 
     public static function createHooks($gitDir = '.git')
@@ -30,7 +30,7 @@ trait PrepareHookTest
         }
     }
 
-    private static function prepare()
+    private static function cleanup()
     {
         foreach (array_keys(self::$hooks) as $hook) {
             if (file_exists(".git/hooks/{$hook}")) {
