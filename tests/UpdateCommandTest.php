@@ -46,6 +46,9 @@ class UpdateCommandTester extends TestCase
         }
     }
 
+    /**
+     * @test
+     */
     public function it_adds_shebang_to_hooks_on_windows()
     {
         if (! is_windows()) {
@@ -118,6 +121,33 @@ class UpdateCommandTester extends TestCase
             $content = file_get_contents(".git/hooks/" . $hook);
             $this->assertNotFalse(strpos($content, "#!/bin/bash"));
             $this->assertEquals(strpos($content, "#!/bin/bash"), 0);
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function it_handles_commands_defined_in_an_array()
+    {
+        self::createHooks();
+        $hooks = [
+            'test-pre-commit' => [
+                'echo pre-commit first',
+                'echo pre-commit second',
+                'echo pre-commit third',
+            ],
+        ];
+
+        $command = new UpdateCommand($hooks);
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute([]);
+
+        foreach ($hooks as $hook => $scripts) {
+            $this->assertContains("Updated {$hook} hook", $commandTester->getDisplay());
+
+            $content = file_get_contents(".git/hooks/" . $hook);
+            $this->assertContains(implode(PHP_EOL, $scripts), $content);
         }
     }
 }

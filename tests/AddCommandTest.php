@@ -192,4 +192,30 @@ class AddCommandTester extends TestCase
             $this->assertEquals(strpos($content, "#!/bin/bash"), 0);
         }
     }
+
+    /**
+     * @test
+     */
+    public function it_handles_commands_defined_in_an_array()
+    {
+        $hooks = [
+            'test-pre-commit' => [
+                'echo pre-commit first',
+                'echo pre-commit second',
+                'echo pre-commit third',
+            ],
+        ];
+
+        $command = new AddCommand($hooks);
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute([]);
+
+        foreach ($hooks as $hook => $scripts) {
+            $this->assertContains("Added {$hook} hook", $commandTester->getDisplay());
+
+            $content = file_get_contents(".git/hooks/" . $hook);
+            $this->assertContains(implode(PHP_EOL, $scripts), $content);
+        }
+    }
 }

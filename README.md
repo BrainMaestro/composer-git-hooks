@@ -13,18 +13,19 @@ Add a `hooks` section to the `extra` section of your `composer.json` and add the
 
 ```json
 {
-  "extra": {
-    "hooks": {
-      "pre-commit": "phpunit",
-      "post-commit": "echo committed",
-      "pre-push": "phpunit && echo pushing!",
-      "...": "..."
+    "extra": {
+        "hooks": {
+            "pre-commit": "phpunit",
+            "post-commit": "echo committed",
+            "pre-push": ["phpunit", "echo pushing!"],
+            "...": "..."
+        }
     }
-  }
 }
 ```
 
 Then install the library with
+
 ```sh
 composer require --dev brainmaestro/composer-git-hooks
 ```
@@ -39,10 +40,10 @@ Add a `cghooks` script to the `scripts` section of your `composer.json` file. Th
 
 ```json
 {
-  "scripts": {
-    "cghooks": "vendor/bin/cghooks",
-    "...": "..."
-  }
+    "scripts": {
+        "cghooks": "vendor/bin/cghooks",
+        "...": "..."
+    }
 }
 ```
 
@@ -52,11 +53,11 @@ Add the following events to your `composer.json` file. The `cghooks` commands wi
 
 ```json
 {
-  "scripts": {
-    "post-install-cmd": "vendor/bin/cghooks add --ignore-lock",
-    "post-update-cmd": "vendor/bin/cghooks update",
-    "...": "..."
-  }
+    "scripts": {
+        "post-install-cmd": "vendor/bin/cghooks add --ignore-lock",
+        "post-update-cmd": "vendor/bin/cghooks update",
+        "...": "..."
+    }
 }
 ```
 
@@ -69,11 +70,11 @@ All the following commands have to be run in the same folder as your `composer.j
 After installation is complete, run `cghooks add`
 to add all the valid git hooks that have been specified in the composer config.
 
-Option | Description | Command
------- | ----------- | -------
-`no-lock` | Do not create a lock file | `cghooks add --no-lock`
-`ignore-lock` | Add the lock file to .gitignore | `cghooks add --ignore-lock`
-`force-win` | Force windows bash compatibility | `cghooks add --force-win`
+| Option        | Description                      | Command                     |
+| ------------- | -------------------------------- | --------------------------- |
+| `no-lock`     | Do not create a lock file        | `cghooks add --no-lock`     |
+| `ignore-lock` | Add the lock file to .gitignore  | `cghooks add --ignore-lock` |
+| `force-win`   | Force windows bash compatibility | `cghooks add --force-win`   |
 
 The `lock` file contains a list of all added hooks.
 
@@ -87,12 +88,11 @@ Hooks can be easily removed with `cghooks remove`. This will remove all the hook
 
 Hooks can also be removed by passing them as arguments. The command `cghooks remove pre-commit post-commit` which will remove the `pre-commit` and `post-commit` hooks.
 
-Option | Description | Command
------- | ----------- | -------
-`force` | Delete hooks without checking the lock file | `cghooks remove --force`
+| Option  | Description                                 | Command                  |
+| ------- | ------------------------------------------- | ------------------------ |
+| `force` | Delete hooks without checking the lock file | `cghooks remove --force` |
 
 **CAREFUL**: If the lock file was tampered with or the force option was used, hooks that already existed before using this package, but were specified in the composer scripts config will be removed as well. That is, if you had a previous `pre-commit` hook, but your current composer config also has a `pre-commit` hook, this option will cause the command to remove your initial hook.
-
 
 ### Listing hooks
 
@@ -102,9 +102,9 @@ Hooks can be listed with the `cghooks list-hooks` command. This basically checks
 
 The following options are common to all commands.
 
-Option | Description | Command
------- | ----------- | -------
-`git-dir` | Path to git directory | `cghooks ${command} --git-dir='/path/to/.git'`
+| Option    | Description           | Command                                        |
+| --------- | --------------------- | ---------------------------------------------- |
+| `git-dir` | Path to git directory | `cghooks ${command} --git-dir='/path/to/.git'` |
 
 ### Testing Hooks
 
@@ -116,11 +116,12 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Credits
 
-- [Ezinwa Okpoechi][link-author]
-- [All Contributors][link-contributors]
+-   [Ezinwa Okpoechi][link-author]
+-   [All Contributors][link-contributors]
 
 ## Related
-- [husky][link-husky]
+
+-   [husky][link-husky]
 
 ## License
 
@@ -131,7 +132,6 @@ The MIT License (MIT). Please see [License File](LICENSE) for more information.
 [badge-packagist]: https://img.shields.io/packagist/v/brainmaestro/composer-git-hooks.svg?style=flat-square
 [badge-stable]: https://poser.pugx.org/your-app-rocks/eloquent-uuid/v/stable
 [badge-travis]: https://img.shields.io/travis/BrainMaestro/composer-git-hooks.svg?style=flat-square
-
 [link-author]: https://github.com/BrainMaestro
 [link-composer-events]: https://getcomposer.org/doc/articles/scripts.md#command-events
 [link-contributors]: ../../contributors
