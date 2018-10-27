@@ -28,10 +28,10 @@ class ListCommand extends Command
     protected function command()
     {
         foreach (array_keys($this->hooks) as $hook) {
-            $filename = "{$this->gitDir}/hooks/{$hook}";
+            $filename = "{$this->dir}/hooks/{$hook}";
 
             if (is_file($filename)) {
-                $this->log("<info>{$hook}</info>");
+                $this->info("[{$hook}]");
             }
         }
     }

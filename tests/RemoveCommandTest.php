@@ -4,23 +4,17 @@ namespace BrainMaestro\GitHooks\Tests;
 
 use BrainMaestro\GitHooks\Commands\RemoveCommand;
 use BrainMaestro\GitHooks\Hook;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class RemoveCommandTester extends TestCase
+class RemoveCommandTest extends TestCase
 {
-    use PrepareHookTest;
-
     private $commandTester;
 
-    public function setUp()
+    public function init()
     {
-        self::createHooks();
-        file_put_contents(Hook::LOCK_FILE, json_encode(array_keys(self::$hooks)));
-
-        $command = new RemoveCommand(self::$hooks);
-        $this->commandTester = new CommandTester($command);
+        self::createHooks('.git', true);
+        $this->commandTester = new CommandTester(new RemoveCommand());
     }
 
     /**
@@ -71,7 +65,9 @@ class RemoveCommandTester extends TestCase
      */
     public function it_does_not_remove_hooks_not_present_in_the_lock_file()
     {
-        $hook = 'test-hook';
+        $hook = 'pre-commit';
+        unlink(Hook::LOCK_FILE);
+
         $this->commandTester->execute(['hooks' => [$hook]]);
         $this->assertContains(
             "Skipped {$hook} hook - not present in lock file",
@@ -84,10 +80,9 @@ class RemoveCommandTester extends TestCase
      */
     public function it_removes_hooks_not_present_in_the_lock_file_if_forced_to()
     {
-        $hook = 'test-hook';
-        file_put_contents(".git/hooks/{$hook}", 'get schwifty');
-        $command = new RemoveCommand([$hook => 'get schwifty']);
-        $this->commandTester = new CommandTester($command);
+        $hook = 'pre-commit';
+        unlink(Hook::LOCK_FILE);
+        touch(".git/hooks/{$hook}");
 
         $this->commandTester->execute(['hooks' => [$hook], '--force' => true]);
         $this->assertContains("Removed {$hook} hook", $this->commandTester->getDisplay());
@@ -99,21 +94,16 @@ class RemoveCommandTester extends TestCase
     public function it_uses_a_different_git_path_if_specified()
     {
         $gitDir = 'test-git-dir';
+        self::createHooks($gitDir, true);
 
-        create_hooks_dir($gitDir, 0777);
-
-        self::createHooks($gitDir);
         $this->assertFalse(self::isDirEmpty("{$gitDir}/hooks"));
 
         $this->commandTester->execute(['--git-dir' => $gitDir]);
-
         foreach (array_keys(self::$hooks) as $hook) {
             $this->assertContains("Removed {$hook} hook", $this->commandTester->getDisplay());
         }
 
         $this->assertTrue(self::isDirEmpty("{$gitDir}/hooks"));
-
-        $this->recursive_rmdir($gitDir);
     }
 
     /**
@@ -121,40 +111,20 @@ class RemoveCommandTester extends TestCase
      */
     public function it_removes_global_git_hooks()
     {
-        $hooks = [
-            'pre-commit' => 'echo pre-commit',
-            'pre-push' => 'echo pre-commit',
-        ];
-        $gitDir = '/tmp/test-global-git-dir';
+        $gitDir = 'test-global-git-dir';
         $hookDir = "{$gitDir}/hooks";
-        $initialDir = global_hook_dir();
 
-        self::createHooks($gitDir, $hooks, true);
-        file_put_contents("{$gitDir}/composer.json", json_encode([
-            'extra' => [
-                'hooks' => $hooks,
-            ],
-        ]));
+        self::createHooks($gitDir, true);
+        self::createTestComposerFile($gitDir);
         $this->assertFalse(self::isDirEmpty($hookDir));
 
         shell_exec("git config --global core.hooksPath {$hookDir}");
 
-        $command = new RemoveCommand($hooks);
-        $commandTester = new CommandTester($command);
+        $this->commandTester->execute(['--global' => true]);
 
-        $commandTester->execute(['--global' => true]);
-
-        foreach (array_keys($hooks) as $hook) {
-            $this->assertContains("Removed {$hook} hook", $commandTester->getDisplay());
+        foreach (array_keys(self::$hooks) as $hook) {
+            $this->assertContains("Removed {$hook} hook", $this->commandTester->getDisplay());
         }
-
-        shell_exec("git config --global core.hooksPath {$initialDir}");
-        $this->recursive_rmdir($gitDir);
-    }
-
-    public function tearDown()
-    {
-        self::cleanup();
     }
 
     private static function isDirEmpty($dir)

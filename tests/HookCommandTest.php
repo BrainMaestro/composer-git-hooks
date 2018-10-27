@@ -3,18 +3,11 @@
 namespace BrainMaestro\GitHooks\Tests;
 
 use BrainMaestro\GitHooks\Commands\HookCommand;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class HookCommandTester extends TestCase
+class HookCommandTest extends TestCase
 {
-    use PrepareHookTest;
-
-    public function setUp()
-    {
-    }
-
     /**
      * @test
      */
@@ -27,9 +20,5 @@ class HookCommandTester extends TestCase
             $commandTester->execute([]);
             $this->assertContains(str_replace('echo ', '', $script), $commandTester->getDisplay());
         }
-    }
-
-    public function tearDown()
-    {
     }
 }

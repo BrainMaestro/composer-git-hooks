@@ -63,6 +63,14 @@ class AddCommand extends Command
         $this->setGlobalGitHooksPath();
     }
 
+    protected function global_dir_fallback()
+    {
+        if (!empty($this->dir = trim(getenv('COMPOSER_HOME')))) {
+            $this->dir = realpath($this->dir);
+            $this->comment("No global git hook path was provided. Falling back to COMPOSER_HOME [{$this->dir}]");
+        }
+    }
+
     private function addHook($hook, $contents)
     {
         $filename = "{$this->dir}/hooks/{$hook}";
@@ -82,7 +90,7 @@ class AddCommand extends Command
         chmod($filename, 0755);
 
         $operation = $exists ? 'Updated' : 'Added';
-        $this->log("{$operation} <info>{$hook}</info> hook");
+        $this->info("{$operation} [{$hook}] hook");
 
         $this->addedHooks[] = $hook;
     }
@@ -124,15 +132,20 @@ class AddCommand extends Command
             return;
         }
 
-        $globalHookDir = global_hook_dir();
+        $previousGlobalHookDir = global_hook_dir();
+        $globalHookDir = trim(realpath("{$this->dir}/hooks"));
+
+        if ($globalHookDir === $previousGlobalHookDir) {
+            return;
+        }
+
         $this->comment(
-            'About to modify global git hook path.' .
-            $globalHookDir === ''
-                ? "Previous value was [{$globalHookDir}]"
-                : 'There was no previous value'
+            'About to modify global git hook path. '
+            . ($previousGlobalHookDir !== ''
+                ? "Previous value was [{$previousGlobalHookDir}]"
+                : 'There was no previous value')
         );
 
-        $globalHookDir = trim(realpath("{$this->dir}/hooks"));
         $exitCode = 0;
         passthru("git config --global core.hooksPath {$globalHookDir}", $exitCode);
 

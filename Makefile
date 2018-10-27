@@ -4,4 +4,4 @@ test:
 	docker build --rm -t cghooks .
 
 exec:
-	docker run --rm -it cghooks sh
+	docker run --rm -it cghooks bash

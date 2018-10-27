@@ -5,7 +5,7 @@ WORKDIR /app
 COPY ./composer.json ./composer.lock /app/
 
 # Remove any scripts that have cghooks since it is not yet present in the container
-RUN sed -iE '/\.\/cghooks .*/d' composer.json
+RUN sed -i -E '/\.\/cghooks .*/d' composer.json
 
 RUN composer install
 

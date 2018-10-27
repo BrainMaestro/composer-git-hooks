@@ -18,12 +18,6 @@ abstract class Command extends SymfonyCommand
     protected $global;
     protected $lockFile;
 
-    public function __construct($hooks)
-    {
-        $this->hooks = $hooks;
-        parent::__construct();
-    }
-
     abstract protected function init($input);
     abstract protected function command();
 
@@ -40,27 +34,41 @@ abstract class Command extends SymfonyCommand
         );
 
         if ($this->global) {
-            $this->dir = trim(empty($this->dir) ? getenv('COMPOSER_HOME') : $this->dir);
-            $this->hooks = Hook::getValidHooks($this->dir);
+            if (empty($this->dir)) {
+                $this->global_dir_fallback();
+            }
+
             $this->lockFile = $this->dir . '/' . Hook::LOCK_FILE;
         }
+
+        $this->hooks = Hook::getValidHooks($this->global ? $this->dir : getcwd());
 
         $this->init($input);
         $this->command();
     }
 
-    protected function log($log)
+    protected function global_dir_fallback()
     {
-        $this->output->writeln($log);
+    }
+
+    protected function info($info)
+    {
+        $info = str_replace('[', '<info>', $info);
+        $info = str_replace(']', '</info>', $info);
+
+        $this->output->writeln($info);
     }
 
     protected function comment($comment)
     {
-        $this->output->writeln("<comment>{$comment}</comment>");
+        $comment = str_replace('[', '<comment>', $comment);
+        $comment = str_replace(']', '</comment>', $comment);
+
+        $this->output->writeln($comment);
     }
 
     protected function error($error)
     {
-        $this->output->writeln("<error>{$error}</error>");
+        $this->output->writeln("<bg=red>{$error}</>");
     }
 }
