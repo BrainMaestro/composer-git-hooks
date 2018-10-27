@@ -35,6 +35,9 @@ class RemoveCommandTester extends TestCase
         }
     }
 
+    /**
+     * @test
+     */
     public function it_removes_removed_hooks_from_the_lock_file()
     {
         foreach (array_keys(self::$hooks) as $hook) {
@@ -110,6 +113,42 @@ class RemoveCommandTester extends TestCase
 
         $this->assertTrue(self::isDirEmpty("{$gitDir}/hooks"));
 
+        $this->recursive_rmdir($gitDir);
+    }
+
+    /**
+     * @test
+     */
+    public function it_removes_global_git_hooks()
+    {
+        $hooks = [
+            'pre-commit' => 'echo pre-commit',
+            'pre-push' => 'echo pre-commit',
+        ];
+        $gitDir = '/tmp/test-global-git-dir';
+        $hookDir = "{$gitDir}/hooks";
+        $initialDir = global_hook_dir();
+
+        self::createHooks($gitDir, $hooks, true);
+        file_put_contents("{$gitDir}/composer.json", json_encode([
+            'extra' => [
+                'hooks' => $hooks,
+            ],
+        ]));
+        $this->assertFalse(self::isDirEmpty($hookDir));
+
+        shell_exec("git config --global core.hooksPath {$hookDir}");
+
+        $command = new RemoveCommand($hooks);
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute(['--global' => true]);
+
+        foreach (array_keys($hooks) as $hook) {
+            $this->assertContains("Removed {$hook} hook", $commandTester->getDisplay());
+        }
+
+        shell_exec("git config --global core.hooksPath {$initialDir}");
         $this->recursive_rmdir($gitDir);
     }
 

@@ -24,8 +24,7 @@ class RemoveCommand extends Command
             ->addArgument(
                 'hooks',
                 InputArgument::IS_ARRAY,
-                'Hooks to be removed',
-                array_keys($this->hooks)
+                'Hooks to be removed'
             )
             ->addOption(
                 'force',
@@ -34,22 +33,24 @@ class RemoveCommand extends Command
                 'Delete hooks without checking the lock file'
             )
             ->addOption('git-dir', 'g', InputOption::VALUE_REQUIRED, 'Path to git directory', '.git')
+            ->addOption('global', null, InputOption::VALUE_NONE, 'Remove global git hooks')
         ;
     }
 
     protected function init($input)
     {
         $this->force = $input->getOption('force');
-        $this->lockFileHooks = file_exists(Hook::LOCK_FILE)
-            ? array_flip(json_decode(file_get_contents(Hook::LOCK_FILE)))
+        $this->lockFileHooks = file_exists($this->lockFile)
+            ? array_flip(json_decode(file_get_contents($this->lockFile)))
             : [];
-        $this->hooksToRemove = $input->getArgument('hooks');
+        $hooks = $input->getArgument('hooks');
+        $this->hooksToRemove = empty($hooks) ? array_keys($this->hooks) : $hooks;
     }
 
     protected function command()
     {
         foreach ($this->hooksToRemove as $hook) {
-            $filename = "{$this->gitDir}/hooks/{$hook}";
+            $filename = "{$this->dir}/hooks/{$hook}";
 
             if (! array_key_exists($hook, $this->lockFileHooks) && ! $this->force) {
                 $this->comment("Skipped {$hook} hook - not present in lock file");
@@ -66,6 +67,6 @@ class RemoveCommand extends Command
             $this->error("{$hook} hook does not exist");
         }
 
-        file_put_contents(Hook::LOCK_FILE, json_encode(array_keys($this->lockFileHooks)));
+        file_put_contents($this->lockFile, json_encode(array_keys($this->lockFileHooks)));
     }
 }

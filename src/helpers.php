@@ -31,3 +31,13 @@ if (! function_exists('is_windows')) {
         return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
     }
 }
+
+if (! function_exists('global_hook_dir')) {
+    /**
+     * Gets the global directory set for git hooks
+     */
+    function global_hook_dir()
+    {
+        return trim(shell_exec('git config --global core.hooksPath'));
+    }
+}

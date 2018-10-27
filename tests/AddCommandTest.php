@@ -75,7 +75,7 @@ class AddCommandTester extends TestCase
         $this->commandTester->execute(['--force' => true]);
 
         foreach (array_keys(self::$hooks) as $hook) {
-            $this->assertContains("Overwrote {$hook} hook", $this->commandTester->getDisplay());
+            $this->assertContains("Updated {$hook} hook", $this->commandTester->getDisplay());
         }
     }
 
@@ -130,15 +130,17 @@ class AddCommandTester extends TestCase
     public function it_uses_a_different_git_path_if_specified()
     {
         $gitDir = 'test-git-dir';
+        $hookDir = "{$gitDir}/hooks";
+
         create_hooks_dir($gitDir);
+
         $this->commandTester->execute(['--git-dir' => $gitDir]);
 
         foreach (array_keys(self::$hooks) as $hook) {
-            $this->assertFileExists("{$gitDir}/hooks/{$hook}");
-            unlink("{$gitDir}/hooks/{$hook}");
+            $this->assertFileExists("{$hookDir}/{$hook}");
         }
 
-        rmdir("{$gitDir}/hooks");
+        $this->recursive_rmdir($gitDir);
     }
 
     /**
@@ -170,11 +172,10 @@ class AddCommandTester extends TestCase
         $this->commandTester->execute(['--git-dir' => $gitDir]);
 
         foreach (array_keys(self::$hooks) as $hook) {
-            $this->assertFileExists("{$gitDir}/hooks/{$hook}");
-            unlink("{$gitDir}/hooks/{$hook}");
+            $this->assertFileExists("{$hookDir}/{$hook}");
         }
 
-        rmdir($hookDir);
+        $this->recursive_rmdir($gitDir);
     }
 
     /**
@@ -217,5 +218,40 @@ class AddCommandTester extends TestCase
             $content = file_get_contents(".git/hooks/" . $hook);
             $this->assertContains(implode(PHP_EOL, $scripts), $content);
         }
+    }
+
+    /**
+     * @test
+     */
+    public function it_adds_global_git_hooks()
+    {
+        $hooks = [
+            'pre-commit' => 'echo pre-commit',
+            'pre-push' => 'echo pre-commit',
+        ];
+        $gitDir = '/tmp/test-global-git-dir';
+        $hookDir = "{$gitDir}/hooks";
+        $initialDir = global_hook_dir();
+
+        create_hooks_dir($gitDir);
+        file_put_contents("{$gitDir}/composer.json", json_encode([
+            'extra' => [
+                'hooks' => $hooks,
+            ],
+        ]));
+
+        $this->commandTester->execute(['--global' => true, '--git-dir' => $gitDir]);
+
+        foreach (array_keys($hooks) as $hook) {
+            $this->assertContains("Added {$hook} hook", $this->commandTester->getDisplay());
+            $this->assertFileExists("{$hookDir}/{$hook}");
+        }
+
+        $hookDir = realpath("{$gitDir}/hooks");
+        $this->assertContains("Global git hook path set to {$hookDir}", $this->commandTester->getDisplay());
+        $this->assertEquals($hookDir, global_hook_dir());
+
+        shell_exec("git config --global core.hooksPath {$initialDir}");
+        $this->recursive_rmdir($gitDir);
     }
 }

@@ -101,10 +101,9 @@ class UpdateCommandTester extends TestCase
 
         foreach (array_keys(self::$hooks) as $hook) {
             $this->assertFileExists("{$gitDir}/hooks/{$hook}");
-            unlink("{$gitDir}/hooks/{$hook}");
         }
 
-        rmdir($hookDir);
+        $this->recursive_rmdir($gitDir);
     }
 
     /**
@@ -149,5 +148,62 @@ class UpdateCommandTester extends TestCase
             $content = file_get_contents(".git/hooks/" . $hook);
             $this->assertContains(implode(PHP_EOL, $scripts), $content);
         }
+    }
+
+    /**
+     * @test
+     */
+    public function it_updates_global_git_hooks()
+    {
+        $hooks = [
+            'pre-commit' => 'echo pre-commit',
+            'pre-push' => 'echo pre-commit',
+        ];
+        $gitDir = '/tmp/test-global-git-dir';
+        $hookDir = realpath("{$gitDir}/hooks");
+        $initialDir = global_hook_dir();
+
+        self::createHooks($gitDir, $hooks);
+        file_put_contents("{$gitDir}/composer.json", json_encode([
+            'extra' => [
+                'hooks' => $hooks,
+            ],
+        ]));
+
+        shell_exec("git config --global core.hooksPath {$hookDir}");
+        $this->commandTester->execute(['--global' => true]);
+
+        foreach (array_keys($hooks) as $hook) {
+            $this->assertContains("Updated {$hook} hook", $this->commandTester->getDisplay());
+        }
+
+        shell_exec("git config --global core.hooksPath {$initialDir}");
+        $this->recursive_rmdir($gitDir);
+    }
+
+    /**
+     * @test
+     */
+    public function it_fails_if_global_hook_dir_is_missing()
+    {
+        $gitDir = 'test-global-git-dir';
+        $hookDir = realpath("{$gitDir}/hooks");
+        $initialDir = global_hook_dir();
+        putenv('COMPOSER_HOME=');
+
+        shell_exec('git config --global --unset core.hooksPath');
+
+        $this->commandTester->execute(['--global' => true]);
+
+        foreach (array_keys(self::$hooks) as $hook) {
+            $this->assertNotContains("Updated {$hook} hook", $this->commandTester->getDisplay());
+        }
+
+        $this->assertContains(
+            'You need to run the add command globally first before you try to update',
+            $this->commandTester->getDisplay()
+        );
+
+        shell_exec("git config --global core.hooksPath {$initialDir}");
     }
 }

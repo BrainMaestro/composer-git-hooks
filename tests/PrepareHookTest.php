@@ -21,12 +21,18 @@ trait PrepareHookTest
         self::cleanup();
     }
 
-    public static function createHooks($gitDir = '.git')
+    public static function createHooks($gitDir = '.git', $hooks = [], $createLockFile = false)
     {
         create_hooks_dir($gitDir, 0777);
+        $hooks = empty($hooks) ? self::$hooks : $hooks;
 
-        foreach (self::$hooks as $hook => $script) {
+        foreach ($hooks as $hook => $script) {
             file_put_contents("{$gitDir}/hooks/{$hook}", $script);
+        }
+
+        if ($createLockFile) {
+            $lockFile = ($gitDir === '.git' ? '' : $gitDir . '/') . Hook::LOCK_FILE;
+            file_put_contents($lockFile, json_encode(array_keys($hooks)));
         }
     }
 
