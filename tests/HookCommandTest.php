@@ -3,7 +3,6 @@
 namespace BrainMaestro\GitHooks\Tests;
 
 use BrainMaestro\GitHooks\Commands\HookCommand;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class HookCommandTest extends TestCase

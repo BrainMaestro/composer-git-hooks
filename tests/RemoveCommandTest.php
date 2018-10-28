@@ -4,8 +4,8 @@ namespace BrainMaestro\GitHooks\Tests;
 
 use BrainMaestro\GitHooks\Commands\RemoveCommand;
 use BrainMaestro\GitHooks\Hook;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class RemoveCommandTest extends TestCase
 {
@@ -68,7 +68,7 @@ class RemoveCommandTest extends TestCase
         $hook = 'pre-commit';
         unlink(Hook::LOCK_FILE);
 
-        $this->commandTester->execute(['hooks' => [$hook]]);
+        $this->commandTester->execute(['hooks' => [$hook]], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
         $this->assertContains(
             "Skipped {$hook} hook - not present in lock file",
             $this->commandTester->getDisplay()

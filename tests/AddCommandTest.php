@@ -4,8 +4,8 @@ namespace BrainMaestro\GitHooks\Tests;
 
 use BrainMaestro\GitHooks\Commands\AddCommand;
 use BrainMaestro\GitHooks\Hook;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class AddCommandTest extends TestCase
 {
@@ -54,11 +54,13 @@ class AddCommandTest extends TestCase
     public function it_does_not_add_hooks_that_already_exist()
     {
         self::createHooks();
-        $this->commandTester->execute([]);
+        $this->commandTester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
 
         foreach (array_keys(self::$hooks) as $hook) {
             $this->assertContains("{$hook} already exists", $this->commandTester->getDisplay());
         }
+
+        $this->assertContains('No hooks were added. Try updating', $this->commandTester->getDisplay());
     }
 
     /**
@@ -79,7 +81,7 @@ class AddCommandTest extends TestCase
      */
     public function it_correctly_creates_the_hook_lock_file()
     {
-        $this->commandTester->execute([]);
+        $this->commandTester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
 
         $this->assertContains('Created '. Hook::LOCK_FILE . ' file', $this->commandTester->getDisplay());
         $this->assertFileExists(Hook::LOCK_FILE);
@@ -91,7 +93,7 @@ class AddCommandTest extends TestCase
      */
     public function it_does_not_create_the_hook_lock_file_if_the_no_lock_option_is_passed()
     {
-        $this->commandTester->execute(['--no-lock' => true]);
+        $this->commandTester->execute(['--no-lock' => true], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
 
         $this->assertContains('Skipped creating a '. Hook::LOCK_FILE . ' file', $this->commandTester->getDisplay());
         $this->assertFileNotExists(Hook::LOCK_FILE);
@@ -102,7 +104,7 @@ class AddCommandTest extends TestCase
      */
     public function it_does_not_ignore_the_hook_lock_file()
     {
-        $this->commandTester->execute([]);
+        $this->commandTester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
 
         $this->assertContains('Skipped adding '. Hook::LOCK_FILE . ' to .gitignore', $this->commandTester->getDisplay());
         $this->assertFalse(strpos(file_get_contents('.gitignore'), Hook::LOCK_FILE));
@@ -113,7 +115,7 @@ class AddCommandTest extends TestCase
      */
     public function it_ignores_the_hook_lock_file_if_the_ignore_lock_option_is_passed()
     {
-        $this->commandTester->execute(['--ignore-lock' => true]);
+        $this->commandTester->execute(['--ignore-lock' => true], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
 
         $this->assertContains('Added ' . Hook::LOCK_FILE . ' to .gitignore', $this->commandTester->getDisplay());
         $this->assertTrue(strpos(file_get_contents('.gitignore'), Hook::LOCK_FILE) !== false);
@@ -216,7 +218,10 @@ class AddCommandTest extends TestCase
 
         self::createTestComposerFile($gitDir);
 
-        $this->commandTester->execute(['--global' => true, '--git-dir' => $gitDir]);
+        $this->commandTester->execute(
+            ['--global' => true, '--git-dir' => $gitDir],
+            ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]
+        );
 
         foreach (array_keys(self::$hooks) as $hook) {
             $this->assertContains("Added {$hook} hook", $this->commandTester->getDisplay());
@@ -244,7 +249,10 @@ class AddCommandTest extends TestCase
 
         self::createTestComposerFile($gitDir);
 
-        $this->commandTester->execute(['--global' => true, '--git-dir' => $gitDir]);
+        $this->commandTester->execute(
+            ['--global' => true, '--git-dir' => $gitDir],
+            ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]
+        );
 
         foreach (array_keys(self::$hooks) as $hook) {
             $this->assertContains("Added {$hook} hook", $this->commandTester->getDisplay());
@@ -253,7 +261,7 @@ class AddCommandTest extends TestCase
 
         $hookDir = realpath("{$gitDir}/hooks");
         $this->assertContains(
-            "About to modify global git hook path. Previous value was [{$previousHookDir}]",
+            "About to modify global git hook path. Previous value was {$previousHookDir}",
             $this->commandTester->getDisplay()
         );
         $this->assertContains("Global git hook path set to {$hookDir}", $this->commandTester->getDisplay());
@@ -272,7 +280,10 @@ class AddCommandTest extends TestCase
 
         self::createTestComposerFile($gitDir);
 
-        $this->commandTester->execute(['--global' => true, '--git-dir' => $gitDir]);
+        $this->commandTester->execute(
+            ['--global' => true, '--git-dir' => $gitDir],
+            ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]
+        );
 
         foreach (array_keys(self::$hooks) as $hook) {
             $this->assertContains("Added {$hook} hook", $this->commandTester->getDisplay());
@@ -280,7 +291,7 @@ class AddCommandTest extends TestCase
         }
 
         $this->assertNotContains(
-            "About to modify global git hook path. Previous value was [{$hookDir}]",
+            "About to modify global git hook path. Previous value was {$hookDir}",
             $this->commandTester->getDisplay()
         );
         $this->assertNotContains("Global git hook path set to {$hookDir}", $this->commandTester->getDisplay());
@@ -300,7 +311,7 @@ class AddCommandTest extends TestCase
 
         self::createTestComposerFile($gitDir);
 
-        $this->commandTester->execute(['--global' => true]);
+        $this->commandTester->execute(['--global' => true], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
 
         foreach (array_keys(self::$hooks) as $hook) {
             $this->assertContains("Added {$hook} hook", $this->commandTester->getDisplay());
@@ -310,7 +321,7 @@ class AddCommandTest extends TestCase
         $gitDir = realpath('test-global-composer-home-dir');
         $hookDir = "{$gitDir}/hooks";
         $this->assertContains(
-            "No global git hook path was provided. Falling back to COMPOSER_HOME [{$gitDir}]",
+            "No global git hook path was provided. Falling back to COMPOSER_HOME {$gitDir}",
             $this->commandTester->getDisplay()
         );
         $this->assertContains(
@@ -332,7 +343,7 @@ class AddCommandTest extends TestCase
 
         shell_exec('git config --global --unset core.hooksPath');
 
-        $this->commandTester->execute(['--global' => true]);
+        $this->commandTester->execute(['--global' => true], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
 
         foreach (array_keys(self::$hooks) as $hook) {
             $this->assertNotContains("Updated {$hook} hook", $this->commandTester->getDisplay());

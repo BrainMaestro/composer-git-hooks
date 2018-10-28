@@ -59,16 +59,16 @@ abstract class Command extends SymfonyCommand
         $this->output->writeln($info);
     }
 
-    protected function comment($comment)
+    protected function debug($debug)
     {
-        $comment = str_replace('[', '<comment>', $comment);
-        $comment = str_replace(']', '</comment>', $comment);
+        $debug = str_replace('[', '<comment>', $debug);
+        $debug = str_replace(']', '</comment>', $debug);
 
-        $this->output->writeln($comment);
+        $this->output->writeln($debug, OutputInterface::VERBOSITY_VERBOSE);
     }
 
     protected function error($error)
     {
-        $this->output->writeln("<bg=red>{$error}</>");
+        $this->output->writeln("<fg=red>{$error}</>");
     }
 }

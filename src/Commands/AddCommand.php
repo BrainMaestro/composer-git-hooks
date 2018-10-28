@@ -67,7 +67,7 @@ class AddCommand extends Command
     {
         if (!empty($this->dir = trim(getenv('COMPOSER_HOME')))) {
             $this->dir = realpath($this->dir);
-            $this->comment("No global git hook path was provided. Falling back to COMPOSER_HOME [{$this->dir}]");
+            $this->debug("No global git hook path was provided. Falling back to COMPOSER_HOME [{$this->dir}]");
         }
     }
 
@@ -82,11 +82,11 @@ class AddCommand extends Command
         $contents = is_array($contents) ? implode(PHP_EOL, $contents) : $contents;
 
         if (! $this->force && $exists) {
-            $this->comment("{$hook} already exists");
+            $this->debug("[{$hook}] already exists");
             return;
         }
 
-        file_put_contents($filename, $shebang . $contents);
+        file_put_contents($filename, $shebang . $contents . PHP_EOL);
         chmod($filename, 0755);
 
         $operation = $exists ? 'Updated' : 'Added';
@@ -98,12 +98,12 @@ class AddCommand extends Command
     private function addLockFile()
     {
         if ($this->noLock) {
-            $this->comment("Skipped creating a {$this->lockFile} file");
+            $this->debug("Skipped creating a [{$this->lockFile}] file");
             return;
         }
 
         file_put_contents(Hook::LOCK_FILE, json_encode($this->addedHooks));
-        $this->comment("Created {$this->lockFile} file");
+        $this->debug("Created [{$this->lockFile}] file");
     }
 
     private function ignoreLockFile()
@@ -113,7 +113,7 @@ class AddCommand extends Command
         }
 
         if (! $this->ignoreLock) {
-            $this->comment("Skipped adding {$this->lockFile} to .gitignore");
+            $this->debug("Skipped adding [{$this->lockFile}] to .gitignore");
             return;
         }
 
@@ -122,7 +122,7 @@ class AddCommand extends Command
 
         if ($return === false) {
             file_put_contents('.gitignore', $this->lockFile . PHP_EOL, FILE_APPEND);
-            $this->comment("Added {$this->lockFile} to .gitignore");
+            $this->debug("Added [{$this->lockFile}] to .gitignore");
         }
     }
 
@@ -139,7 +139,7 @@ class AddCommand extends Command
             return;
         }
 
-        $this->comment(
+        $this->info(
             'About to modify global git hook path. '
             . ($previousGlobalHookDir !== ''
                 ? "Previous value was [{$previousGlobalHookDir}]"
@@ -155,6 +155,6 @@ class AddCommand extends Command
             return;
         }
 
-        $this->comment("Global git hook path set to {$globalHookDir}");
+        $this->info("Global git hook path set to [{$globalHookDir}]");
     }
 }

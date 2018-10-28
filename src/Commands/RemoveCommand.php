@@ -53,7 +53,7 @@ class RemoveCommand extends Command
             $filename = "{$this->dir}/hooks/{$hook}";
 
             if (! array_key_exists($hook, $this->lockFileHooks) && ! $this->force) {
-                $this->comment("Skipped {$hook} hook - not present in lock file");
+                $this->info("Skipped [{$hook}] hook - not present in lock file");
                 continue;
             }
 

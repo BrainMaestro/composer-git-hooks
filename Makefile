@@ -1,6 +1,6 @@
-.PHONY: test
+.PHONY: build exec
 
-test:
+build:
 	docker build --rm -t cghooks .
 
 exec:

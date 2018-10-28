@@ -3,7 +3,6 @@
 namespace BrainMaestro\GitHooks\Tests;
 
 use BrainMaestro\GitHooks\Commands\ListCommand;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class ListCommandTest extends TestCase

@@ -49,7 +49,10 @@
     "extra": {
         "hooks": {
             "pre-commit": "composer check-style",
-            "pre-push": "composer test"
+            "pre-push": [
+                "composer test",
+                "grep -q $(git tag --sort=-v:refname | head -n 1) cghooks"
+            ]
         }
     }
 }
