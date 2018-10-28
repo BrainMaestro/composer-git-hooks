@@ -17,6 +17,7 @@ class ListCommand extends Command
             ->setDescription('List added hooks')
             ->setHelp('This command allows you to list your git hooks')
             ->addOption('git-dir', 'g', InputOption::VALUE_REQUIRED, 'Path to git directory', '.git')
+            ->addOption('global', null, InputOption::VALUE_NONE, 'Perform hook command globally for every git repository')
         ;
     }
 
@@ -27,10 +28,10 @@ class ListCommand extends Command
     protected function command()
     {
         foreach (array_keys($this->hooks) as $hook) {
-            $filename = "{$this->gitDir}/hooks/{$hook}";
+            $filename = "{$this->dir}/hooks/{$hook}";
 
             if (is_file($filename)) {
-                $this->log("<info>{$hook}</info>");
+                $this->info("[{$hook}]");
             }
         }
     }

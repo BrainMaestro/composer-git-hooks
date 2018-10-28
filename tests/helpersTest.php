@@ -2,9 +2,9 @@
 
 namespace BrainMaestro\GitHooks\Tests;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 
-class HelpersTester extends TestCase
+class HelpersTest extends PHPUnitTestCase
 {
     /**
      * @test

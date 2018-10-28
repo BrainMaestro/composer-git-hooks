@@ -15,7 +15,12 @@ class Hook
      */
     public static function getValidHooks($dir)
     {
-        $contents = file_get_contents("{$dir}/composer.json");
+        $composerFile = "{$dir}/composer.json";
+        if (!file_exists($composerFile)) {
+            return [];
+        }
+
+        $contents = file_get_contents($composerFile);
         $json = json_decode($contents, true);
         $hooks = array_merge(
             isset($json['scripts']) ? $json['scripts'] : [],
