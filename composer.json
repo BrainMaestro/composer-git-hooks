@@ -51,7 +51,13 @@
             "pre-commit": "composer check-style",
             "pre-push": [
                 "composer test",
-                "grep -q $(git tag --sort=-v:refname | head -n 1) cghooks"
+                "appver=$(grep -o -P '\\d.\\d.\\d' cghooks)",
+                "tag=$(git tag --sort=-v:refname | head -n 1 | tr -d v)",
+                "if [ \"$tag\" != \"$appver\" ]; then",
+                "echo \"The most recent tag v$tag does not match the application version $appver\n\"",
+                "sed -i -E \"s/$appver/$tag/\" cghooks",
+                "exit 1",
+                "fi"
             ]
         }
     }
