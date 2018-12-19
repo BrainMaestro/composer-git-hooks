@@ -6,6 +6,8 @@ matrix:
         - php: 7.0
         - php: 7.1
         - php: 7.2
+        - php: 7.3
+          env: PHP_CS_FIXER_IGNORE_ENV=1 IGNORE_PLATFORM_REQS=--ignore-platform-reqs # awful ugly hack
     fast_finish: true
 
 cache:
@@ -17,9 +19,9 @@ before_install:
   - travis_retry composer self-update
 
 install:
-  - travis_retry composer update --no-interaction
+  - travis_retry composer update --no-interaction $IGNORE_PLATFORM_REQS
 
 script:
   - composer validate --strict --no-check-lock
-  - ./vendor/bin/php-cs-fixer fix . -v --dry-run --using-cache=no
-  - ./vendor/bin/phpunit
+  - composer check-style
+  - composer test
