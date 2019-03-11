@@ -2,7 +2,7 @@ FROM composer:1.8
 
 WORKDIR /app
 
-COPY ./composer.* .
+COPY ./composer.* ./
 
 # Remove any scripts that have cghooks since it is not yet present in the container
 RUN sed -i -E '/\.\/cghooks .*/d' composer.json
