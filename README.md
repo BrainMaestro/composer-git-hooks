@@ -72,8 +72,8 @@ Add the following events to your `composer.json` file. The `cghooks` commands wi
 ```json
 {
     "scripts": {
-        "post-install-cmd": "vendor/bin/cghooks add --ignore-lock",
-        "post-update-cmd": "vendor/bin/cghooks update",
+        "post-install-cmd": "if [ $COMPOSER_DEV_MODE == 1 ]; then vendor/bin/cghooks add --ignore-lock; fi",
+        "post-update-cmd": "if [ $COMPOSER_DEV_MODE == 1 ]; then vendor/bin/cghooks update; fi",
         "...": "..."
     }
 }
