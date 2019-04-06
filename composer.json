@@ -46,6 +46,11 @@
         "check-style": "php-cs-fixer fix --using-cache=no --diff --dry-run .",
         "fix-style": "php-cs-fixer fix --using-cache=no ."
     },
+    "scripts-descriptions": {
+        "test": "Run all tests.",
+        "check-style": "Run style checks (only dry run - no fixing!).",
+        "fix-style": "Run style checks and fix violations."
+    },
     "extra": {
         "hooks": {
             "pre-commit": "composer check-style",
