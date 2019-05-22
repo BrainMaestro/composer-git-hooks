@@ -2,11 +2,9 @@
 
 namespace BrainMaestro\GitHooks\Commands;
 
-use BrainMaestro\GitHooks\Hook;
 use BrainMaestro\GitHooks\Commands\Command;
-use Symfony\Component\Console\Input\InputInterface;
+use BrainMaestro\GitHooks\Hook;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class AddCommand extends Command
 {
@@ -47,13 +45,15 @@ class AddCommand extends Command
             return;
         }
 
-        create_hooks_dir($this->dir);
+        if (is_dir(realpath(__DIR__ . '/.git/hooks')) === false && is_dir(realpath(__DIR__ . '/..') . '/.git/hooks') === false) {
+            create_hooks_dir($this->dir);
+        }
 
         foreach ($this->hooks as $hook => $contents) {
             $this->addHook($hook, $contents);
         }
 
-        if (! count($this->addedHooks)) {
+        if (!count($this->addedHooks)) {
             $this->error('No hooks were added. Try updating');
             return;
         }
@@ -65,7 +65,11 @@ class AddCommand extends Command
 
     protected function global_dir_fallback()
     {
-        if (!empty($this->dir = trim(getenv('COMPOSER_HOME')))) {
+        if (is_dir(realpath(__DIR__ . '/.git'))) {
+            $this->dir = realpath(__DIR__ . '/.git');
+        } elseif (is_dir(realpath(__DIR__ . '/..') . '/.git')) {
+            $this->dir = realpath(__DIR__ . '/..') . '/.git';
+        } elseif (!empty($this->dir = trim(getenv('COMPOSER_HOME')))) {
             $this->dir = realpath($this->dir);
             $this->debug("No global git hook path was provided. Falling back to COMPOSER_HOME [{$this->dir}]");
         }
@@ -81,7 +85,7 @@ class AddCommand extends Command
         $shebang = ($this->windows ? '#!/bin/bash' : '#!/bin/sh') . PHP_EOL . PHP_EOL;
         $contents = is_array($contents) ? implode(PHP_EOL, $contents) : $contents;
 
-        if (! $this->force && $exists) {
+        if (!$this->force && $exists) {
             $this->debug("[{$hook}] already exists");
             return;
         }
@@ -112,7 +116,7 @@ class AddCommand extends Command
             return;
         }
 
-        if (! $this->ignoreLock) {
+        if (!$this->ignoreLock) {
             $this->debug("Skipped adding [{$this->lockFile}] to .gitignore");
             return;
         }
@@ -128,7 +132,7 @@ class AddCommand extends Command
 
     private function setGlobalGitHooksPath()
     {
-        if (! $this->global) {
+        if (!$this->global) {
             return;
         }
 
@@ -151,7 +155,7 @@ class AddCommand extends Command
 
         if ($exitCode !== 0) {
             $this->error("Could not set global git hook path.\n" .
-            " Try running this manually 'git config --global core.hooksPath {$globalHookDir}'");
+                " Try running this manually 'git config --global core.hooksPath {$globalHookDir}'");
             return;
         }
 

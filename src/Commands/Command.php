@@ -5,7 +5,6 @@ namespace BrainMaestro\GitHooks\Commands;
 use BrainMaestro\GitHooks\Hook;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class Command extends SymfonyCommand
@@ -27,11 +26,17 @@ abstract class Command extends SymfonyCommand
         $this->gitDir = $input->getOption('git-dir');
         $this->global = $input->getOption('global');
         $this->lockFile = Hook::LOCK_FILE;
-        $this->dir = trim(
-            $this->global && $this->gitDir === '.git'
+        if (is_dir(realpath(__DIR__ . '/.git'))) {
+            $this->dir = realpath(__DIR__ . '/.git');
+        } elseif (is_dir(realpath(__DIR__ . '/..') . '/.git')) {
+            $this->dir = realpath(__DIR__ . '/..') . '/.git';
+        } else {
+            $this->dir = trim(
+                $this->global && $this->gitDir === '.git'
                 ? dirname(global_hook_dir())
                 : $this->gitDir
-        );
+            );
+        }
 
         if ($this->global) {
             if (empty($this->dir)) {
