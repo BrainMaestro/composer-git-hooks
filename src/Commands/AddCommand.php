@@ -33,7 +33,7 @@ class AddCommand extends Command
         ;
     }
 
-    protected function init($input)
+    protected function init(InputInterface $input)
     {
         $this->force = $input->getOption('force');
         $this->windows = $input->getOption('force-win') || is_windows();
