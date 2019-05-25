@@ -56,7 +56,7 @@
             "pre-commit": "composer check-style",
             "pre-push": [
                 "composer test",
-                "appver=$(grep -o -P '\\d.\\d.\\d' cghooks)",
+                "appver=$(grep -o -E '\\d.\\d.\\d' cghooks)",
                 "tag=$(git describe --tags --abbrev=0)",
                 "if [ \"$tag\" != \"v$appver\" ]; then",
                 "echo \"The most recent tag $tag does not match the application version $appver\\n\"",
