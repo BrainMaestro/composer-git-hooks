@@ -75,8 +75,8 @@ Go to [Composer Command Events][link-composer-events] for more details about com
 ```json
 {
     "scripts": {
-        "post-install-cmd": "vendor/bin/cghooks add --no-dev --ignore-lock",
-        "post-update-cmd": "vendor/bin/cghooks update --no-dev",
+        "post-install-cmd": "cghooks add --no-dev --ignore-lock",
+        "post-update-cmd": "cghooks update --no-dev",
         "...": "..."
     }
 }
