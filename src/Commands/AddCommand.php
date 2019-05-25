@@ -16,6 +16,8 @@ class AddCommand extends Command
     protected $noLock;
     protected $windows;
     protected $ignoreLock;
+    /** @var bool */
+    protected $noDev;
 
     protected function configure()
     {
@@ -25,6 +27,7 @@ class AddCommand extends Command
             ->setHelp('This command allows you to add git hooks')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Override existing git hooks')
             ->addOption('no-lock', 'l', InputOption::VALUE_NONE, 'Do not create a lock file')
+            ->addOption('no-dev', null, InputOption::VALUE_NONE, 'Do not setup hook if running in composer --no-dev')
             ->addOption('ignore-lock', 'i', InputOption::VALUE_NONE, 'Add the lock file to .gitignore')
             ->addOption('git-dir', 'g', InputOption::VALUE_REQUIRED, 'Path to git directory', '.git')
             ->addOption('force-win', null, InputOption::VALUE_NONE, 'Force windows bash compatibility')
@@ -32,16 +35,22 @@ class AddCommand extends Command
         ;
     }
 
-    protected function init($input)
+    protected function init(InputInterface $input)
     {
         $this->force = $input->getOption('force');
         $this->windows = $input->getOption('force-win') || is_windows();
         $this->noLock = $input->getOption('no-lock');
+        $this->noDev = $input->getOption('no-dev');
         $this->ignoreLock = $input->getOption('ignore-lock');
     }
 
     protected function command()
     {
+        if ($this->isComposerDevMode()) {
+            // skip silently
+            return;
+        }
+
         if (empty($this->dir)) {
             $this->error('You did not specify a git directory to use');
             return;
@@ -156,5 +165,18 @@ class AddCommand extends Command
         }
 
         $this->info("Global git hook path set to [{$globalHookDir}]");
+    }
+
+    /**
+     * During a composer install or update process,
+     * a variable named COMPOSER_DEV_MODE will be added to the environment.
+     * If the command was run with the --no-dev flag,
+     * this variable will be set to 0, otherwise it will be set to 1.
+     *
+     * @see https://getcomposer.org/doc/articles/scripts.md#defining-scripts
+     */
+    private function isComposerDevMode()
+    {
+        return $this->noDev && getenv('COMPOSER_DEV_MODE') === '1';
     }
 }
