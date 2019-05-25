@@ -22,7 +22,7 @@ class UpdateCommand extends AddCommand
         ;
     }
 
-    protected function init($input)
+    protected function init(InputInterface $input)
     {
         $this->windows = $input->getOption('force-win') || is_windows();
         $this->force = true;
