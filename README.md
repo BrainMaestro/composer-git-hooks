@@ -67,13 +67,16 @@ Add a `cghooks` script to the `scripts` section of your `composer.json` file. Th
 
 #### Composer Events
 
-Add the following events to your `composer.json` file. The `cghooks` commands will be run every time the events occur. Go to [Composer Command Events][link-composer-events] for more details about composer's event system.
+Add the following events to your `composer.json` file.
+The `cghooks` commands will be run every time the events occur.
+The `--no-dev` option will make `cghooks` skip hooks setup if `composer` is running in `--no-dev` option.
+Go to [Composer Command Events][link-composer-events] for more details about composer's event system.
 
 ```json
 {
     "scripts": {
         "post-install-cmd": "vendor/bin/cghooks add --no-dev --ignore-lock",
-        "post-update-cmd": "vendor/bin/cghooks update",
+        "post-update-cmd": "vendor/bin/cghooks update --no-dev",
         "...": "..."
     }
 }
