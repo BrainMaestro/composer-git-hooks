@@ -1,7 +1,5 @@
 <?php
 
-use Symfony\Component\Process\Process;
-
 if (! function_exists('create_hooks_dir')) {
     /**
      * Create hook directory if not exists.
