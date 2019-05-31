@@ -17,7 +17,7 @@ class AddCommand extends Command
     protected $windows;
     protected $ignoreLock;
     /** @var bool */
-    protected $noDev;
+    protected $always;
 
     protected function configure()
     {
@@ -27,7 +27,7 @@ class AddCommand extends Command
             ->setHelp('This command allows you to add git hooks')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Override existing git hooks')
             ->addOption('no-lock', 'l', InputOption::VALUE_NONE, 'Do not create a lock file')
-            ->addOption('no-dev', null, InputOption::VALUE_NONE, 'Do not setup hook if running in composer --no-dev')
+            ->addOption('always', null, InputOption::VALUE_NONE, 'Setup hooks even if composer is running with --no-dev')
             ->addOption('ignore-lock', 'i', InputOption::VALUE_NONE, 'Add the lock file to .gitignore')
             ->addOption('git-dir', 'g', InputOption::VALUE_REQUIRED, 'Path to git directory', '.git')
             ->addOption('force-win', null, InputOption::VALUE_NONE, 'Force windows bash compatibility')
@@ -40,7 +40,7 @@ class AddCommand extends Command
         $this->force = $input->getOption('force');
         $this->windows = $input->getOption('force-win') || is_windows();
         $this->noLock = $input->getOption('no-lock');
-        $this->noDev = $input->getOption('no-dev');
+        $this->always = $input->getOption('always');
         $this->ignoreLock = $input->getOption('ignore-lock');
     }
 
@@ -177,6 +177,6 @@ class AddCommand extends Command
      */
     private function isComposerDevMode()
     {
-        return $this->noDev && getenv('COMPOSER_DEV_MODE') === '1';
+        return !$this->always && getenv('COMPOSER_DEV_MODE') === '1';
     }
 }
