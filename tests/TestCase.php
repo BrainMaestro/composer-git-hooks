@@ -86,7 +86,7 @@ abstract class TestCase extends PHPUnitTestCase
             $entries = scandir($dir);
 
             foreach ($entries as $entry) {
-                if ($entry != "." && $entry != "..") {
+                if ($entry !== '.' && $entry !== '..') {
                     $path = "{$dir}/{$entry}";
                     if (is_dir($path)) {
                         self::rmdir($path);

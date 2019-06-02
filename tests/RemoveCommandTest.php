@@ -129,6 +129,6 @@ class RemoveCommandTest extends TestCase
 
     private static function isDirEmpty($dir)
     {
-        return count(scandir($dir)) == 2;
+        return count(scandir($dir)) === 2;
     }
 }
