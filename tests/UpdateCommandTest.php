@@ -8,6 +8,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class UpdateCommandTest extends TestCase
 {
+    /** @var CommandTester */
     private $commandTester;
 
     public function init()
