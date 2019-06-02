@@ -44,6 +44,32 @@ class UpdateCommandTest extends TestCase
     /**
      * @test
      */
+    public function it_does_not_update_hooks_in_composer_dev_mode()
+    {
+        self::createHooks();
+        putenv('COMPOSER_DEV_MODE=1');
+        $this->commandTester->execute([]);
+
+        $this->assertEquals('', $this->commandTester->getDisplay());
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_update_hooks_in_composer_dev_mode_with_always_option()
+    {
+        self::createHooks();
+        putenv('COMPOSER_DEV_MODE=1');
+        $this->commandTester->execute(['--always' => true]);
+
+        foreach (array_keys(self::$hooks) as $hook) {
+            $this->assertContains("Updated {$hook} hook", $this->commandTester->getDisplay());
+        }
+    }
+
+    /**
+     * @test
+     */
     public function it_adds_shebang_to_hooks_on_windows()
     {
         if (! is_windows()) {

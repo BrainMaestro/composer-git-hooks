@@ -79,6 +79,30 @@ class AddCommandTest extends TestCase
     /**
      * @test
      */
+    public function it_does_not_add_hooks_in_composer_dev_mode()
+    {
+        putenv('COMPOSER_DEV_MODE=1');
+        $this->commandTester->execute([]);
+
+        $this->assertEquals('', $this->commandTester->getDisplay());
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_add_hooks_in_composer_dev_mode_with_always_option()
+    {
+        putenv('COMPOSER_DEV_MODE=1');
+        $this->commandTester->execute(['--always' => true]);
+
+        foreach (array_keys(self::$hooks) as $hook) {
+            $this->assertContains("Added {$hook} hook", $this->commandTester->getDisplay());
+        }
+    }
+
+    /**
+     * @test
+     */
     public function it_correctly_creates_the_hook_lock_file()
     {
         $this->commandTester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
