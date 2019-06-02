@@ -46,7 +46,7 @@ class AddCommand extends Command
 
     protected function command()
     {
-        if ($this->isComposerDevMode()) {
+        if (!$this->always && $this->isComposerDevMode()) {
             // skip silently
             return;
         }
@@ -177,6 +177,6 @@ class AddCommand extends Command
      */
     private function isComposerDevMode()
     {
-        return !$this->always && getenv('COMPOSER_DEV_MODE') === '1';
+        return getenv('COMPOSER_DEV_MODE') === '1';
     }
 }
