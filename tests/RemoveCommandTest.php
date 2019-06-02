@@ -12,6 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class RemoveCommandTest extends TestCase
 {
+    /** @var CommandTester */
     private $commandTester;
 
     public function init()
