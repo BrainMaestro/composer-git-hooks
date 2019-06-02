@@ -188,7 +188,6 @@ class UpdateCommandTest extends TestCase
      */
     public function it_fails_if_global_hook_dir_is_missing()
     {
-        $gitDir = 'test-global-git-dir';
         putenv('COMPOSER_HOME=');
 
         shell_exec('git config --global --unset core.hooksPath');
