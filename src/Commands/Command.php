@@ -26,10 +26,8 @@ abstract class Command extends SymfonyCommand
         $this->gitDir = $input->getOption('git-dir');
         $this->global = $input->getOption('global');
         $this->lockFile = Hook::LOCK_FILE;
-        if (is_dir(realpath(__DIR__ . '/.git'))) {
-            $this->dir = realpath(__DIR__ . '/.git');
-        } elseif (is_dir(realpath(__DIR__ . '/..') . '/.git')) {
-            $this->dir = realpath(__DIR__ . '/..') . '/.git';
+        if (exec('git rev-parse --absolute-git-dir')) {
+            $this->dir = exec('git rev-parse --absolute-git-dir');
         } else {
             $this->dir = trim(
                 $this->global && $this->gitDir === '.git'

@@ -45,7 +45,8 @@ class AddCommand extends Command
             return;
         }
 
-        if (is_dir(realpath(__DIR__ . '/.git/hooks')) === false && is_dir(realpath(__DIR__ . '/..') . '/.git/hooks') === false) {
+        $getGitDir = exec('git rev-parse --absolute-git-dir', $output, $status);
+        if ($status !== 0) {
             create_hooks_dir($this->dir);
         }
 
@@ -65,10 +66,8 @@ class AddCommand extends Command
 
     protected function global_dir_fallback()
     {
-        if (is_dir(realpath(__DIR__ . '/.git'))) {
-            $this->dir = realpath(__DIR__ . '/.git');
-        } elseif (is_dir(realpath(__DIR__ . '/..') . '/.git')) {
-            $this->dir = realpath(__DIR__ . '/..') . '/.git';
+        if (exec('git rev-parse --absolute-git-dir')) {
+            $this->dir = exec('git rev-parse --absolute-git-dir');
         } elseif (!empty($this->dir = trim(getenv('COMPOSER_HOME')))) {
             $this->dir = realpath($this->dir);
             $this->debug("No global git hook path was provided. Falling back to COMPOSER_HOME [{$this->dir}]");
