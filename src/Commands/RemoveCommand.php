@@ -37,7 +37,7 @@ class RemoveCommand extends Command
         ;
     }
 
-    protected function init($input)
+    protected function init(InputInterface $input)
     {
         $this->force = $input->getOption('force');
         $this->lockFileHooks = file_exists($this->lockFile)
