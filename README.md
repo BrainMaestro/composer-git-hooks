@@ -70,7 +70,7 @@ Add a `cghooks` script to the `scripts` section of your `composer.json` file. Th
 Add the following events to your `composer.json` file.
 The `cghooks` commands will be run every time the events occur.
 By default `cghooks` will honor composer `--no-dev` option and will not setup hooks if `composer` is running in dev mode.
-If you need to override this, use `--always` option.
+If you need to override this, use `--force-setup` option.
 Go to [Composer Command Events][link-composer-events] for more details about composer's event system.
 
 ```json

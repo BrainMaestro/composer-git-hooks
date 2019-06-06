@@ -16,7 +16,7 @@ class UpdateCommand extends AddCommand
             ->setName('update')
             ->setDescription('Update git hooks specified in the composer config')
             ->setHelp('This command allows you to update git hooks')
-            ->addOption('always', null, InputOption::VALUE_NONE, 'Setup hooks even if composer is running with --no-dev')
+            ->addOption('force-setup', null, InputOption::VALUE_NONE, 'Setup hooks even if composer is running with --no-dev')
             ->addOption('git-dir', 'g', InputOption::VALUE_REQUIRED, 'Path to git directory', '.git')
             ->addOption('force-win', null, InputOption::VALUE_NONE, 'Force windows bash compatibility')
             ->addOption('global', null, InputOption::VALUE_NONE, 'Update global git hooks')
@@ -28,7 +28,7 @@ class UpdateCommand extends AddCommand
         $this->windows = $input->getOption('force-win') || is_windows();
         $this->force = true;
         $this->noLock = true;
-        $this->always = $input->getOption('always');
+        $this->forceSetup = $input->getOption('force-setup');
         $this->ignoreLock = false;
     }
 

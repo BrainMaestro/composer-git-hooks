@@ -17,7 +17,7 @@ class AddCommand extends Command
     protected $windows;
     protected $ignoreLock;
     /** @var bool */
-    protected $always;
+    protected $forceSetup;
 
     protected function configure()
     {
@@ -27,7 +27,7 @@ class AddCommand extends Command
             ->setHelp('This command allows you to add git hooks')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Override existing git hooks')
             ->addOption('no-lock', 'l', InputOption::VALUE_NONE, 'Do not create a lock file')
-            ->addOption('always', null, InputOption::VALUE_NONE, 'Setup hooks even if composer is running with --no-dev')
+            ->addOption('force-setup', null, InputOption::VALUE_NONE, 'Setup hooks even if composer is running with --no-dev')
             ->addOption('ignore-lock', 'i', InputOption::VALUE_NONE, 'Add the lock file to .gitignore')
             ->addOption('git-dir', 'g', InputOption::VALUE_REQUIRED, 'Path to git directory', '.git')
             ->addOption('force-win', null, InputOption::VALUE_NONE, 'Force windows bash compatibility')
@@ -40,13 +40,13 @@ class AddCommand extends Command
         $this->force = $input->getOption('force');
         $this->windows = $input->getOption('force-win') || is_windows();
         $this->noLock = $input->getOption('no-lock');
-        $this->always = $input->getOption('always');
+        $this->forceSetup = $input->getOption('force-setup');
         $this->ignoreLock = $input->getOption('ignore-lock');
     }
 
     protected function command()
     {
-        if (!$this->always && is_composer_dev_mode()) {
+        if (!$this->forceSetup && is_composer_dev_mode()) {
             // skip silently
             return;
         }

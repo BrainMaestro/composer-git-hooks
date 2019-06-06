@@ -90,10 +90,10 @@ class AddCommandTest extends TestCase
     /**
      * @test
      */
-    public function it_does_add_hooks_in_composer_dev_mode_with_always_option()
+    public function it_does_add_hooks_in_composer_dev_mode_with_force_setup_option()
     {
         putenv('COMPOSER_DEV_MODE=1');
-        $this->commandTester->execute(['--always' => true]);
+        $this->commandTester->execute(['--force-setup' => true]);
 
         foreach (array_keys(self::$hooks) as $hook) {
             $this->assertContains("Added {$hook} hook", $this->commandTester->getDisplay());
