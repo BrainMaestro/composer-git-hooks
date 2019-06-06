@@ -22,10 +22,10 @@ Add a `hooks` section to the `extra` section of your `composer.json` and add the
             // verify commit message. ex: ABC-123: Fix everything
             "commit-msg": "grep -q '[A-Z]+-[0-9]+.*' $1",
             "pre-push": [
-                "php-cs-fixer fix --dry-run ." // check style
+                "php-cs-fixer fix --dry-run .", // check style
                 "phpunit"
             ],
-            "post-merge": "composer update"
+            "post-merge": "composer update",
             "...": "..."
         }
     }
@@ -69,9 +69,8 @@ Add a `cghooks` script to the `scripts` section of your `composer.json` file. Th
 
 Add the following events to your `composer.json` file.
 The `cghooks` commands will be run every time the events occur.
-By default `cghooks` will honor composer `--no-dev` option and will not setup hooks
-if `composer` is running in `--no-dev` option,
-if you need to override this, use `--always` option.
+By default `cghooks` will honor composer `--no-dev` option and will not setup hooks if `composer` is running in dev mode.
+If you need to override this, use `--always` option.
 Go to [Composer Command Events][link-composer-events] for more details about composer's event system.
 
 ```json
@@ -83,6 +82,7 @@ Go to [Composer Command Events][link-composer-events] for more details about com
     }
 }
 ```
+
 ## Usage
 
 All the following commands have to be run either in the same folder as your `composer.json` file or by specifying the `--git-dir` option to point to a folder with a `composer.json` file.

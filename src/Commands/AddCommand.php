@@ -46,7 +46,7 @@ class AddCommand extends Command
 
     protected function command()
     {
-        if (!$this->always && $this->isComposerDevMode()) {
+        if (!$this->always && is_composer_dev_mode()) {
             // skip silently
             return;
         }
@@ -165,18 +165,5 @@ class AddCommand extends Command
         }
 
         $this->info("Global git hook path set to [{$globalHookDir}]");
-    }
-
-    /**
-     * During a composer install or update process,
-     * a variable named COMPOSER_DEV_MODE will be added to the environment.
-     * If the command was run with the --no-dev flag,
-     * this variable will be set to 0, otherwise it will be set to 1.
-     *
-     * @see https://getcomposer.org/doc/articles/scripts.md#defining-scripts
-     */
-    private function isComposerDevMode()
-    {
-        return getenv('COMPOSER_DEV_MODE') === '1';
     }
 }

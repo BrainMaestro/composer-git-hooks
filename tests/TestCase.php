@@ -33,6 +33,7 @@ abstract class TestCase extends PHPUnitTestCase
         chdir('..');
         self::rmdir(self::TEMP_TEST_DIR);
         $this->restoreGlobalHookDir();
+        putenv('COMPOSER_DEV_MODE=');
     }
 
     protected function init()
