@@ -16,7 +16,7 @@ class ListCommand extends Command
             ->setName('list-hooks')
             ->setDescription('List added hooks')
             ->setHelp('This command allows you to list your git hooks')
-            ->addOption('git-dir', 'g', InputOption::VALUE_REQUIRED, 'Path to git directory', '.git')
+            ->addOption('git-dir', 'g', InputOption::VALUE_REQUIRED, 'Path to git directory', absolute_git_dir())
             ->addOption('global', null, InputOption::VALUE_NONE, 'Perform hook command globally for every git repository')
         ;
     }

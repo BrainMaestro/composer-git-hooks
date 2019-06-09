@@ -205,4 +205,28 @@ class UpdateCommandTest extends TestCase
             $this->commandTester->getDisplay()
         );
     }
+
+    /**
+     * @test
+     */
+    public function it_updates_hooks_correctly_in_a_git_worktree()
+    {
+        self::createHooks();
+        $currentDir = realpath(getcwd());
+        shell_exec('git branch develop');
+        mkdir('../worktree-test');
+        shell_exec('git worktree add -b test ../worktree-test develop');
+        chdir('../worktree-test');
+
+        $this->commandTester->execute([]);
+
+        foreach (array_keys(self::$hooks) as $hook) {
+            $this->assertContains("Updated {$hook} hook", $this->commandTester->getDisplay());
+            $this->assertFileNotExists(".git/hooks/{$hook}");
+            $this->assertFileExists("{$currentDir}/.git/hooks/{$hook}");
+        }
+
+        chdir($currentDir);
+        self::rmdir('../worktree-test');
+    }
 }

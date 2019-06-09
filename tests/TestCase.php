@@ -7,23 +7,28 @@ use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 
 abstract class TestCase extends PHPUnitTestCase
 {
-    const TEMP_TEST_DIR = 'cghooks-temp';
-
     protected static $hooks = [
         'pre-commit' => 'echo before-commit',
         'post-commit' => 'echo after-commit',
     ];
 
+    private $tempTestDir;
     private $initialGlobalHookDir;
 
     final public function setUp()
     {
         $this->initialGlobalHookDir = global_hook_dir();
+        $this->tempTestDir = 'cghooks-temp-' . bin2hex(random_bytes(5));
 
-        mkdir(self::TEMP_TEST_DIR);
-        chdir(self::TEMP_TEST_DIR);
+        mkdir($this->tempTestDir);
+        chdir($this->tempTestDir);
+        shell_exec('git init');
+        shell_exec('git config user.email "cghooks@example.com"');
+        shell_exec('git config user.name "Composer Git Hooks"');
+
         touch('.gitignore');
         self::createTestComposerFile();
+        shell_exec('git add . && git commit -m "Initial commit"');
 
         $this->init();
     }
@@ -31,7 +36,7 @@ abstract class TestCase extends PHPUnitTestCase
     final public function tearDown()
     {
         chdir('..');
-        self::rmdir(self::TEMP_TEST_DIR);
+        self::rmdir($this->tempTestDir);
         $this->restoreGlobalHookDir();
         putenv('COMPOSER_DEV_MODE=');
     }
@@ -81,7 +86,7 @@ abstract class TestCase extends PHPUnitTestCase
      *
      * @param $dir string
      */
-    private static function rmdir($dir)
+    public static function rmdir($dir)
     {
         if (is_dir($dir)) {
             $entries = scandir($dir);

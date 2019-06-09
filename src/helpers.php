@@ -54,3 +54,14 @@ if (! function_exists('is_composer_dev_mode')) {
         return getenv('COMPOSER_DEV_MODE') === '1';
     }
 }
+
+if (! function_exists('absolute_git_dir')) {
+    /**
+     * Resolve absolute git dir which will serve as the default git dir
+     * if one is not provided by the user.
+     */
+    function absolute_git_dir()
+    {
+        return trim(shell_exec('git rev-parse --absolute-git-dir'));
+    }
+}

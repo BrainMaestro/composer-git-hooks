@@ -29,7 +29,7 @@ class AddCommand extends Command
             ->addOption('no-lock', 'l', InputOption::VALUE_NONE, 'Do not create a lock file')
             ->addOption('force-setup', null, InputOption::VALUE_NONE, 'Setup hooks even if composer is running with --no-dev')
             ->addOption('ignore-lock', 'i', InputOption::VALUE_NONE, 'Add the lock file to .gitignore')
-            ->addOption('git-dir', 'g', InputOption::VALUE_REQUIRED, 'Path to git directory', '.git')
+            ->addOption('git-dir', 'g', InputOption::VALUE_REQUIRED, 'Path to git directory', absolute_git_dir())
             ->addOption('force-win', null, InputOption::VALUE_NONE, 'Force windows bash compatibility')
             ->addOption('global', null, InputOption::VALUE_NONE, 'Add global git hooks')
         ;
