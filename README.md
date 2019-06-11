@@ -25,7 +25,7 @@ Add a `hooks` section to the `extra` section of your `composer.json` and add the
                 "php-cs-fixer fix --dry-run ." // check style
                 "phpunit"
             ],
-            "post-merge": "composer update"
+            "post-merge": "composer install"
             "...": "..."
         }
     }
