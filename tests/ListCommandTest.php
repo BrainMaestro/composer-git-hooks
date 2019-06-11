@@ -7,7 +7,6 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class ListCommandTest extends TestCase
 {
-    /** @var CommandTester */
     private $commandTester;
 
     public function init()

@@ -1,6 +1,6 @@
 /vendor/
 /.idea/
 /test-git-dir/
-/.php_cs.cache
-/phpunit.xml
-/cghooks.lock
+.php_cs.cache
+phpunit.xml
+cghooks.lock

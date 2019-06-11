@@ -21,7 +21,7 @@ class ListCommand extends Command
         ;
     }
 
-    protected function init(InputInterface $input)
+    protected function init($input)
     {
     }
 

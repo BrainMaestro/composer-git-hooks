@@ -38,7 +38,6 @@ abstract class TestCase extends PHPUnitTestCase
         chdir('..');
         self::rmdir($this->tempTestDir);
         $this->restoreGlobalHookDir();
-        putenv('COMPOSER_DEV_MODE=');
     }
 
     protected function init()
@@ -92,7 +91,7 @@ abstract class TestCase extends PHPUnitTestCase
             $entries = scandir($dir);
 
             foreach ($entries as $entry) {
-                if ($entry !== '.' && $entry !== '..') {
+                if ($entry != "." && $entry != "..") {
                     $path = "{$dir}/{$entry}";
                     if (is_dir($path)) {
                         self::rmdir($path);

@@ -22,10 +22,10 @@ Add a `hooks` section to the `extra` section of your `composer.json` and add the
             // verify commit message. ex: ABC-123: Fix everything
             "commit-msg": "grep -q '[A-Z]+-[0-9]+.*' $1",
             "pre-push": [
-                "php-cs-fixer fix --dry-run .", // check style
+                "php-cs-fixer fix --dry-run ." // check style
                 "phpunit"
             ],
-            "post-merge": "composer update",
+            "post-merge": "composer update"
             "...": "..."
         }
     }
@@ -67,17 +67,13 @@ Add a `cghooks` script to the `scripts` section of your `composer.json` file. Th
 
 #### Composer Events
 
-Add the following events to your `composer.json` file.
-The `cghooks` commands will be run every time the events occur.
-By default `cghooks` will honor composer `--no-dev` option and will not setup hooks if `composer` is running in dev mode.
-If you need to override this, use `--force-setup` option.
-Go to [Composer Command Events][link-composer-events] for more details about composer's event system.
+Add the following events to your `composer.json` file. The `cghooks` commands will be run every time the events occur. Go to [Composer Command Events][link-composer-events] for more details about composer's event system.
 
 ```json
 {
     "scripts": {
-        "post-install-cmd": "cghooks add --ignore-lock",
-        "post-update-cmd": "cghooks update",
+        "post-install-cmd": "vendor/bin/cghooks add --ignore-lock",
+        "post-update-cmd": "vendor/bin/cghooks update",
         "...": "..."
     }
 }
