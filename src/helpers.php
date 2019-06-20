@@ -47,6 +47,6 @@ if (! function_exists('absolute_git_dir')) {
      */
     function absolute_git_dir()
     {
-        return trim(shell_exec('git rev-parse --absolute-git-dir'));
+        return trim(shell_exec('git rev-parse --git-dir'));
     }
 }
