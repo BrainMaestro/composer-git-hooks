@@ -40,13 +40,13 @@ if (! function_exists('global_hook_dir')) {
     }
 }
 
-if (! function_exists('absolute_git_dir')) {
+if (! function_exists('git_dir')) {
     /**
      * Resolve absolute git dir which will serve as the default git dir
      * if one is not provided by the user.
      */
-    function absolute_git_dir()
+    function git_dir()
     {
-        return trim(shell_exec('git rev-parse --git-dir'));
+        return realpath(trim(shell_exec('git rev-parse --git-dir')));
     }
 }
