@@ -16,7 +16,7 @@ class UpdateCommand extends AddCommand
             ->setName('update')
             ->setDescription('Update git hooks specified in the composer config')
             ->setHelp('This command allows you to update git hooks')
-            ->addOption('git-dir', 'g', InputOption::VALUE_REQUIRED, 'Path to git directory', absolute_git_dir())
+            ->addOption('git-dir', 'g', InputOption::VALUE_REQUIRED, 'Path to git directory', git_dir())
             ->addOption('force-win', null, InputOption::VALUE_NONE, 'Force windows bash compatibility')
             ->addOption('global', null, InputOption::VALUE_NONE, 'Update global git hooks')
         ;
