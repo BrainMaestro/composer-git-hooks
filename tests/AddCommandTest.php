@@ -91,7 +91,7 @@ class AddCommandTest extends TestCase
 
     /**
      * @test
-     * @group add-lock-dir-option
+     * @group lock-dir
      */
     public function it_correctly_creates_the_hook_lock_file_in_lock_dir()
     {

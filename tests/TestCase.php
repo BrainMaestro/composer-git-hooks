@@ -44,7 +44,7 @@ abstract class TestCase extends PHPUnitTestCase
     {
     }
 
-    public static function createHooks($gitDir = '.git', $createLockFile = false)
+    public static function createHooks($gitDir = '.git', $createLockFile = false, $lockDir = false)
     {
         create_hooks_dir($gitDir);
 
@@ -53,7 +53,7 @@ abstract class TestCase extends PHPUnitTestCase
         }
 
         if ($createLockFile) {
-            $lockFile = ($gitDir === '.git' ? '' : $gitDir . '/') . Hook::LOCK_FILE;
+            $lockFile = ((false !== $lockDir) ? ($lockDir . '/') : ($gitDir === '.git' ? '' : $gitDir . '/')) . Hook::LOCK_FILE;
             file_put_contents($lockFile, json_encode(array_keys(self::$hooks)));
         }
     }
