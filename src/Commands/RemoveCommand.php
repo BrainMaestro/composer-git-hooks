@@ -33,6 +33,7 @@ class RemoveCommand extends Command
                 'Delete hooks without checking the lock file'
             )
             ->addOption('git-dir', 'g', InputOption::VALUE_REQUIRED, 'Path to git directory', git_dir())
+            ->addOption('lock-dir', null, InputOption::VALUE_REQUIRED, 'Path to lock file directory', getcwd())
             ->addOption('global', null, InputOption::VALUE_NONE, 'Remove global git hooks')
         ;
     }

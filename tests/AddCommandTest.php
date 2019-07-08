@@ -81,11 +81,31 @@ class AddCommandTest extends TestCase
      */
     public function it_correctly_creates_the_hook_lock_file()
     {
+        $currentDir = realpath(getcwd());
         $this->commandTester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
 
-        $this->assertContains('Created '. Hook::LOCK_FILE . ' file', $this->commandTester->getDisplay());
+        $this->assertContains('Created ' . $currentDir . '/' . Hook::LOCK_FILE . ' file', $this->commandTester->getDisplay());
         $this->assertFileExists(Hook::LOCK_FILE);
         $this->assertEquals(json_encode(array_keys(self::$hooks)), file_get_contents(Hook::LOCK_FILE));
+    }
+
+    /**
+     * @test
+     * @group add-lock-dir-option
+     */
+    public function it_correctly_creates_the_hook_lock_file_in_lock_dir()
+    {
+        $lockDir = 'lock-dir';
+        $currentDir = realpath(getcwd());
+        mkdir('../' . $lockDir);
+
+        $hookFile = $currentDir . '/../' . $lockDir . '/' . Hook::LOCK_FILE;
+        $this->commandTester->execute(['--lock-dir' => dirname($hookFile)], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
+
+        $this->assertContains('Created '. $hookFile . ' file', $this->commandTester->getDisplay());
+        $this->assertFileExists($hookFile);
+        $this->assertEquals(json_encode(array_keys(self::$hooks)), file_get_contents($hookFile));
+        self::rmdir('../' . $lockDir);
     }
 
     /**
@@ -93,9 +113,10 @@ class AddCommandTest extends TestCase
      */
     public function it_does_not_create_the_hook_lock_file_if_the_no_lock_option_is_passed()
     {
+        $currentDir = realpath(getcwd());
         $this->commandTester->execute(['--no-lock' => true], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
 
-        $this->assertContains('Skipped creating a '. Hook::LOCK_FILE . ' file', $this->commandTester->getDisplay());
+        $this->assertContains('Skipped creating a ' . $currentDir . '/' . Hook::LOCK_FILE  . ' file', $this->commandTester->getDisplay());
         $this->assertFileNotExists(Hook::LOCK_FILE);
     }
 
@@ -104,9 +125,10 @@ class AddCommandTest extends TestCase
      */
     public function it_does_not_ignore_the_hook_lock_file()
     {
+        $currentDir = realpath(getcwd());
         $this->commandTester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
 
-        $this->assertContains('Skipped adding '. Hook::LOCK_FILE . ' to .gitignore', $this->commandTester->getDisplay());
+        $this->assertContains('Skipped adding '. $currentDir . '/' . Hook::LOCK_FILE . ' to .gitignore', $this->commandTester->getDisplay());
         $this->assertFalse(strpos(file_get_contents('.gitignore'), Hook::LOCK_FILE));
     }
 
@@ -115,9 +137,10 @@ class AddCommandTest extends TestCase
      */
     public function it_ignores_the_hook_lock_file_if_the_ignore_lock_option_is_passed()
     {
+        $currentDir = realpath(getcwd());
         $this->commandTester->execute(['--ignore-lock' => true], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
 
-        $this->assertContains('Added ' . Hook::LOCK_FILE . ' to .gitignore', $this->commandTester->getDisplay());
+        $this->assertContains('Added ' . $currentDir . '/' . Hook::LOCK_FILE . ' to .gitignore', $this->commandTester->getDisplay());
         $this->assertTrue(strpos(file_get_contents('.gitignore'), Hook::LOCK_FILE) !== false);
     }
 
