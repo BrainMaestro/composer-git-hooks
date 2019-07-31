@@ -7,6 +7,9 @@ use BrainMaestro\GitHooks\Hook;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * @group remove
+ */
 class RemoveCommandTest extends TestCase
 {
     private $commandTester;
@@ -125,6 +128,24 @@ class RemoveCommandTest extends TestCase
         foreach (array_keys(self::$hooks) as $hook) {
             $this->assertContains("Removed {$hook} hook", $this->commandTester->getDisplay());
         }
+    }
+
+    /**
+     * @test
+     * @group lock-dir
+     */
+    public function it_removes_git_hooks_with_lock_dir()
+    {
+        $lockDir = realpath(getcwd()) . '/../lock-dir';
+        mkdir($lockDir);
+        $hookFile = $lockDir . '/' . Hook::LOCK_FILE;
+        self::createHooks('.git', true, $lockDir);
+
+        $this->commandTester->execute(['--lock-dir' => dirname($hookFile)]);
+        foreach (array_keys(self::$hooks) as $hook) {
+            $this->assertContains("Removed {$hook} hook", $this->commandTester->getDisplay());
+        }
+        self::rmdir($lockDir);
     }
 
     private static function isDirEmpty($dir)

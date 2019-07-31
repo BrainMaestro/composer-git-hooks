@@ -6,6 +6,9 @@ use BrainMaestro\GitHooks\Commands\UpdateCommand;
 use BrainMaestro\GitHooks\Hook;
 use Symfony\Component\Console\Tester\CommandTester;
 
+/**
+ * @group update
+ */
 class UpdateCommandTest extends TestCase
 {
     private $commandTester;
@@ -156,6 +159,27 @@ class UpdateCommandTest extends TestCase
         foreach (array_keys(self::$hooks) as $hook) {
             $this->assertContains("Updated {$hook} hook", $this->commandTester->getDisplay());
         }
+    }
+
+    /**
+     * @test
+     * @group lock-dir
+     */
+    public function it_updates_git_hooks_with_lock_dir()
+    {
+        $lockDir = realpath(getcwd()) . '/../lock-dir';
+        mkdir($lockDir);
+        $hookFile = $lockDir . '/' . Hook::LOCK_FILE;
+
+        self::createHooks('.git', true, $lockDir);
+
+        $this->commandTester->execute(['--lock-dir' => dirname($hookFile)]);
+
+        foreach (array_keys(self::$hooks) as $hook) {
+            $this->assertContains("Updated {$hook} hook", $this->commandTester->getDisplay());
+        }
+
+        self::rmdir($lockDir);
     }
 
     /**

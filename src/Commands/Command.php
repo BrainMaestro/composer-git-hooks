@@ -15,6 +15,7 @@ abstract class Command extends SymfonyCommand
     protected $dir;
     protected $hooks;
     protected $gitDir;
+    protected $lockDir;
     protected $global;
     protected $lockFile;
 
@@ -25,21 +26,19 @@ abstract class Command extends SymfonyCommand
     {
         $this->output = $output;
         $this->gitDir = $input->getOption('git-dir');
+        $this->lockDir = $input->getOption('lock-dir');
         $this->global = $input->getOption('global');
-        $this->lockFile = Hook::LOCK_FILE;
         $this->dir = trim(
             $this->global && $this->gitDir === git_dir()
                 ? dirname(global_hook_dir())
                 : $this->gitDir
         );
-
         if ($this->global) {
             if (empty($this->dir)) {
                 $this->global_dir_fallback();
             }
-
-            $this->lockFile = $this->dir . '/' . Hook::LOCK_FILE;
         }
+        $this->lockFile = (null !== $this->lockDir ? ($this->lockDir . '/') : '') . Hook::LOCK_FILE;
 
         $this->hooks = Hook::getValidHooks($this->global ? $this->dir : getcwd());
 
