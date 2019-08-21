@@ -47,6 +47,6 @@ if (! function_exists('git_dir')) {
      */
     function git_dir()
     {
-        return realpath(trim(shell_exec('git rev-parse --git-dir')));
+        return realpath(trim(shell_exec('git rev-parse --git-common-dir')));
     }
 }
