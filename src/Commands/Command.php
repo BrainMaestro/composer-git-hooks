@@ -25,7 +25,7 @@ abstract class Command extends SymfonyCommand
     final protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->output = $output;
-        $this->gitDir = $input->getOption('git-dir');
+        $this->gitDir = $input->getOption('git-dir') ?: git_dir();
         $this->lockDir = $input->getOption('lock-dir');
         $this->global = $input->getOption('global');
         $this->dir = trim(
