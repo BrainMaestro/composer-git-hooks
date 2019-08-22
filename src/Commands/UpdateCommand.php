@@ -2,11 +2,8 @@
 
 namespace BrainMaestro\GitHooks\Commands;
 
-use BrainMaestro\GitHooks\Hook;
-use BrainMaestro\GitHooks\Commands\AddCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class UpdateCommand extends AddCommand
 {
@@ -23,7 +20,7 @@ class UpdateCommand extends AddCommand
         ;
     }
 
-    protected function init($input)
+    protected function init(InputInterface $input)
     {
         $this->windows = $input->getOption('force-win') || is_windows();
         $this->force = true;

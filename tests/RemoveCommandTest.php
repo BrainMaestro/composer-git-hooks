@@ -12,6 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class RemoveCommandTest extends TestCase
 {
+    /** @var CommandTester */
     private $commandTester;
 
     public function init()
@@ -150,6 +151,6 @@ class RemoveCommandTest extends TestCase
 
     private static function isDirEmpty($dir)
     {
-        return count(scandir($dir)) == 2;
+        return count(scandir($dir)) === 2;
     }
 }
