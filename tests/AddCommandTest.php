@@ -66,6 +66,28 @@ class AddCommandTest extends TestCase
     /**
      * @test
      */
+    public function it_detects_existing_correct_hooks()
+    {
+        $originalHooks = self::$hooks;
+        self::$hooks = [
+            'pre-commit' => '#!/bin/sh' . PHP_EOL . PHP_EOL . 'echo before-commit' . PHP_EOL,
+            'post-commit' => '#!/bin/sh' . PHP_EOL . PHP_EOL . 'echo after-commit' . PHP_EOL,
+        ];
+
+        self::createHooks();
+        $this->commandTester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
+
+        foreach (array_keys(self::$hooks) as $hook) {
+            $this->assertContains("{$hook} is up to date", $this->commandTester->getDisplay());
+        }
+        $this->assertContains('All hooks are up to date', $this->commandTester->getDisplay());
+
+        self::$hooks = $originalHooks;
+    }
+
+    /**
+     * @test
+     */
     public function it_overrides_hooks_that_already_exist()
     {
         self::createHooks();

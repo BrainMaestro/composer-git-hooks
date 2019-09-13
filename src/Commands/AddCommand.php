@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 class AddCommand extends Command
 {
     private $addedHooks = [];
+    private $upToDateHooks = [];
 
     protected $force;
     protected $noLock;
@@ -51,7 +52,10 @@ class AddCommand extends Command
             $this->addHook($hook, $contents);
         }
 
-        if (! count($this->addedHooks)) {
+        if (! empty($this->hooks) && count($this->upToDateHooks) === count($this->hooks)) {
+            $this->info('All hooks are up to date');
+            return;
+        } elseif (! count($this->addedHooks)) {
             $this->error('No hooks were added. Try updating');
             return;
         }
@@ -78,13 +82,22 @@ class AddCommand extends Command
         // See: https://github.com/BrainMaestro/composer-git-hooks/issues/7
         $shebang = ($this->windows ? '#!/bin/bash' : '#!/bin/sh') . PHP_EOL . PHP_EOL;
         $contents = is_array($contents) ? implode(PHP_EOL, $contents) : $contents;
+        $hookContents = $shebang . $contents . PHP_EOL;
 
         if (! $this->force && $exists) {
+            $actualContents = file_get_contents($filename);
+
+            if ($actualContents === $hookContents) {
+                $this->debug("[{$hook}] is up to date");
+                $this->upToDateHooks[] = $hook;
+                return;
+            }
+
             $this->debug("[{$hook}] already exists");
             return;
         }
 
-        file_put_contents($filename, $shebang . $contents . PHP_EOL);
+        file_put_contents($filename, $hookContents);
         chmod($filename, 0755);
 
         $operation = $exists ? 'Updated' : 'Added';
