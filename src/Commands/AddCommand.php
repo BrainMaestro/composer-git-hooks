@@ -134,7 +134,7 @@ class AddCommand extends Command
 
         if ($return === false) {
             file_put_contents('.gitignore', Hook::LOCK_FILE . PHP_EOL, FILE_APPEND);
-            $this->debug("Added [{$this->lockFile}] to .gitignore");
+            $this->debug(sprintf('Added [%s] to .gitignore', Hook::LOCK_FILE));
         }
     }
 
