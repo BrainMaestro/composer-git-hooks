@@ -2,6 +2,7 @@
 
 namespace BrainMaestro\GitHooks\Commands;
 
+use BrainMaestro\GitHooks\Hook;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -132,8 +133,8 @@ class AddCommand extends Command
         $return = strpos($contents, $this->lockFile);
 
         if ($return === false) {
-            file_put_contents('.gitignore', $this->lockFile . PHP_EOL, FILE_APPEND);
-            $this->debug("Added [{$this->lockFile}] to .gitignore");
+            file_put_contents('.gitignore', Hook::LOCK_FILE . PHP_EOL, FILE_APPEND);
+            $this->debug(sprintf('Added [%s] to .gitignore', Hook::LOCK_FILE));
         }
     }
 

@@ -159,10 +159,9 @@ class AddCommandTest extends TestCase
      */
     public function it_ignores_the_hook_lock_file_if_the_ignore_lock_option_is_passed()
     {
-        $currentDir = realpath(getcwd());
         $this->commandTester->execute(['--ignore-lock' => true], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
 
-        $this->assertContains('Added ' . $currentDir . '/' . Hook::LOCK_FILE . ' to .gitignore', $this->commandTester->getDisplay());
+        $this->assertContains('Added ' . Hook::LOCK_FILE . ' to .gitignore', $this->commandTester->getDisplay());
         $this->assertTrue(strpos(file_get_contents('.gitignore'), Hook::LOCK_FILE) !== false);
     }
 
