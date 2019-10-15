@@ -110,7 +110,7 @@ class AddCommand extends Command
     private function addLockFile()
     {
         if ($this->noLock) {
-            $this->debug("Skipped creating a [{$this->lockFile}] file");
+            $this->debug('Skipped creating a [' . Hook::LOCK_FILE . '] file');
             return;
         }
 
@@ -125,15 +125,15 @@ class AddCommand extends Command
         }
 
         if (! $this->ignoreLock) {
-            $this->debug("Skipped adding [{$this->lockFile}] to .gitignore");
+            $this->debug('Skipped adding [' . Hook::LOCK_FILE . '] to .gitignore');
             return;
         }
 
         $contents = file_get_contents('.gitignore');
-        $return = strpos($contents, $this->lockFile);
+        $return = strpos($contents, Hook::LOCK_FILE);
 
         if ($return === false) {
-            file_put_contents('.gitignore', Hook::LOCK_FILE . PHP_EOL, FILE_APPEND);
+            file_put_contents('.gitignore', Hook::LOCK_FILE . PHP_EOL . PHP_EOL, FILE_APPEND);
             $this->debug(sprintf('Added [%s] to .gitignore', Hook::LOCK_FILE));
         }
     }

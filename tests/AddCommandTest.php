@@ -138,7 +138,7 @@ class AddCommandTest extends TestCase
         $currentDir = realpath(getcwd());
         $this->commandTester->execute(['--no-lock' => true], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
 
-        $this->assertContains('Skipped creating a ' . $currentDir . '/' . Hook::LOCK_FILE  . ' file', $this->commandTester->getDisplay());
+        $this->assertContains('Skipped creating a ' . Hook::LOCK_FILE . ' file', $this->commandTester->getDisplay());
         $this->assertFileNotExists(Hook::LOCK_FILE);
     }
 
@@ -150,7 +150,7 @@ class AddCommandTest extends TestCase
         $currentDir = realpath(getcwd());
         $this->commandTester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
 
-        $this->assertContains('Skipped adding '. $currentDir . '/' . Hook::LOCK_FILE . ' to .gitignore', $this->commandTester->getDisplay());
+        $this->assertContains('Skipped adding ' . Hook::LOCK_FILE . ' to .gitignore', $this->commandTester->getDisplay());
         $this->assertFalse(strpos(file_get_contents('.gitignore'), Hook::LOCK_FILE));
     }
 
@@ -162,6 +162,18 @@ class AddCommandTest extends TestCase
         $this->commandTester->execute(['--ignore-lock' => true], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
 
         $this->assertContains('Added ' . Hook::LOCK_FILE . ' to .gitignore', $this->commandTester->getDisplay());
+        $this->assertTrue(strpos(file_get_contents('.gitignore'), Hook::LOCK_FILE) !== false);
+    }
+
+    /**
+     * @test
+     */
+    public function it_does_not_ignore_the_hook_lock_file_if_it_is_already_ignored()
+    {
+        file_put_contents('.gitignore', Hook::LOCK_FILE . PHP_EOL, FILE_APPEND);
+        $this->commandTester->execute(['--ignore-lock' => true], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
+
+        $this->assertNotContains('Added ' . Hook::LOCK_FILE . ' to .gitignore', $this->commandTester->getDisplay());
         $this->assertTrue(strpos(file_get_contents('.gitignore'), Hook::LOCK_FILE) !== false);
     }
 
