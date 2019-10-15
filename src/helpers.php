@@ -47,6 +47,13 @@ if (! function_exists('git_dir')) {
      */
     function git_dir()
     {
-        return realpath(trim(shell_exec('git rev-parse --git-common-dir')));
+        $gitDir = realpath(trim(shell_exec('git rev-parse --git-common-dir')));
+        if ($gitDir === null || $gitDir === '' || $gitDir === '--git-common-dir') {
+            // the version of git does not support `--git-common-dir`
+            // we fallback to `--git-dir` which and lose worktree support
+            return realpath(trim(shell_exec('git rev-parse --git-dir')));
+        }
+
+        return $gitDir;
     }
 }
