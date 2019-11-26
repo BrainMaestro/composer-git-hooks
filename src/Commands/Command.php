@@ -43,6 +43,8 @@ abstract class Command extends SymfonyCommand
 
         $this->init($input);
         $this->command();
+
+        return 0;
     }
 
     protected function global_dir_fallback()
