@@ -35,7 +35,7 @@ class HookCommand extends SymfonyCommand
         $returnCode    = 0;
         exec($contents, $outputMessage, $returnCode);
 
-        $output->writeln(implode("\n", $outputMessage));
+        $output->writeln(implode(PHP_EOL, $outputMessage));
 
         return $returnCode;
     }
