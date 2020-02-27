@@ -22,6 +22,13 @@ class Hook
 
         $contents = file_get_contents($composerFile);
         $json = json_decode($contents, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            echo "ERROR: Failed to parse $composerFile: " . json_last_error_msg() . PHP_EOL;
+
+            exit(-1);
+        }
+
         $hooks = array_merge(
             isset($json['scripts']) ? $json['scripts'] : [],
             isset($json['hooks']) ? $json['hooks'] : [],
