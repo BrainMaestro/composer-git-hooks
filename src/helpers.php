@@ -57,3 +57,17 @@ if (! function_exists('git_dir')) {
         return realpath($gitDir);
     }
 }
+
+if (! function_exists('get_hook_contents')) {
+    /**
+     * Return hook contents
+     *
+     * @param array|string $contents
+     *
+     * @return string
+     */
+    function get_hook_contents($contents)
+    {
+        return is_array($contents) ? implode(" && \\" . PHP_EOL, $contents) : $contents;
+    }
+}

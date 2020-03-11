@@ -20,4 +20,24 @@ class HookCommandTest extends TestCase
             $this->assertContains(str_replace('echo ', '', $script), $commandTester->getDisplay());
         }
     }
+
+    /**
+     * @test
+     */
+    public function it_terminates_if_previous_hook_fails()
+    {
+        $hook = [
+            'pre-commit' => [
+                'echo execution-error;exit 1',
+                'echo before-commit'
+            ],
+        ];
+
+        $command = new HookCommand('pre-commit', $hook['pre-commit']);
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute([]);
+        $this->assertContains('execution-error', $commandTester->getDisplay());
+        $this->assertNotContains('before-commit', $commandTester->getDisplay());
+    }
 }
