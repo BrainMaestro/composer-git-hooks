@@ -68,6 +68,6 @@ if (! function_exists('get_hook_contents')) {
      */
     function get_hook_contents($contents)
     {
-        return is_array($contents) ? implode(" && ", $contents) : $contents;
+        return is_array($contents) ? implode(" && \\" . PHP_EOL, $contents) : $contents;
     }
 }
