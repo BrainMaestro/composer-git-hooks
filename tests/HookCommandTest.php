@@ -24,7 +24,7 @@ class HookCommandTest extends TestCase
     /**
      * @test
      */
-    public function it_not_continue_if_previous_hook_fail()
+    public function it_terminates_if_previous_hook_fails()
     {
         $hook = [
             'pre-commit' => [
@@ -38,5 +38,6 @@ class HookCommandTest extends TestCase
 
         $commandTester->execute([]);
         $this->assertContains('execution-error', $commandTester->getDisplay());
+        $this->assertNotContains('before-commit', $commandTester->getDisplay());
     }
 }
