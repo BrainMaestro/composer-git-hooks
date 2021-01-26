@@ -32,6 +32,7 @@ class RemoveCommand extends Command
             ->addOption('git-dir', 'g', InputOption::VALUE_REQUIRED, 'Path to git directory')
             ->addOption('lock-dir', null, InputOption::VALUE_REQUIRED, 'Path to lock file directory', getcwd())
             ->addOption('global', null, InputOption::VALUE_NONE, 'Remove global git hooks')
+            ->addOption('skip-validation', null, InputOption::VALUE_NONE, 'Allow to remove non-standard custom hooks')
         ;
     }
 

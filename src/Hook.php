@@ -15,6 +15,13 @@ class Hook
      */
     public static function getValidHooks($dir)
     {
+        return array_filter(static::getHooks($dir), function ($hook) {
+            return self::isDefaultHook($hook);
+        }, ARRAY_FILTER_USE_KEY);
+    }
+
+    public static function getHooks($dir)
+    {
         $composerFile = "{$dir}/composer.json";
         if (!file_exists($composerFile)) {
             return [];
@@ -22,34 +29,26 @@ class Hook
 
         $contents = file_get_contents($composerFile);
         $json = json_decode($contents, true);
-        $hooks = array_merge(
+
+        return array_merge(
             isset($json['scripts']) ? $json['scripts'] : [],
             isset($json['hooks']) ? $json['hooks'] : [],
             isset($json['extra']['hooks']) ? $json['extra']['hooks'] : []
         );
-        $validHooks = [];
-
-        foreach ($hooks as $hook => $script) {
-            if (self::isValidHook($hook)) {
-                $validHooks[$hook] = $script;
-            }
-        }
-
-        return $validHooks;
     }
 
     /**
      * Check if a hook is valid
      */
-    public static function isValidHook($hook)
+    private static function isDefaultHook($hook)
     {
-        return array_key_exists($hook, self::getHooks());
+        return array_key_exists($hook, self::getDefaultHooks());
     }
 
     /**
-     * Get all valid git hooks
+     * Get all default git hooks
      */
-    private static function getHooks()
+    private static function getDefaultHooks()
     {
         return array_flip([
            'applypatch-msg',
