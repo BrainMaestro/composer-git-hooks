@@ -126,12 +126,12 @@ Hooks can be listed with the `cghooks list-hooks` command. This basically checks
 
 The following options are common to all commands.
 
-| Option            | Description                         | Command                                         |
-| ----------------- | ----------------------------------- | ----------------------------------------------- |
-| `git-dir`         | Path to git directory               | `cghooks ${command} --git-dir='/path/to/.git'`  |
-| `lock-dir`        | Path to lock file directory         | `cghooks ${command} --lock-dir='/path/to/lock'` |
-| `global`          | Runs the specified command globally | `cghooks ${command} --global`                   |
-| `skip-validation` | Allow to add custom hooks           | `cghooks ${command} --skip-validation`          |
+| Option               | Description                         | Command                                         |
+| -------------------- | ----------------------------------- | ----------------------------------------------- |
+| `git-dir`            | Path to git directory               | `cghooks ${command} --git-dir='/path/to/.git'`  |
+| `lock-dir`           | Path to lock file directory         | `cghooks ${command} --lock-dir='/path/to/lock'` |
+| `global`             | Runs the specified command globally | `cghooks ${command} --global`                   |
+| `allow-custom-hooks` | Allow to handle custom hooks        | `cghooks ${command} --allow-custom-hooks`       |
 
 Each command also has a flag `-v` to control verbosity for more detailed logs. Currently, only one level is supported.
 

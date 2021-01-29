@@ -47,6 +47,39 @@ class UpdateCommandTest extends TestCase
     /**
      * @test
      */
+    public function it_adds_custom_hooks_that_do_not_already_exist()
+    {
+        $customHooks = [
+            'pre-flow-feature-start' => 'echo custom-hook'
+        ];
+
+        $this->createTestComposerFile(".", $customHooks);
+
+        $this->commandTester->execute(['--allow-custom-hooks' => true]);
+
+        $this->assertContains("Added pre-flow-feature-start hook", $this->commandTester->getDisplay());
+    }
+
+    /**
+     * @test
+     */
+    public function it_updates_custom_hooks_that_already_exist()
+    {
+        $customHooks = [
+            'pre-flow-feature-start' => 'echo custom-hook'
+        ];
+
+        $this->createTestComposerFile(".", $customHooks);
+        self::createCustomHooks($customHooks);
+
+        $this->commandTester->execute(['--allow-custom-hooks' => true]);
+
+        $this->assertContains("Updated pre-flow-feature-start hook", $this->commandTester->getDisplay());
+    }
+
+    /**
+     * @test
+     */
     public function it_adds_shebang_to_hooks_on_windows()
     {
         if (! is_windows()) {

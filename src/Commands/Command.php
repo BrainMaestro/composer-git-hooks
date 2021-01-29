@@ -42,7 +42,7 @@ abstract class Command extends SymfonyCommand
 
         $dir = $this->global ? $this->dir : getcwd();
 
-        $this->hooks = $input->getOption('skip-validation')
+        $this->hooks = $input->getOption('allow-custom-hooks')
             ? Hook::getHooks($dir)
             : Hook::getValidHooks($dir);
 

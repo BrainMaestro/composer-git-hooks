@@ -31,7 +31,7 @@ class AddCommandTest extends TestCase
     /**
      * @test
      */
-    public function it_doesnt_allow_custom_hooks_by_default()
+    public function it_doesnt_allow_to_add_custom_hooks_by_default()
     {
         $customHooks = [
             'pre-flow-feature-start' => 'echo custom-hook'
@@ -40,7 +40,7 @@ class AddCommandTest extends TestCase
         $this->createTestComposerFile(".", $customHooks);
 
         $this->commandTester->execute(
-            ['--skip-validation' => false],
+            ['--allow-custom-hooks' => false],
             ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]
         );
 
@@ -53,7 +53,7 @@ class AddCommandTest extends TestCase
     /**
      * @test
      */
-    public function it_allows_to_add_custom_hooks_with_skip_validation_option()
+    public function it_allows_to_add_custom_hooks_with_allow_custom_hooks_option()
     {
         $customHooks = [
             'pre-flow-feature-start' => 'echo custom-hook'
@@ -62,7 +62,7 @@ class AddCommandTest extends TestCase
         $this->createTestComposerFile(".", $customHooks);
 
         $this->commandTester->execute(
-            ['--skip-validation' => true],
+            ['--allow-custom-hooks' => true],
             ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]
         );
 

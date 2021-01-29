@@ -46,15 +46,25 @@ abstract class TestCase extends PHPUnitTestCase
 
     public static function createHooks($gitDir = '.git', $createLockFile = false, $lockDir = false)
     {
+        static::initializeHooks($gitDir, $createLockFile, $lockDir, self::$hooks);
+    }
+
+    public static function createCustomHooks($hooks, $createLockFile = false)
+    {
+        static::initializeHooks('.git', $createLockFile, false, $hooks);
+    }
+
+    public static function initializeHooks($gitDir, $createLockFile, $lockDir, $hooks)
+    {
         create_hooks_dir($gitDir);
 
-        foreach (self::$hooks as $hook => $script) {
+        foreach ($hooks as $hook => $script) {
             file_put_contents("{$gitDir}/hooks/{$hook}", $script);
         }
 
         if ($createLockFile) {
             $lockFile = ((false !== $lockDir) ? ($lockDir . '/') : ($gitDir === '.git' ? '' : $gitDir . '/')) . Hook::LOCK_FILE;
-            file_put_contents($lockFile, json_encode(array_keys(self::$hooks)));
+            file_put_contents($lockFile, json_encode(array_keys($hooks)));
         }
     }
 
