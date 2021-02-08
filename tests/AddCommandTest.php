@@ -260,7 +260,7 @@ class AddCommandTest extends TestCase
             $this->assertContains("Added {$hook} hook", $this->commandTester->getDisplay());
 
             $content = file_get_contents(".git/hooks/" . $hook);
-            $this->assertContains(implode(" && \\" . PHP_EOL, $scripts), $content);
+            $this->assertContains(implode(PHP_EOL, $scripts), $content);
         }
     }
 

@@ -82,7 +82,7 @@ class AddCommand extends Command
         // On windows, the shebang needs to point to bash
         // See: https://github.com/BrainMaestro/composer-git-hooks/issues/7
         $shebang = ($this->windows ? '#!/bin/bash' : '#!/bin/sh') . PHP_EOL . PHP_EOL;
-        $contents = get_hook_contents($contents);
+        $contents = is_array($contents) ? implode(PHP_EOL, $contents) : $contents;
         $hookContents = $shebang . $contents . PHP_EOL;
 
         if (! $this->force && $exists) {

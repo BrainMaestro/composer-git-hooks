@@ -29,7 +29,7 @@ class HookCommand extends SymfonyCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $contents = get_hook_contents($this->contents);
+        $contents = is_array($this->contents) ? implode(PHP_EOL, $this->contents) : $this->contents;
 
         $outputMessage = [];
         $returnCode    = 0;
