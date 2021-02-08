@@ -15,7 +15,7 @@ abstract class TestCase extends PHPUnitTestCase
     private $tempTestDir;
     private $initialGlobalHookDir;
 
-    final public function setUp()
+    final public function setUp(): void
     {
         $this->initialGlobalHookDir = global_hook_dir();
         $this->tempTestDir = 'cghooks-temp-' . bin2hex(random_bytes(5));
@@ -33,7 +33,7 @@ abstract class TestCase extends PHPUnitTestCase
         $this->init();
     }
 
-    final public function tearDown()
+    final public function tearDown(): void
     {
         chdir('..');
         self::rmdir($this->tempTestDir);
