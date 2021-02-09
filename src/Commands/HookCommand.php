@@ -2,6 +2,7 @@
 
 namespace BrainMaestro\GitHooks\Commands;
 
+use BrainMaestro\GitHooks\Hook;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -10,11 +11,13 @@ class HookCommand extends SymfonyCommand
 {
     private $hook;
     private $contents;
+    private $composerDir;
 
-    public function __construct($hook, $contents)
+    public function __construct($hook, $contents, $composerDir)
     {
         $this->hook     = $hook;
         $this->contents = $contents;
+        $this->composerDir = $composerDir;
         parent::__construct();
     }
 
@@ -29,8 +32,7 @@ class HookCommand extends SymfonyCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $contents = get_hook_contents($this->contents);
-
+        $contents = Hook::getHookContents($this->composerDir, $this->contents, $this->hook);
         $outputMessage = [];
         $returnCode    = 0;
         exec($contents, $outputMessage, $returnCode);

@@ -12,6 +12,7 @@ abstract class Command extends SymfonyCommand
     private $output;
 
     protected $dir;
+    protected $composerDir;
     protected $hooks;
     protected $gitDir;
     protected $lockDir;
