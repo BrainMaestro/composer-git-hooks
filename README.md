@@ -52,6 +52,29 @@ All commands have global support (besides testing the hooks. Still requires bein
 
 ### Optional Configuration
 
+#### Stop on failure
+
+When a hook is a sequence of commands, it can be useful to stop the execution when
+a command fails.
+
+Specify the impacted hooks in the `stop-on-failure` config section.
+
+```json
+{
+    "extra": {
+        "hooks": {
+            "config": {
+                "stop-on-failure": ["pre-push"]
+            },
+            "pre-push": [
+                "php-cs-fixer fix --dry-run --stop-on-violation .",
+                "phpunit"
+            ],
+        }
+    }
+}
+```
+
 #### Shortcut
 
 Add a `cghooks` script to the `scripts` section of your `composer.json` file. That way, commands can be run with `composer cghooks ${command}`. This is ideal if you would rather not edit your system path.
