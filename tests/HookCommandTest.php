@@ -13,7 +13,7 @@ class HookCommandTest extends TestCase
     public function it_tests_hooks_that_exist()
     {
         foreach (self::$hooks as $hook => $script) {
-            $command = new HookCommand($hook, $script);
+            $command = new HookCommand($hook, $script, '.');
             $commandTester = new CommandTester($command);
 
             $commandTester->execute([]);
@@ -33,7 +33,7 @@ class HookCommandTest extends TestCase
             ],
         ];
 
-        $command = new HookCommand('pre-commit', $hook['pre-commit']);
+        $command = new HookCommand('pre-commit', $hook['pre-commit'], '.');
         $commandTester = new CommandTester($command);
 
         $commandTester->execute([]);

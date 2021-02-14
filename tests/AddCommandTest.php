@@ -315,7 +315,7 @@ class AddCommandTest extends TestCase
     {
         $hooks = [
             'config' => [
-                'pre-commit',
+                'stop-on-failure' => ['pre-commit'],
             ],
             'pre-commit' => [
                 'echo "pre-commit 1"',
