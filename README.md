@@ -100,7 +100,7 @@ If the `--global` flag is used, the hooks will be added globally, and the global
 
 ### Updating Hooks
 
-The update command which is run with `cghooks update` basically ignores the lock file and tries to add hooks from the composer lock. This is similar to what the `--force` option for the `add` command did. This command is useful if the hooks in the `composer.json` file have changed since the first time the hooks were added.
+The update command which is run with `cghooks update` basically ignores the lock file and tries to add hooks from the composer file. This is similar to what the `--force` option for the `add` command did. This command is useful if the hooks in the `composer.json` file have changed since the first time the hooks were added.
 
 This works similarly when used with `--global` except that there is no fallback to `$COMPOSER_HOME` if no directory is provided.
 
