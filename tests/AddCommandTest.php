@@ -31,6 +31,49 @@ class AddCommandTest extends TestCase
     /**
      * @test
      */
+    public function it_doesnt_allow_to_add_custom_hooks_by_default()
+    {
+        $customHooks = [
+            'pre-flow-feature-start' => 'echo custom-hook'
+        ];
+
+        $this->createTestComposerFile(".", $customHooks);
+
+        $this->commandTester->execute(
+            ['--allow-custom-hooks' => false],
+            ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]
+        );
+
+        $this->assertContains(
+            "No hooks were added. Try updating",
+            $this->commandTester->getDisplay()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function it_allows_to_add_custom_hooks_with_allow_custom_hooks_option()
+    {
+        $customHooks = [
+            'pre-flow-feature-start' => 'echo custom-hook'
+        ];
+
+        $this->createTestComposerFile(".", $customHooks);
+
+        $this->commandTester->execute(
+            ['--allow-custom-hooks' => true],
+            ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]
+        );
+
+        foreach (array_keys($customHooks) as $hook) {
+            $this->assertContains("Added {$hook} hook", $this->commandTester->getDisplay());
+        }
+    }
+
+    /**
+     * @test
+     */
     public function it_adds_shebang_to_hooks_on_windows()
     {
         if (! is_windows()) {

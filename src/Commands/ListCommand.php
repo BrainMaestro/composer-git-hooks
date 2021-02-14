@@ -16,6 +16,7 @@ class ListCommand extends Command
             ->addOption('git-dir', 'g', InputOption::VALUE_REQUIRED, 'Path to git directory')
             ->addOption('lock-dir', null, InputOption::VALUE_REQUIRED, 'Path to lock file directory', getcwd())
             ->addOption('global', null, InputOption::VALUE_NONE, 'Perform hook command globally for every git repository')
+            ->addOption('allow-custom-hooks', null, InputOption::VALUE_NONE, 'Allow to list custom hooks')
         ;
     }
 

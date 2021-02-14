@@ -19,6 +19,7 @@ abstract class Command extends SymfonyCommand
     protected $lockFile;
 
     abstract protected function init(InputInterface $input);
+
     abstract protected function command();
 
     final protected function execute(InputInterface $input, OutputInterface $output)
@@ -39,7 +40,11 @@ abstract class Command extends SymfonyCommand
         }
         $this->lockFile = (null !== $this->lockDir ? ($this->lockDir . '/') : '') . Hook::LOCK_FILE;
 
-        $this->hooks = Hook::getValidHooks($this->global ? $this->dir : getcwd());
+        $dir = $this->global ? $this->dir : getcwd();
+
+        $this->hooks = $input->getOption('allow-custom-hooks')
+            ? Hook::getHooks($dir)
+            : Hook::getValidHooks($dir);
 
         $this->init($input);
         $this->command();

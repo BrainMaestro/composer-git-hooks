@@ -29,6 +29,7 @@ class AddCommand extends Command
             ->addOption('lock-dir', null, InputOption::VALUE_REQUIRED, 'Path to lock file directory', getcwd())
             ->addOption('force-win', null, InputOption::VALUE_NONE, 'Force windows bash compatibility')
             ->addOption('global', null, InputOption::VALUE_NONE, 'Add global git hooks')
+            ->addOption('allow-custom-hooks', null, InputOption::VALUE_NONE, 'Allow to add custom hooks')
         ;
     }
 

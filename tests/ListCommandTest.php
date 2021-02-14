@@ -3,6 +3,7 @@
 namespace BrainMaestro\GitHooks\Tests;
 
 use BrainMaestro\GitHooks\Commands\ListCommand;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class ListCommandTest extends TestCase
@@ -26,6 +27,26 @@ class ListCommandTest extends TestCase
         foreach (array_keys(self::$hooks) as $hook) {
             $this->assertContains($hook, $this->commandTester->getDisplay());
         }
+    }
+
+    /**
+     * @test
+     */
+    public function it_lists_custom_hooks_that_exist()
+    {
+        $customHooks = [
+            'pre-flow-feature-start' => 'echo custom-hook'
+        ];
+
+        $this->createTestComposerFile(".", $customHooks);
+        self::createCustomHooks($customHooks);
+
+        $this->commandTester->execute(
+            ['--allow-custom-hooks' => true],
+            ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]
+        );
+
+        $this->assertContains('pre-flow-feature-start', $this->commandTester->getDisplay());
     }
 
     /**
