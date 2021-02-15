@@ -54,8 +54,7 @@ All commands have global support (besides testing the hooks. Still requires bein
 
 #### Stop on failure
 
-When a hook is a sequence of commands, it can be useful to stop the execution when
-a command fails.
+When a hook is a sequence of commands, it can be useful to stop the execution when a command fails.
 
 Specify the impacted hooks in the `stop-on-failure` config section.
 
@@ -74,6 +73,8 @@ Specify the impacted hooks in the `stop-on-failure` config section.
     }
 }
 ```
+
+Always be sure to run the [update command](#updating-hooks) after changing the `stop-on-failure` config section.
 
 #### Shortcut
 
