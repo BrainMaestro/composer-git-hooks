@@ -39,13 +39,16 @@ class RemoveCommandTest extends TestCase
     public function it_removes_custom_hooks_that_were_added()
     {
         $customHooks = [
-            'pre-flow-feature-start' => 'echo custom-hook'
+            'config' => [
+                'custom-hooks' => ['pre-flow-feature-start'],
+            ],
+            'pre-flow-feature-start' => 'echo "pre-flow-feature-start"',
         ];
 
-        $this->createTestComposerFile(".", $customHooks);
+        self::createTestComposerFile('.', $customHooks);
         self::createCustomHooks($customHooks, true);
 
-        $this->commandTester->execute(['--allow-custom-hooks' => true]);
+        $this->commandTester->execute([]);
 
         $this->assertContains("Removed pre-flow-feature-start hook", $this->commandTester->getDisplay());
     }

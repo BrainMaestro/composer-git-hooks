@@ -35,16 +35,17 @@ class ListCommandTest extends TestCase
     public function it_lists_custom_hooks_that_exist()
     {
         $customHooks = [
-            'pre-flow-feature-start' => 'echo custom-hook'
+            'config' => [
+                'custom-hooks' => ['pre-flow-feature-start'],
+            ],
+            'pre-flow-feature-start' => 'echo "pre-flow-feature-start"',
         ];
 
-        $this->createTestComposerFile(".", $customHooks);
+        self::createTestComposerFile('.', $customHooks);
+
         self::createCustomHooks($customHooks);
 
-        $this->commandTester->execute(
-            ['--allow-custom-hooks' => true],
-            ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]
-        );
+        $this->commandTester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
 
         $this->assertContains('pre-flow-feature-start', $this->commandTester->getDisplay());
     }

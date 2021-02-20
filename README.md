@@ -76,6 +76,28 @@ Specify the impacted hooks in the `stop-on-failure` config section.
 
 Always be sure to run the [update command](#updating-hooks) after changing the `stop-on-failure` config section.
 
+#### Custom hooks
+
+Custom hooks can be added to the `custom-hooks` array of the `config section.
+
+```json
+{
+    "extra": {
+        "hooks": {
+            "config": {
+                "custom-hooks": ["pre-flow-feature-start"]
+            },
+            "pre-flow-feature-start": [
+                "echo 'Starting a new feature...'"
+            ]
+        }
+    }
+}
+```
+
+Always be sure to run the [update command](#updating-hooks) after changing the `custom-hooks` config section.
+Note: `config` is not valid custom hook value.
+
 #### Shortcut
 
 Add a `cghooks` script to the `scripts` section of your `composer.json` file. That way, commands can be run with `composer cghooks ${command}`. This is ideal if you would rather not edit your system path.
@@ -155,7 +177,6 @@ The following options are common to all commands.
 | `git-dir`            | Path to git directory               | `cghooks ${command} --git-dir='/path/to/.git'`  |
 | `lock-dir`           | Path to lock file directory         | `cghooks ${command} --lock-dir='/path/to/lock'` |
 | `global`             | Runs the specified command globally | `cghooks ${command} --global`                   |
-| `allow-custom-hooks` | Allow to handle custom hooks        | `cghooks ${command} --allow-custom-hooks`       |
 
 Each command also has a flag `-v` to control verbosity for more detailed logs. Currently, only one level is supported.
 

@@ -34,15 +34,12 @@ class AddCommandTest extends TestCase
     public function it_doesnt_allow_to_add_custom_hooks_by_default()
     {
         $customHooks = [
-            'pre-flow-feature-start' => 'echo custom-hook'
+            'pre-flow-feature-start' => 'echo custom-hook',
         ];
 
-        $this->createTestComposerFile(".", $customHooks);
+        self::createTestComposerFile('.', $customHooks);
 
-        $this->commandTester->execute(
-            ['--allow-custom-hooks' => false],
-            ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]
-        );
+        $this->commandTester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
 
         $this->assertContains(
             "No hooks were added. Try updating",
@@ -53,22 +50,28 @@ class AddCommandTest extends TestCase
     /**
      * @test
      */
-    public function it_allows_to_add_custom_hooks_with_allow_custom_hooks_option()
+    public function it_allows_to_add_custom_hooks_specified_in_config_section()
     {
         $customHooks = [
-            'pre-flow-feature-start' => 'echo custom-hook'
+            'config' => [
+                'custom-hooks' => ['pre-flow-feature-start'],
+            ],
+            'pre-flow-feature-start' => 'echo "pre-flow-feature-start"',
+            'pre-flow-hotfix-start' => 'echo "pre-flow-hotfix-start"',
         ];
 
-        $this->createTestComposerFile(".", $customHooks);
+        self::createTestComposerFile('.', $customHooks);
 
-        $this->commandTester->execute(
-            ['--allow-custom-hooks' => true],
-            ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]
+        $this->commandTester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
+
+        $this->assertContains(
+            'Added pre-flow-feature-start hook',
+            $this->commandTester->getDisplay()
         );
-
-        foreach (array_keys($customHooks) as $hook) {
-            $this->assertContains("Added {$hook} hook", $this->commandTester->getDisplay());
-        }
+        $this->assertNotContains(
+            'Added pre-flow-hotfix-start hook',
+            $this->commandTester->getDisplay()
+        );
     }
 
     /**

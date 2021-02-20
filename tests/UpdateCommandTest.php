@@ -50,12 +50,15 @@ class UpdateCommandTest extends TestCase
     public function it_adds_custom_hooks_that_do_not_already_exist()
     {
         $customHooks = [
-            'pre-flow-feature-start' => 'echo custom-hook'
+            'config' => [
+                'custom-hooks' => ['pre-flow-feature-start'],
+            ],
+            'pre-flow-feature-start' => 'echo "pre-flow-feature-start"',
         ];
 
-        $this->createTestComposerFile(".", $customHooks);
+        self::createTestComposerFile('.', $customHooks);
 
-        $this->commandTester->execute(['--allow-custom-hooks' => true]);
+        $this->commandTester->execute([]);
 
         $this->assertContains("Added pre-flow-feature-start hook", $this->commandTester->getDisplay());
     }
@@ -66,13 +69,16 @@ class UpdateCommandTest extends TestCase
     public function it_updates_custom_hooks_that_already_exist()
     {
         $customHooks = [
-            'pre-flow-feature-start' => 'echo custom-hook'
+            'config' => [
+                'custom-hooks' => ['pre-flow-feature-start'],
+            ],
+            'pre-flow-feature-start' => 'echo "pre-flow-feature-start"',
         ];
 
-        $this->createTestComposerFile(".", $customHooks);
-        self::createCustomHooks($customHooks);
+        self::createTestComposerFile('.', $customHooks);
+        self::createCustomHooks($customHooks, true);
 
-        $this->commandTester->execute(['--allow-custom-hooks' => true]);
+        $this->commandTester->execute([]);
 
         $this->assertContains("Updated pre-flow-feature-start hook", $this->commandTester->getDisplay());
     }
