@@ -75,11 +75,7 @@ class Hook
     {
         $json = self::getComposerJson($dir);
 
-        $possibleHooks = array_merge(
-            isset($json['scripts']) ? $json['scripts'] : [],
-            isset($json['hooks']) ? $json['hooks'] : [],
-            isset($json['extra']['hooks']) ? $json['extra']['hooks'] : []
-        );
+        $possibleHooks = isset($json['extra']['hooks']) ? $json['extra']['hooks'] : [];
 
         return array_filter($possibleHooks, function ($hook) use ($dir) {
             return self::isDefaultHook($hook) || self::isCustomHook($dir, $hook);

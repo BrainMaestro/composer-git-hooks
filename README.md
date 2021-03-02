@@ -9,7 +9,7 @@
 
 ## Install
 
-Add a `hooks` section to the `extra` section of your `composer.json` and add the hooks there. The previous way of adding hooks to the `scripts` section of your `composer.json` is still supported, but this way is cleaner if you have many scripts.
+Add a `hooks` section to the `extra` section of your `composer.json` and add the hooks there.
 
 ```javascript
 {
@@ -39,6 +39,8 @@ composer require --dev brainmaestro/composer-git-hooks
 ```
 
 This installs the `cghooks` binary to your `vendor/bin` folder. If this folder is not in your path, you will need to preface every command with `vendor/bin/`.
+
+Note: hooks declared in the `scripts` or `hooks` root sections of `composer.json` are no longer supported in v3.
 
 ### Global support
 
