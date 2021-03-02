@@ -51,6 +51,7 @@ abstract class TestCase extends PHPUnitTestCase
 
     public static function createCustomHooks($hooks, $createLockFile = false)
     {
+        unset($hooks['config']);
         static::initializeHooks('.git', $createLockFile, false, $hooks);
     }
 

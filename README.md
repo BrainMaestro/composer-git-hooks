@@ -9,7 +9,7 @@
 
 ## Install
 
-Add a `hooks` section to the `extra` section of your `composer.json` and add the hooks there. The previous way of adding hooks to the `scripts` section of your `composer.json` is still supported, but this way is cleaner if you have many scripts.
+Add a `hooks` section to the `extra` section of your `composer.json` and add the hooks there.
 
 ```javascript
 {
@@ -39,6 +39,8 @@ composer require --dev brainmaestro/composer-git-hooks
 ```
 
 This installs the `cghooks` binary to your `vendor/bin` folder. If this folder is not in your path, you will need to preface every command with `vendor/bin/`.
+
+Note: hooks declared in the `scripts` or `hooks` root sections of `composer.json` are no longer supported in v3.
 
 ### Global support
 
@@ -75,6 +77,28 @@ Specify the impacted hooks in the `stop-on-failure` config section.
 ```
 
 Always be sure to run the [update command](#updating-hooks) after changing the `stop-on-failure` config section.
+
+#### Custom hooks
+
+Custom hooks can be added to the `custom-hooks` array of the `config section.
+
+```json
+{
+    "extra": {
+        "hooks": {
+            "config": {
+                "custom-hooks": ["pre-flow-feature-start"]
+            },
+            "pre-flow-feature-start": [
+                "echo 'Starting a new feature...'"
+            ]
+        }
+    }
+}
+```
+
+Always be sure to run the [update command](#updating-hooks) after changing the `custom-hooks` config section.
+Note: `config` is not valid custom hook value.
 
 #### Shortcut
 
@@ -155,7 +179,6 @@ The following options are common to all commands.
 | `git-dir`            | Path to git directory               | `cghooks ${command} --git-dir='/path/to/.git'`  |
 | `lock-dir`           | Path to lock file directory         | `cghooks ${command} --lock-dir='/path/to/lock'` |
 | `global`             | Runs the specified command globally | `cghooks ${command} --global`                   |
-| `allow-custom-hooks` | Allow to handle custom hooks        | `cghooks ${command} --allow-custom-hooks`       |
 
 Each command also has a flag `-v` to control verbosity for more detailed logs. Currently, only one level is supported.
 

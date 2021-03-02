@@ -29,7 +29,7 @@ $application->add(new UpdateCommand());
 $application->add(new RemoveCommand());
 $application->add(new ListCommand());
 
-foreach (Hook::getHooks($dir) as $hook => $script) {
+foreach (Hook::getValidHooks($dir) as $hook => $script) {
     $application->add(new HookCommand($hook, $script, $dir));
 }
 
