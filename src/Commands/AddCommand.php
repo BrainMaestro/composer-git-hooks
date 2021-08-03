@@ -74,6 +74,11 @@ class AddCommand extends Command
         }
     }
 
+    private static function startsWithShebang($contents)
+    {
+        return substr_compare(trim($contents), "#!", 0) == 0;
+    }
+
     private function addHook($hook, $contents)
     {
         $filename = "{$this->dir}/hooks/{$hook}";
@@ -84,6 +89,13 @@ class AddCommand extends Command
         $shebang = ($this->windows ? '#!/bin/bash' : '#!/bin/sh') . PHP_EOL . PHP_EOL;
         $composerDir = $this->global ? $this->dir : getcwd();
         $contents = Hook::getHookContents($composerDir, $contents, $hook);
+        if (AddCommand::startsWithShebang($contents)) {
+            // Hook already starts with a shebang, do not add the default.
+            // Many developers use bash in hooks, but sh is guaranteed to
+            // be bash compatible. Especially in docker images with minimal
+            // program set is sh often dash.
+            $shebang = "";
+        }
         $hookContents = $shebang . $contents . PHP_EOL;
 
         if (! $this->force && $exists) {
