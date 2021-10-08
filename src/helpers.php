@@ -44,6 +44,7 @@ if (! function_exists('git_dir')) {
     /**
      * Resolve absolute git dir which will serve as the default git dir
      * if one is not provided by the user.
+     * @return string|false
      */
     function git_dir()
     {
@@ -54,9 +55,9 @@ if (! function_exists('git_dir')) {
         if ($gitDir === '' || $gitDir === '--git-common-dir') {
             // the version of git does not support `--git-common-dir`
             // we fallback to `--git-dir` which and lose worktree support
-            return realpath(trim(shell_exec('git rev-parse --git-dir'.$errorToDevNull)));
+            $gitDir = trim(shell_exec('git rev-parse --git-dir'.$errorToDevNull));
         }
 
-        return realpath($gitDir);
+        return $gitDir === '' ? false : realpath($gitDir);
     }
 }
