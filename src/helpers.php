@@ -48,7 +48,7 @@ if (! function_exists('git_dir')) {
      */
     function git_dir()
     {
-        // Don't show command error if git not initialized
+        // Don't show command error if git is not initialized
         $errorToDevNull = is_windows() ? '' : ' 2>/dev/null';
 
         $gitDir = trim(shell_exec('git rev-parse --git-common-dir'.$errorToDevNull));
