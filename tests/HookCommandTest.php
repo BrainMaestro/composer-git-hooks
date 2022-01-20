@@ -17,7 +17,7 @@ class HookCommandTest extends TestCase
             $commandTester = new CommandTester($command);
 
             $commandTester->execute([]);
-            $this->assertContains(str_replace('echo ', '', $script), $commandTester->getDisplay());
+            $this->assertStringContainsString(str_replace('echo ', '', $script), $commandTester->getDisplay());
         }
     }
 
@@ -37,7 +37,7 @@ class HookCommandTest extends TestCase
         $commandTester = new CommandTester($command);
 
         $commandTester->execute([]);
-        $this->assertContains('execution-error', $commandTester->getDisplay());
-        $this->assertNotContains('before-commit', $commandTester->getDisplay());
+        $this->assertStringContainsString('execution-error', $commandTester->getDisplay());
+        $this->assertStringNotContainsString('before-commit', $commandTester->getDisplay());
     }
 }

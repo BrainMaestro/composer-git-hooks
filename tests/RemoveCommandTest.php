@@ -29,7 +29,7 @@ class RemoveCommandTest extends TestCase
         $this->commandTester->execute([]);
 
         foreach (array_keys(self::$hooks) as $hook) {
-            $this->assertContains("Removed {$hook} hook", $this->commandTester->getDisplay());
+            $this->assertStringContainsString("Removed {$hook} hook", $this->commandTester->getDisplay());
         }
     }
 
@@ -50,7 +50,7 @@ class RemoveCommandTest extends TestCase
 
         $this->commandTester->execute([]);
 
-        $this->assertContains("Removed pre-flow-feature-start hook", $this->commandTester->getDisplay());
+        $this->assertStringContainsString("Removed pre-flow-feature-start hook", $this->commandTester->getDisplay());
     }
 
     /**
@@ -65,7 +65,7 @@ class RemoveCommandTest extends TestCase
             $this->assertEquals(0, $return);
 
             $this->commandTester->execute(['hooks' => [$hook]]);
-            $this->assertContains("Removed {$hook} hook", $this->commandTester->getDisplay());
+            $this->assertStringContainsString("Removed {$hook} hook", $this->commandTester->getDisplay());
 
             $contents = file_get_contents('.gitignore');
             $return = strpos($contents, Hook::LOCK_FILE);
@@ -80,7 +80,7 @@ class RemoveCommandTest extends TestCase
     {
         foreach (array_keys(self::$hooks) as $hook) {
             $this->commandTester->execute(['hooks' => [$hook]]);
-            $this->assertContains("Removed {$hook} hook", $this->commandTester->getDisplay());
+            $this->assertStringContainsString("Removed {$hook} hook", $this->commandTester->getDisplay());
         }
     }
 
@@ -93,7 +93,7 @@ class RemoveCommandTest extends TestCase
         unlink(Hook::LOCK_FILE);
 
         $this->commandTester->execute(['hooks' => [$hook]], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
-        $this->assertContains(
+        $this->assertStringContainsString(
             "Skipped {$hook} hook - not present in lock file",
             $this->commandTester->getDisplay()
         );
@@ -109,7 +109,7 @@ class RemoveCommandTest extends TestCase
         touch(".git/hooks/{$hook}");
 
         $this->commandTester->execute(['hooks' => [$hook], '--force' => true]);
-        $this->assertContains("Removed {$hook} hook", $this->commandTester->getDisplay());
+        $this->assertStringContainsString("Removed {$hook} hook", $this->commandTester->getDisplay());
     }
 
     /**
@@ -124,7 +124,7 @@ class RemoveCommandTest extends TestCase
 
         $this->commandTester->execute(['--git-dir' => $gitDir]);
         foreach (array_keys(self::$hooks) as $hook) {
-            $this->assertContains("Removed {$hook} hook", $this->commandTester->getDisplay());
+            $this->assertStringContainsString("Removed {$hook} hook", $this->commandTester->getDisplay());
         }
 
         $this->assertTrue(self::isDirEmpty("{$gitDir}/hooks"));
@@ -147,7 +147,7 @@ class RemoveCommandTest extends TestCase
         $this->commandTester->execute(['--global' => true]);
 
         foreach (array_keys(self::$hooks) as $hook) {
-            $this->assertContains("Removed {$hook} hook", $this->commandTester->getDisplay());
+            $this->assertStringContainsString("Removed {$hook} hook", $this->commandTester->getDisplay());
         }
     }
 
@@ -158,13 +158,15 @@ class RemoveCommandTest extends TestCase
     public function it_removes_git_hooks_with_lock_dir()
     {
         $lockDir = realpath(getcwd()) . '/../lock-dir';
-        mkdir($lockDir);
+        if (!file_exists($lockDir)) {
+            mkdir($lockDir);
+        }
         $hookFile = $lockDir . '/' . Hook::LOCK_FILE;
         self::createHooks('.git', true, $lockDir);
 
         $this->commandTester->execute(['--lock-dir' => dirname($hookFile)]);
         foreach (array_keys(self::$hooks) as $hook) {
-            $this->assertContains("Removed {$hook} hook", $this->commandTester->getDisplay());
+            $this->assertStringContainsString("Removed {$hook} hook", $this->commandTester->getDisplay());
         }
         self::rmdir($lockDir);
     }
