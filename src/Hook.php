@@ -6,8 +6,8 @@ use Exception;
 
 class Hook
 {
-    const LOCK_FILE = 'cghooks.lock';
-    const CONFIG_SECTIONS = ['custom-hooks', 'stop-on-failure'];
+    public const LOCK_FILE = 'cghooks.lock';
+    public const CONFIG_SECTIONS = ['custom-hooks', 'stop-on-failure'];
 
     /**
      * Return hook contents

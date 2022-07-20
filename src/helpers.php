@@ -36,7 +36,7 @@ if (! function_exists('global_hook_dir')) {
      */
     function global_hook_dir()
     {
-        return trim(shell_exec('git config --global core.hooksPath'));
+        return trim((string) shell_exec('git config --global core.hooksPath'));
     }
 }
 

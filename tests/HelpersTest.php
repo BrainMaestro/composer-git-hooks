@@ -11,6 +11,6 @@ class HelpersTest extends PHPUnitTestCase
      */
     public function it_checks_os()
     {
-        $this->assertInternalType('boolean', is_windows());
+        $this->assertIsBool(is_windows());
     }
 }
