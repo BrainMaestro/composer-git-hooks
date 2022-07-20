@@ -39,7 +39,7 @@ abstract class Command extends SymfonyCommand
                 $this->global_dir_fallback();
             }
         }
-        if($this->gitDir === false) {
+        if ($this->gitDir === false) {
             $output->writeln('Git is not initialized. Skip setting hooks...');
             return 0;
         }

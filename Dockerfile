@@ -1,5 +1,4 @@
-FROM composer:1.8
-
+FROM composer:2.3
 WORKDIR /app
 
 COPY ./composer.* ./
