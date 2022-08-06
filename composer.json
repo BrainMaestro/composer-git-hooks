@@ -16,12 +16,12 @@
         }
     ],
     "require": {
-        "php": "^8.0",
-        "symfony/console": "^6.0"
+        "php": "^7.4 || >=8.0",
+        "symfony/console": "^5.0||^6.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
-        "friendsofphp/php-cs-fixer": "^3.0",
+        "friendsofphp/php-cs-fixer": "^3.9",
         "ext-json": "*"
     },
     "autoload": {

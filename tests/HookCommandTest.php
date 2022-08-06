@@ -10,7 +10,7 @@ class HookCommandTest extends TestCase
     /**
      * @test
      */
-    public function it_tests_hooks_that_exist()
+    public function it_tests_hooks_that_exist(): void
     {
         foreach (self::$hooks as $hook => $script) {
             $command = new HookCommand($hook, $script, '.');
@@ -24,7 +24,7 @@ class HookCommandTest extends TestCase
     /**
      * @test
      */
-    public function it_terminates_if_previous_hook_fails()
+    public function it_terminates_if_previous_hook_fails(): void
     {
         $hook = [
             'pre-commit' => [

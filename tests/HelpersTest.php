@@ -9,7 +9,7 @@ class HelpersTest extends PHPUnitTestCase
     /**
      * @test
      */
-    public function it_checks_os()
+    public function it_checks_os(): void
     {
         $this->assertIsBool(is_windows());
     }

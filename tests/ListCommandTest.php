@@ -8,10 +8,9 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class ListCommandTest extends TestCase
 {
-    /** @var CommandTester */
-    private $commandTester;
+    private CommandTester $commandTester;
 
-    public function init()
+    protected function init(): void
     {
         $this->commandTester = new CommandTester(new ListCommand());
     }
@@ -19,7 +18,7 @@ class ListCommandTest extends TestCase
     /**
      * @test
      */
-    public function it_lists_hooks_that_exist()
+    public function it_lists_hooks_that_exist(): void
     {
         self::createHooks();
         $this->commandTester->execute([]);
@@ -32,7 +31,7 @@ class ListCommandTest extends TestCase
     /**
      * @test
      */
-    public function it_lists_custom_hooks_that_exist()
+    public function it_lists_custom_hooks_that_exist(): void
     {
         $customHooks = [
             'config' => [
@@ -53,7 +52,7 @@ class ListCommandTest extends TestCase
     /**
      * @test
      */
-    public function it_uses_a_different_git_path_if_specified()
+    public function it_uses_a_different_git_path_if_specified(): void
     {
         $gitDir = 'test-git-dir';
         self::createHooks($gitDir);
@@ -68,16 +67,16 @@ class ListCommandTest extends TestCase
     /**
      * @test
      */
-    public function it_lists_global_git_hooks()
+    public function it_lists_global_git_hooks(): void
     {
         $gitDir = 'test-global-git-dir';
         create_hooks_dir($gitDir);
-        $hookDir = realpath("{$gitDir}/hooks");
+        $hookDir = realpath("$gitDir/hooks");
 
         self::createHooks($gitDir);
         self::createTestComposerFile($gitDir);
 
-        shell_exec("git config --global core.hooksPath {$hookDir}");
+        shell_exec("git config --global core.hooksPath $hookDir");
         $this->commandTester->execute(['--global' => true]);
 
         foreach (array_keys(self::$hooks) as $hook) {
