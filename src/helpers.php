@@ -51,11 +51,11 @@ if (! function_exists('git_dir')) {
         // Don't show command error if git is not initialized
         $errorToDevNull = is_windows() ? '' : ' 2>/dev/null';
 
-        $gitDir = trim(shell_exec('git rev-parse --git-common-dir'.$errorToDevNull));
+        $gitDir = trim((string) shell_exec('git rev-parse --git-common-dir'.$errorToDevNull));
         if ($gitDir === '' || $gitDir === '--git-common-dir') {
             // the version of git does not support `--git-common-dir`
             // we fallback to `--git-dir` which and lose worktree support
-            $gitDir = trim(shell_exec('git rev-parse --git-dir'.$errorToDevNull));
+            $gitDir = trim((string) shell_exec('git rev-parse --git-dir'.$errorToDevNull));
         }
 
         return $gitDir === '' ? false : realpath($gitDir);
