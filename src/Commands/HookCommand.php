@@ -30,7 +30,7 @@ class HookCommand extends SymfonyCommand
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $contents = Hook::getHookContents($this->composerDir, $this->contents, $this->hook);
         $outputMessage = [];
