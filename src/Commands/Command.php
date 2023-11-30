@@ -23,7 +23,7 @@ abstract class Command extends SymfonyCommand
 
     abstract protected function command();
 
-    final protected function execute(InputInterface $input, OutputInterface $output)
+    final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->output = $output;
         $this->gitDir = $input->getOption('git-dir') ?: git_dir();
@@ -41,7 +41,7 @@ abstract class Command extends SymfonyCommand
         }
         if ($this->gitDir === false) {
             $output->writeln('Git is not initialized. Skip setting hooks...');
-            return 0;
+            return SymfonyCommand::SUCCESS;
         }
         $this->lockFile = (null !== $this->lockDir ? ($this->lockDir . '/') : '') . Hook::LOCK_FILE;
 
@@ -52,7 +52,7 @@ abstract class Command extends SymfonyCommand
         $this->init($input);
         $this->command();
 
-        return 0;
+        return SymfonyCommand::SUCCESS;
     }
 
     protected function global_dir_fallback()
