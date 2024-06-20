@@ -59,9 +59,9 @@
                 "composer test",
                 "appver=$(grep -o -E '[0-9]+\\.[0-9]+\\.[0-9]+(-alpha\\.[0-9]+)?' cghooks)",
                 "tag=$(git tag | tail -n 1)",
-                "if [ \"$tag\" != \"v$appver\" ]; then",
-                "echo \"The most recent tag $tag does not match the application version $appver\\n\"",
                 "tag=${tag#v}",
+                "if [ \"$tag\" != \"$appver\" ]; then",
+                "echo \"The most recent tag $tag does not match the application version $appver\\n\"",
                 "sed -i -E \"s/$appver/$tag/\" cghooks",
                 "exit 1",
                 "fi"
