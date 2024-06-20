@@ -5,6 +5,7 @@ namespace BrainMaestro\GitHooks\Tests;
 use BrainMaestro\GitHooks\Commands\UpdateCommand;
 use BrainMaestro\GitHooks\Hook;
 use Symfony\Component\Console\Tester\CommandTester;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * @group update
@@ -19,9 +20,7 @@ class UpdateCommandTest extends TestCase
         $this->commandTester = new CommandTester(new UpdateCommand());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_adds_hooks_that_do_not_already_exist()
     {
         $this->commandTester->execute([]);
@@ -31,9 +30,7 @@ class UpdateCommandTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_updates_hooks_that_already_exist()
     {
         self::createHooks();
@@ -44,9 +41,7 @@ class UpdateCommandTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_adds_custom_hooks_that_do_not_already_exist()
     {
         $customHooks = [
@@ -63,9 +58,7 @@ class UpdateCommandTest extends TestCase
         $this->assertStringContainsString("Added pre-flow-feature-start hook", $this->commandTester->getDisplay());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_updates_custom_hooks_that_already_exist()
     {
         $customHooks = [
@@ -83,9 +76,7 @@ class UpdateCommandTest extends TestCase
         $this->assertStringContainsString("Updated pre-flow-feature-start hook", $this->commandTester->getDisplay());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_adds_shebang_to_hooks_on_windows()
     {
         if (! is_windows()) {
@@ -104,9 +95,7 @@ class UpdateCommandTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_uses_a_different_git_path_if_specified()
     {
         $gitDir = 'test-git-dir';
@@ -120,9 +109,7 @@ class UpdateCommandTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_create_git_hooks_path_when_hooks_dir_not_exists()
     {
         $gitDir = 'test-git-dir';
@@ -139,9 +126,7 @@ class UpdateCommandTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_adds_win_bash_compat_if_the_force_windows_option_is_passed()
     {
         self::createHooks();
@@ -156,9 +141,7 @@ class UpdateCommandTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_handles_commands_defined_in_an_array()
     {
         self::createHooks();
@@ -181,9 +164,7 @@ class UpdateCommandTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_updates_global_git_hooks()
     {
         $gitDir = 'test-global-git-dir';
@@ -224,9 +205,7 @@ class UpdateCommandTest extends TestCase
         self::rmdir($lockDir);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_fails_if_global_hook_dir_is_missing()
     {
         putenv('COMPOSER_HOME=');
@@ -245,9 +224,7 @@ class UpdateCommandTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_updates_hooks_correctly_in_a_git_worktree()
     {
         self::createHooks();

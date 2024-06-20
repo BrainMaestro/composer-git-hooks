@@ -6,6 +6,7 @@ use BrainMaestro\GitHooks\Commands\RemoveCommand;
 use BrainMaestro\GitHooks\Hook;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Console\Output\OutputInterface;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * @group remove
@@ -21,9 +22,7 @@ class RemoveCommandTest extends TestCase
         $this->commandTester = new CommandTester(new RemoveCommand());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_removes_hooks_that_were_added()
     {
         $this->commandTester->execute([]);
@@ -33,9 +32,7 @@ class RemoveCommandTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_removes_custom_hooks_that_were_added()
     {
         $customHooks = [
@@ -53,9 +50,7 @@ class RemoveCommandTest extends TestCase
         $this->assertStringContainsString("Removed pre-flow-feature-start hook", $this->commandTester->getDisplay());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_removes_removed_hooks_from_the_lock_file()
     {
         foreach (array_keys(self::$hooks) as $hook) {
@@ -73,9 +68,7 @@ class RemoveCommandTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_removes_individual_hooks()
     {
         foreach (array_keys(self::$hooks) as $hook) {
@@ -84,9 +77,7 @@ class RemoveCommandTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_does_not_remove_hooks_not_present_in_the_lock_file()
     {
         $hook = 'pre-commit';
@@ -99,9 +90,7 @@ class RemoveCommandTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_removes_hooks_not_present_in_the_lock_file_if_forced_to()
     {
         $hook = 'pre-commit';
@@ -112,9 +101,7 @@ class RemoveCommandTest extends TestCase
         $this->assertStringContainsString("Removed {$hook} hook", $this->commandTester->getDisplay());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_uses_a_different_git_path_if_specified()
     {
         $gitDir = 'test-git-dir';
@@ -130,9 +117,7 @@ class RemoveCommandTest extends TestCase
         $this->assertTrue(self::isDirEmpty("{$gitDir}/hooks"));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_removes_global_git_hooks()
     {
         $gitDir = 'test-global-git-dir';

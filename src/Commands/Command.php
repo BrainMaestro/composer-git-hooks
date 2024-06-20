@@ -23,7 +23,7 @@ abstract class Command extends SymfonyCommand
 
     abstract protected function command();
 
-    final protected function execute(InputInterface $input, OutputInterface $output)
+    final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->output = $output;
         $this->gitDir = $input->getOption('git-dir') ?: git_dir();
