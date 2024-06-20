@@ -15,8 +15,6 @@ abstract class TestCase extends PHPUnitTestCase
     private $tempTestDir;
     private $initialGlobalHookDir;
 
-    private $shouldSignGpg;
-
     final public function setUp(): void
     {
         $this->initialGlobalHookDir = global_hook_dir();
@@ -25,8 +23,7 @@ abstract class TestCase extends PHPUnitTestCase
         mkdir($this->tempTestDir);
         chdir($this->tempTestDir);
         shell_exec('git init');
-        $this->shouldSignGpg = shell_exec('git config --global commit.gpgsign false');
-        shell_exec('git config --global commit.gpgsign false');
+        shell_exec('git config commit.gpgsign false');
         shell_exec('git config user.email "cghooks@example.com"');
         shell_exec('git config user.name "Composer Git Hooks"');
 
@@ -39,7 +36,6 @@ abstract class TestCase extends PHPUnitTestCase
 
     final public function tearDown(): void
     {
-        shell_exec('git config --global commit.gpgsign '.$this->shouldSignGpg);
         chdir('..');
         self::rmdir($this->tempTestDir);
         $this->restoreGlobalHookDir();
