@@ -17,6 +17,7 @@ class ListCommandTest extends TestCase
         $this->commandTester = new CommandTester(new ListCommand());
     }
 
+    /** @test  */
     #[Test]
     public function it_lists_hooks_that_exist()
     {
@@ -28,6 +29,7 @@ class ListCommandTest extends TestCase
         }
     }
 
+    /** @test  */
     #[Test]
     public function it_lists_custom_hooks_that_exist()
     {
@@ -47,6 +49,7 @@ class ListCommandTest extends TestCase
         $this->assertStringContainsString('pre-flow-feature-start', $this->commandTester->getDisplay());
     }
 
+    /** @test  */
     #[Test]
     public function it_uses_a_different_git_path_if_specified()
     {
@@ -60,6 +63,7 @@ class ListCommandTest extends TestCase
         }
     }
 
+    /** @test  */
     #[Test]
     public function it_lists_global_git_hooks()
     {

@@ -7,6 +7,7 @@ use PHPUnit\Framework\Attributes\Test;
 
 class HelpersTest extends PHPUnitTestCase
 {
+    /** @test  */
     #[Test]
     public function it_checks_os()
     {

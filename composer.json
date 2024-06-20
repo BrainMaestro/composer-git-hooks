@@ -20,7 +20,7 @@
         "symfony/console": "^5.0|^6.0|^7.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^11",
+        "phpunit/phpunit": "^9|^10|^11",
         "friendsofphp/php-cs-fixer": "^3.0",
         "ext-json": "*"
     },
@@ -57,7 +57,7 @@
             "pre-commit": "composer check-style",
             "pre-push": [
                 "composer test",
-                "appver=$(grep -o -E '\\d.\\d.\\d(-alpha.\\d)?' cghooks)",
+                "appver=$(grep -o -P '\\d+\\.\\d+\\.\\d+(-alpha\\.\\d+)?' cghooks)",
                 "tag=$(git tag | tail -n 1)",
                 "if [ \"$tag\" != \"v$appver\" ]; then",
                 "echo \"The most recent tag $tag does not match the application version $appver\\n\"",
