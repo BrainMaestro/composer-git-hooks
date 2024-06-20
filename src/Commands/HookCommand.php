@@ -34,7 +34,7 @@ class HookCommand extends SymfonyCommand
     {
         $contents = Hook::getHookContents($this->composerDir, $this->contents, $this->hook);
         $outputMessage = [];
-        $returnCode    = 0;
+        $returnCode    = SymfonyCommand::SUCCESS;
         exec($contents, $outputMessage, $returnCode);
 
         $output->writeln(implode(PHP_EOL, $outputMessage));
