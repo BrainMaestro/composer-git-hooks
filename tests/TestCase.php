@@ -23,6 +23,7 @@ abstract class TestCase extends PHPUnitTestCase
         mkdir($this->tempTestDir);
         chdir($this->tempTestDir);
         shell_exec('git init');
+        shell_exec('git config commit.gpgsign false');
         shell_exec('git config user.email "cghooks@example.com"');
         shell_exec('git config user.name "Composer Git Hooks"');
 

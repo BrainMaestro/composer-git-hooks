@@ -5,6 +5,7 @@ namespace BrainMaestro\GitHooks\Tests;
 use BrainMaestro\GitHooks\Commands\ListCommand;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
+use PHPUnit\Framework\Attributes\Test;
 
 class ListCommandTest extends TestCase
 {
@@ -16,9 +17,8 @@ class ListCommandTest extends TestCase
         $this->commandTester = new CommandTester(new ListCommand());
     }
 
-    /**
-     * @test
-     */
+    /** @test  */
+    #[Test]
     public function it_lists_hooks_that_exist()
     {
         self::createHooks();
@@ -29,9 +29,8 @@ class ListCommandTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    /** @test  */
+    #[Test]
     public function it_lists_custom_hooks_that_exist()
     {
         $customHooks = [
@@ -50,9 +49,8 @@ class ListCommandTest extends TestCase
         $this->assertStringContainsString('pre-flow-feature-start', $this->commandTester->getDisplay());
     }
 
-    /**
-     * @test
-     */
+    /** @test  */
+    #[Test]
     public function it_uses_a_different_git_path_if_specified()
     {
         $gitDir = 'test-git-dir';
@@ -65,9 +63,8 @@ class ListCommandTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
+    /** @test  */
+    #[Test]
     public function it_lists_global_git_hooks()
     {
         $gitDir = 'test-global-git-dir';
